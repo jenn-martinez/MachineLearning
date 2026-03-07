@@ -1,349 +1,95 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Caso de uso Machine Learning</title>
-    <style>
-        body {
-            margin: 0;
-            font-family: Arial, sans-serif;
-            background-color: #f4f6f9;
-        }
 
-        .header {
-            background-color: #cb1b1b;
-            color: white;
-            padding: 15px;
-            text-align: center;
-            font-size: 28px;
-            font-weight: bold;
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-        }
-
-        .layout {
-            display: flex;
-            min-height: 100vh;
-        }
-
-        .sidebar {
-            width: 300px;
-            background-color: #ffffff;
-            padding: 20px;
-            position: fixed;
-            top: 70px;
-            left: 0;
-            height: calc(100vh - 70px);
-            overflow-y: auto;
-            justify-content: center;
-            border-right: 1px solid #ddd;
-        }
-
-        .sidebar ul {
-            list-style: none;
-            padding: 0;
-        }
-
-        .sidebar li {
-            margin: 15px 0;
-        }
-
-        .sidebar a {
-            text-decoration: none;
-            color: #333;
-            font-weight: bold;
-        }
-
-        .sidebar a:hover {
-            color: #000;
-        }
-
-        .main {
-            margin-left: 300px;
-            flex: 1;
-            padding:  30px;
-        }
-
-        .contenido {
-            max-width: 1000px;
-            margin: 0 auto;
-        }
-
-        .titulo {
-            position: relative;
-            background-image: url("{{url_for('static',filename='computador.jpg')}}");
-            background-size: cover;
-            background-position: center;
-            height: 280px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 28px; 
-            font-weight: bold;
-            color: white;
-            text-align: center;
-        }
-
-        .overlay {
-            position:absolute;
-            inset: 0;
-            background: rgba(0, 0, 0, 0.6);
-            z-index: 1;
-        }
-
-        .titulo h1 {
-            position: relative;
-            z-index: 2;
-            font-size: 32px;
-            margin: 0;
-        }
-
-        h2,h3 {
-            color: #1a1a1a;
-        }
-
-        p {
-            font-size: 20px;
-            line-height: 1.8;
-            color: #1a1a1a;
-        }
-
-        .seccion {
-            margin-top: 30px;
-            font-size: 20px;
-        }
-
-        .seccion:hover {
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-        }
-
-        .bloque-horizontal {
-            display: flex;
-            align-items: center;
-            gap: 40px;
-            margin: 40px 0;
-        }
-
-        .imagen {
-            height: auto;
-            display: block;
-        }
-
-        .texto{
-            flex: 1;
-        }
-
-        html {
-            scroll-behavior: smooth;
-        }
-
-    </style>
+    <!-- Bootstrap CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 
-<body>
-    <!-- Barra superior-->
-    <div class="header">
-        Machine Learning: Pipeline BBVA
-    </div>
+<body class="bg-light">
 
-    <!-- Diseño -->
-    <div class="layout">
-        <div class="sidebar">
-            <h3>Sections</h3>
-            <ul>
-                <li><a href="#problema">Problem to solve</a></li>
-                <li><a href="#modelo">Model</a></li>
-                <li><a href="#clasificacion">Types of models according to the client's situation</a></li>
-                <li>
-                    <a href="#estructura">Structure</a>
-                    <ol>
-                        <li><a href="#ETL">ETL Dataset Construction</a></li>
-                        <li><a href="#datos">Data Split</a></li>
-                        <li><a href="#seleccion">Variable Selection and Control</a></li>
-                        <li><a href="#modelacion">Modeling</a></li>
-                        <li><a href="#evaluacion">Model Evaluation</a></li>
-                        <li><a href="#despliegue">Deployment and Monitoring</a></li>
-                    </ol>
-                </li>
-                <li><a href="#exito">Why is this case successful?</a></li>
+<div class="container mt-5">
+
+    <div class="card shadow">
+        <div class="card-body">
+
+            <!-- DEFINICION GENERAL -->
+            <h1 class="text-center text-primary">Caso de uso en Machine Learning</h1>
+
+            <p class="mt-4">
+                Un caso de uso en Machine Learning es una aplicación práctica donde se emplean algoritmos que aprenden
+                a partir de datos para resolver un problema real. Estos sistemas permiten automatizar decisiones,
+                realizar predicciones o reconocer patrones que serían difíciles de identificar manualmente.
+            </p>
+
+            <h3 class="mt-4">Elementos de un caso de uso</h3>
+            <ul class="list-group">
+                <li class="list-group-item">Problema a resolver</li>
+                <li class="list-group-item">Recolección de datos</li>
+                <li class="list-group-item">Entrenamiento de un modelo</li>
+                <li class="list-group-item">Evaluación del modelo</li>
+                <li class="list-group-item">Implementación en un sistema real</li>
             </ul>
-        </div>
 
-        <div class="main">
-            <div class="contenido">
-                <div class="titulo">
-                    <div class="overlay"></div>
-                    <h1>Use Case: Predictive model for early debt resolution, BBVA Bank</h1>
-                </div>
-                <div class="seccion">
-                    <!-- Descripción-->
-                    <p>
-                        This is a predictive model created by the BBVA AI Factory division of BBVA Bank
-                        with the aim of improving early debt management and personalizing it according to each case.
-                    </p>
-                </div>
-                <hr>
+            <!-- EJEMPLO ESPECIFICO -->
+            <h2 class="mt-5 text-success">Ejemplo: Reconocimiento Facial</h2>
 
-                <div class="seccion">
-                    <h2 id="problema"> Problem to solve </h2>
-                    <p>
-                        When a customer enters a delinquency state due to financial difficulties, both the customer
-                        and the bank are affected.
-                        The customer suffers penalties and the bank faces the risk of financial loss. The objective is
-                        to identify
-                        these situations early and categorize them in order to provide appropriate solutions for each case.
-                    </p>
+            <p>
+                El reconocimiento facial es un caso de uso de Machine Learning y visión por computador que permite
+                identificar o verificar la identidad de una persona mediante el análisis de sus características
+                faciales a partir de imágenes o video.
+            </p>
+
+            <h3 class="mt-4">¿Cómo funciona el reconocimiento facial?</h3>
+            <ul class="list-group">
+                <li class="list-group-item">Captura de imagen o video mediante cámara</li>
+                <li class="list-group-item">Detección del rostro dentro de la imagen</li>
+                <li class="list-group-item">Extracción de rasgos faciales únicos</li>
+                <li class="list-group-item">Comparación con una base de datos</li>
+                <li class="list-group-item">Resultado de identificación o verificación</li>
+            </ul>
+
+            <h3 class="mt-4">Aplicaciones del reconocimiento facial</h3>
+            <div class="row">
+
+                <div class="col-md-4">
+                    <div class="alert alert-info">Desbloqueo de smartphones</div>
                 </div>
 
-                <div class="seccion">
-                    <h2 id="modelo"> Model</h2>
-                    <p>
-                        The solution is based on a pipeline that integrates traditional credit risk analysis,
-                        supervised learning algorithms,
-                        automation of training and validation processes,
-                        and classifies customers according to their debt and possible evolution.
-                    </p>
+                <div class="col-md-4">
+                    <div class="alert alert-success">Control de acceso a edificios</div>
                 </div>
 
-                <div class="seccion">
-                    <h2 id="clasificacion">Types of models according to the client's situation</h2>
-                    <p>
-                        They are divided into <strong>4 models</strong> according to the delinquency status.
-                    </p>
-                    <img src="{{url_for('static',filename='BBVA.jpg')}}" width="900px" height="300px">
-                    <p>
-                        This segmentation makes it possible to adapt recovery strategies according to the customer profile.
-                    </p>
+                <div class="col-md-4">
+                    <div class="alert alert-warning">Sistemas de vigilancia</div>
                 </div>
 
-                <div class="seccion">
-                    <h2 id="estructura">Structure</h2>
-                    <h3 id="ETL"> 1. ETL Dataset Construction </h3>
-                    <p>
-                        The table is created through an extraction, transformation, and loading (ETL) process using
-                        variables:
-                    <ul>
-                        <li>Sociodemographic</li>
-                        <li>Debt status</li>
-                        <li>Payment behavior</li>
-                        <li>Financial history</li>
-                    </ul>
-                    </p>
-
-                    <h3 id="datos">2. Data Split </h3>
-                    <p>
-                        The data is separated into:
-                    <ul>
-                        <li>Training</li>
-                        <li>Validation</li>
-                        <li>Test</li>
-                    </ul>
-                    The latter acts as a temporal holdout set to review the model's behavior.
-                    </p>
-                    <div class="bloque-horizontal">
-                        <div class="imagen">
-                            <img src="{{url_for('static',filename='iconos.jpg')}}" alt="Iconos" width="400px">
-                        </div>
-
-                            <div class="texto">
-                                <h3 id="seleccion">3. Variable Selection and Control </h3>
-                            <p>
-                                Using the <strong>GRMlab</strong> tool, variables are preselected.
-                                Afterwards, unstable variables (data drift) are identified and removed.
-                                Finally, using the <strong>Mercury</strong> tool, model overfitting is controlled,
-                                preventing performance deterioration.
-                            </p>
-                            </div>
-                    </div>
-
-
-                    <h3 id="modelacion">4. Modeling </h3>
-                    <p>
-                        Three types of models are built:
-                    <ul>
-                        <li>
-                            <p>
-                                <strong>Baseline Model:</strong> integrates traditional methodologies that allow
-                                referencing the minimum expected performance.
-                            </p>
-                        </li>
-                        <li>
-                            <p>
-                                <strong>Complex non-productionizable model:</strong> <strong>AutoGluon</strong>
-                                is used to generate code pipelines automatically from the data,
-                                producing an efficient and high-performing model, but not suitable for production
-                                integration due to its lack of transparency and interpretability.
-                            </p>
-                        </li>
-                        <li>
-                            <p>
-                                <strong>Production candidate model:</strong> represents a balance between the type of
-                                algorithm, variable selection, and hyperparameter optimization.
-                                It also allows the integration of algorithm lists and processing through
-                                time-series cross-validation, ensuring stable performance.
-                            </p>
-                        </li>
-                    </ul>
-
-                    At this stage two key concepts appear:
-                    <ul>
-                        <li>
-                            <p>
-                                <strong>Feature Selection</strong>: techniques such as Permutation Feature Importance
-                                and Recursive Feature Elimination are used to discard redundant variables.
-                            </p>
-                        </li>
-                        <li>
-                            <p>
-                                <strong>Hyperparameter Optimization</strong> using the
-                                <strong>Optuna</strong> framework to maximize AUC, minimize overfitting, and apply
-                                time-series cross-validation.
-                            </p>
-                        </li>
-                    </ul>
-                    </p>
-
-                    <h3 id="evaluacion">5. Model Evaluation</h3>
-                    <p>
-                        To determine the effectiveness of the model, the following tests are carried out:
-                    <ol>
-                        <li>Performance measurement using metrics such as the Gini index, recall, and the confusion matrix.</li>
-                        <li>Evaluation by segments such as product type or financial history.</li>
-                        <li>Stability analysis and deviation index.</li>
-                        <li>Using <strong>Optimal Binning</strong> to discretize the model score, which allows
-                            specific actions depending on the risk level.</li>
-                        <li>Variable impact analysis using the SHAP library.</li>
-                        <li>Bias absence verification.</li>
-                    </ol>
-                    </p>
-
-                    <h3 id="despliegue">6. Deployment and Monitoring</h3>
-                    <p>
-                        Once the tests are passed, the model is implemented in production and monitored for:
-                    <ul>
-                        <li>Performance</li>
-                        <li>Stability</li>
-                        <li>Retraining if necessary</li>
-                    </ul>
-
-                    </p>
+                <div class="col-md-4">
+                    <div class="alert alert-danger">Registro automático de asistencia</div>
                 </div>
-                <div class="seccion">
-                    <h2 id="exito">Why is this case successful?</h2>
-                    <p>
-                        This case is successful because it has a real impact, helps reduce losses, is scalable,
-                        combines performance with interpretability, and dynamically adapts to changes
-                        in the financial market.
-                    </p>
+
+                <div class="col-md-4">
+                    <div class="alert alert-primary">Autenticación bancaria</div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="alert alert-dark">Etiquetado en redes sociales</div>
                 </div>
 
             </div>
 
+            <h3 class="mt-4">Conclusión</h3>
+            <div class="alert alert-primary">
+                El reconocimiento facial demuestra cómo un caso de uso de Machine Learning puede transformar datos
+                visuales en sistemas inteligentes capaces de identificar personas de manera rápida, segura y
+                automatizada.
+            </div>
+
         </div>
     </div>
-</body>
 
+</div>
+
+</body>
 </html>
