@@ -6,14 +6,15 @@ app = Flask(__name__)
 def home():
     return render_template('index.html')
 
-@app.route('/FirstPage')
-def firstPage():
-    return render_template('index.html')
+@app.route('/SG')
+def sg_page():
+    return render_template('Sergio.html')
+
+@app.route('/JM')
+def jm_page():
+    return render_template('jennifer.html', titulo = "First Page",
+                           des = "Machine Learning Class")
 
 if __name__ == '__main__':
     app.run(debug=True)
 
-@app.route('/JM')
-def home():
-    return render_template('index.html', titulo = "First Page",
-                           des = "Machine Learning Class")
