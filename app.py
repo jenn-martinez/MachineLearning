@@ -12,3 +12,8 @@ def firstPage():
 
 if __name__ == '__main__':
     app.run(debug=True)
+
+@app.route('/JM')
+def home():
+    return render_template('index.html', titulo = "First Page",
+                           des = "Machine Learning Class")
