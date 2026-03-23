@@ -10,9 +10,9 @@ def home():
 def sg_page():
     return render_template('Sergio.html')
 
-@app.route('/JM')
+@app.route('/BBVA')
 def jm_page():
-    return render_template('jennifer.html', titulo = "First Page",
+    return render_template('BBVAPipeline.html', titulo = "Case One",
                            des = "Machine Learning Class")
 
 @app.route('/MD')
