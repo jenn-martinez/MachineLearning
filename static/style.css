@@ -59,12 +59,12 @@ body {
             padding:  30px;
         }
 
-        .contenido {
+        .content {
             max-width: 1000px;
             margin: 0 auto;
         }
 
-        .titulo {
+        .title {
             position: relative;
             background-image: url("../static/computador.jpg");
             background-size: cover;
@@ -86,7 +86,7 @@ body {
             z-index: 1;
         }
 
-        .titulo h1 {
+        .title h1 {
             position: relative;
             z-index: 2;
             font-size: 32px;
@@ -103,16 +103,16 @@ body {
             color: #1a1a1a;
         }
 
-        .seccion {
+        .section {
             margin-top: 30px;
             font-size: 20px;
         }
 
-        .seccion:hover {
+        .section:hover {
             box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
         }
 
-        .bloque-horizontal {
+        .horizontal-block {
             display: flex;
             align-items: center;
             gap: 40px;
@@ -124,7 +124,7 @@ body {
             display: block;
         }
 
-        .texto{
+        .text{
             flex: 1;
         }
 

@@ -9,42 +9,48 @@
 </head>
 
 <body>
-    <!-- Barra superior-->
     <div class="header">
         Machine Learning: Pipeline BBVA
     </div>
 
-    <!-- Diseño -->
     <div class="layout">
         <div class="sidebar">
             <h3>Sections</h3>
             <ul>
-                <li><a href="#problema">Problem to solve</a></li>
-                <li><a href="#modelo">Model</a></li>
-                <li><a href="#clasificacion">Types of models according to the client's situation</a></li>
+                <li><a href="#problem">Problem Description</a></li>
+                <li><a href="#model">Type of Machine Learning</a></li>
+                <li><a href="#clasification">Classification and Types of models according to the client's situation</a></li>
                 <li>
-                    <a href="#estructura">Structure</a>
+                    <a href="#Data"> Dates</a>
                     <ol>
-                        <li><a href="#ETL">ETL Dataset Construction</a></li>
-                        <li><a href="#datos">Data Split</a></li>
-                        <li><a href="#seleccion">Variable Selection and Control</a></li>
-                        <li><a href="#modelacion">Modeling</a></li>
-                        <li><a href="#evaluacion">Model Evaluation</a></li>
-                        <li><a href="#despliegue">Deployment and Monitoring</a></li>
+                        <ul>
+                        <li><a href="#InputData"> Input Data</a></li>
+                        <li><a href="#OutputData"> Expected Output</a></li>
+                        </ul>
                     </ol>
                 </li>
-                <li><a href="#exito">Why is this case successful?</a></li>
+                <li>
+                    <a href="#structure">Structure management</a>
+                    <ol>
+                        <li><a href="#ETL">ETL Dataset Construction</a></li>
+                        <li><a href="#dateSplit">Data Split</a></li>
+                        <li><a href="#selection">Variable Selection and Control</a></li>
+                        <li><a href="#modeling">Modeling</a></li>
+                        <li><a href="#evaluation">Model Evaluation</a></li>
+                        <li><a href="#deployment">Deployment and Monitoring</a></li>
+                    </ol>
+                </li>
+                <li><a href="#win">Real world relevance</a></li>
             </ul>
         </div>
 
         <div class="main">
-            <div class="contenido">
-                <div class="titulo">
+            <div class="content">
+                <div class="title">
                     <div class="overlay"></div>
                     <h1>Use Case: Predictive model for early debt resolution, BBVA Bank</h1>
                 </div>
-                <div class="seccion">
-                    <!-- Descripción-->
+                <div class="section">
                     <p>
                         This is a predictive model created by the BBVA AI Factory division of BBVA Bank
                         with the aim of improving early debt management and personalizing it according to each case.
@@ -52,8 +58,8 @@
                 </div>
                 <hr>
 
-                <div class="seccion">
-                    <h2 id="problema"> Problem to solve </h2>
+                <div class="section">
+                    <h2 id="problem"> Problem Description </h2>
                     <p>
                         When a customer enters a delinquency state due to financial difficulties, both the customer
                         and the bank are affected.
@@ -63,18 +69,24 @@
                     </p>
                 </div>
 
-                <div class="seccion">
-                    <h2 id="modelo"> Model</h2>
+                <div class="section">
+                    <h2 id="model"> Type of Machine Learning</h2>
                     <p>
-                        The solution is based on a pipeline that integrates traditional credit risk analysis,
-                        supervised learning algorithms,
-                        automation of training and validation processes,
-                        and classifies customers according to their debt and possible evolution.
+                        This model is a pipeline that uses <strong> supervised learning </strong>because it uses historical data, 
+                        where the outcome whether the customer pays or not is already known.
+                    </p>
+                    <p>
+                        Therefore, it learns patterns from this labeled data to make predictions about new customers.
+                    </p>
+                    <p>
+                        It is a <strong>classification model </strong> because it assigns each customer a risk category, allowing the bank 
+                        to decide on the appropriate recovery strategy.
+                        This customer classification is performed as follows:
                     </p>
                 </div>
 
-                <div class="seccion">
-                    <h2 id="clasificacion">Types of models according to the client's situation</h2>
+                <div class="section">
+                    <h2 id="clasification">Classification and Types of models according to the client's situation</h2>
                     <p>
                         They are divided into <strong>4 models</strong> according to the delinquency status.
                     </p>
@@ -83,22 +95,39 @@
                         This segmentation makes it possible to adapt recovery strategies according to the customer profile.
                     </p>
                 </div>
+                <div class="section">
+                    <h2 id="Data">Dates</h2>
+                    <h3 id="InputData"> Input Data</h3>
+                    <p>
+                        The input data used by the model consists of data labeled according to the different factors 
+                        that can influence payment compliance. These are divided into the following variables:
+                        <ul>
+                            <li>Sociodemographic data (age, income, employmente status)</li>
+                            <li>Debt status</li>
+                            <li>Payment behavior</li>
+                            <li>Financial history</li>
+                        </ul>
+                    </p>
+                    <h3 id="OutputData"> Expected Output</h3>
+                    <p>
+                        The model is designed to produce data that allows the bank to determine which model is 
+                        appropriate for each client. They are divided into:
+                        <ul>
+                            <li>Probability of repayment</li>
+                            <li>Risk classification</li>
+                            <li>Recommended actions</li>
+                        </ul>
+                    </p>
+                </div>
 
-                <div class="seccion">
-                    <h2 id="estructura">Structure</h2>
+                <div class="section">
+                    <h2 id="structure">Structure management</h2>
                     <h3 id="ETL"> 1. ETL Dataset Construction </h3>
                     <p>
-                        The table is created through an extraction, transformation, and loading (ETL) process using
-                        variables:
-                    <ul>
-                        <li>Sociodemographic</li>
-                        <li>Debt status</li>
-                        <li>Payment behavior</li>
-                        <li>Financial history</li>
-                    </ul>
-                    </p>
+                        The table is created through an extract, transform, and load (ETL) process using the 
+                        input data as variables.
 
-                    <h3 id="datos">2. Data Split </h3>
+                    <h3 id="dateSplit">2. Data Split </h3>
                     <p>
                         The data is separated into:
                     <ul>
@@ -108,13 +137,13 @@
                     </ul>
                     The latter acts as a temporal holdout set to review the model's behavior.
                     </p>
-                    <div class="bloque-horizontal">
+                    <div class="horizontal-block">
                         <div class="imagen">
                             <img src="{{url_for('static',filename='iconos.jpg')}}" alt="Iconos" width="400px">
                         </div>
 
-                            <div class="texto">
-                                <h3 id="seleccion">3. Variable Selection and Control </h3>
+                            <div class="text">
+                                <h3 id="selection">3. Variable Selection and Control </h3>
                             <p>
                                 Using the <strong>GRMlab</strong> tool, variables are preselected.
                                 Afterwards, unstable variables (data drift) are identified and removed.
@@ -125,7 +154,7 @@
                     </div>
 
 
-                    <h3 id="modelacion">4. Modeling </h3>
+                    <h3 id="modeling">4. Modeling </h3>
                     <p>
                         Three types of models are built:
                     <ul>
@@ -171,7 +200,7 @@
                     </ul>
                     </p>
 
-                    <h3 id="evaluacion">5. Model Evaluation</h3>
+                    <h3 id="evaluation">5. Model Evaluation</h3>
                     <p>
                         To determine the effectiveness of the model, the following tests are carried out:
                     <ol>
@@ -185,7 +214,7 @@
                     </ol>
                     </p>
 
-                    <h3 id="despliegue">6. Deployment and Monitoring</h3>
+                    <h3 id="deployment">6. Deployment and Monitoring</h3>
                     <p>
                         Once the tests are passed, the model is implemented in production and monitored for:
                     <ul>
@@ -196,12 +225,15 @@
 
                     </p>
                 </div>
-                <div class="seccion">
-                    <h2 id="exito">Why is this case successful?</h2>
+                <div class="section">
+                    <h2 id="win">Real world relevance</h2>
                     <p>
-                        This case is successful because it has a real impact, helps reduce losses, is scalable,
-                        combines performance with interpretability, and dynamically adapts to changes
-                        in the financial market.
+                        This case is relevant in real-world situations because, in addition to being successful, it allows banks to reduce 
+                        losses and improve customer management based on data.
+                    </p>
+                    <p>
+                        Furthermore, by being scalable and combining performance with interpretability, it adapts dynamically to changes in 
+                        the financial market.
                     </p>
                 </div>
 

@@ -4,7 +4,7 @@ app = Flask(__name__)
 
 @app.route('/')
 def home():
-    return render_template('index.html')
+    return render_template('mainMenu.html')
 
 @app.route('/SG')
 def sg_page():
@@ -23,7 +23,7 @@ def md_page():
         return f"<h1>Error en /casodeuso</h1><p>{str(e)}</p>"
 
 @app.route('/SB')
-def firstPage():
+def sb_page():
     return render_template('santiago.html')
 
 if __name__ == '__main__':
