@@ -7,12 +7,11 @@
 </head>
 <body>
 
-{% include "navbar.html"%}
+{% include "navbar.html" %}
 
 <div class="container mt-4">
 
     <h1>Linear Regression - Application</h1>
-
     <hr>
 
     <h3>Problem Description</h3>
@@ -27,60 +26,63 @@
         during the Tokyo 2021 Olympic Games.
     </p>
 
-    <h3>Variables Used</h3>
-    <ul>
-        <li><strong>Independent Variables:</strong> Gold, Silver, Bronze</li>
-        <li><strong>Dependent Variable:</strong> Total Medals</li>
-    </ul>
-
     <h3>Data Preparation</h3>
     <p>
         The dataset was cleaned and processed by selecting relevant columns and ensuring that all values
         were numeric. Missing values were checked and handled before training the model.
     </p>
 
-    <h3>Regression Graph</h3>
-    <p>
-        The regression graph shows the relationship between the variables and helps visualize how well
-        the model fits the data.
-    </p>
-
-    <img src="{{ url_for('static', filename='graph.png') }}" class="img-fluid" alt="Regression Graph">
-
-    <h3 class="mt-4">Interpretation of Results</h3>
-    <p>
-        The model indicates a strong relationship between the number of gold, silver, and bronze medals
-        and the total number of medals. As these values increase, the predicted total medals also increase.
-    </p>
-
     <hr>
 
-    <h3>Prediction Form (Flask)</h3>
+    <h3>Prediction Form</h3>
+    <p>Select the independent variable (X), the dependent variable (Y), and enter a value to predict.</p>
 
     <form action="{{ url_for('predict') }}" method="POST">
 
         <div class="mb-3">
-            <label>Gold Medals</label>
-            <input type="number" name="gold" class="form-control" required>
+            <label class="form-label"><strong>Independent Variable (X)</strong></label>
+            <select name="x_variable" class="form-select" required>
+                <option value="" disabled selected>Select X variable</option>
+                {% for col in columns %}
+                    <option value="{{ col }}" {% if x_col == col %}selected{% endif %}>{{ col }}</option>
+                {% endfor %}
+            </select>
         </div>
 
         <div class="mb-3">
-            <label>Silver Medals</label>
-            <input type="number" name="silver" class="form-control" required>
+            <label class="form-label"><strong>Dependent Variable (Y)</strong></label>
+            <select name="y_variable" class="form-select" required>
+                <option value="" disabled selected>Select Y variable</option>
+                {% for col in columns %}
+                    <option value="{{ col }}" {% if y_col == col %}selected{% endif %}>{{ col }}</option>
+                {% endfor %}
+            </select>
         </div>
 
         <div class="mb-3">
-            <label>Bronze Medals</label>
-            <input type="number" name="bronze" class="form-control" required>
+            <label class="form-label"><strong>Enter value for X to predict Y</strong></label>
+            <input type="number" step="any" name="input_value" class="form-control"
+                   placeholder="e.g. 10" value="{{ input_value or '' }}" required>
         </div>
 
         <button type="submit" class="btn btn-success">Predict</button>
     </form>
 
-    {% if prediction %}
-        <div class="alert alert-info mt-3">
-            <strong>Prediction Result:</strong> {{ prediction }} total medals
+    {% if prediction is not none %}
+        <div class="alert alert-info mt-4">
+            <strong>Prediction Result:</strong> If <em>{{ x_col }}</em> = {{ input_value }},
+            then <em>{{ y_col }}</em> is approximately <strong>{{ prediction }}</strong>
         </div>
+
+        <h3 class="mt-4">Regression Graph</h3>
+        <p>The graph shows the relationship between <strong>{{ x_col }}</strong> and <strong>{{ y_col }}</strong>.</p>
+        <img src="{{ url_for('static', filename='graph.png') }}" class="img-fluid" alt="Regression Graph">
+
+        <h3 class="mt-4">Interpretation of Results</h3>
+        <p>
+            The model found a linear relationship between <strong>{{ x_col }}</strong> and <strong>{{ y_col }}</strong>.
+            The red line represents the regression line fitted to the data, while the blue dots represent the real values.
+        </p>
     {% endif %}
 
 </div>
