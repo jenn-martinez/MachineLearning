@@ -41,9 +41,9 @@ def home():
     return render_template('mainMenu.html')
 
 
-@app.route('/SG')
-def sg_page():
-    return render_template('Sergio.html')
+@app.route('/BankFraud')
+def bank_page():
+    return render_template('BankFraud.html')
 
 
 @app.route('/BBVA')
@@ -53,17 +53,17 @@ def bbva_page():
                            des="Machine Learning Class")
 
 
-@app.route('/MD')
-def md_page():
+@app.route('/FacialRecognition')
+def facial_page():
     try:
-        return render_template('medina.html')
+        return render_template('FacialReconogized.html')
     except Exception as e:
         return f"<h1>Error en /casodeuso</h1><p>{str(e)}</p>"
 
 
 @app.route('/SB')
-def sb_page():
-    return render_template('santiago.html')
+def customerChurn_page():
+    return render_template('customerChurn.html')
 
 @app.route('/linearRegression/concepts')
 def linealConcept():
