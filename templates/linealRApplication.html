@@ -2,14 +2,88 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lineal Regression Application</title>
+    <title>Linear Regression Application</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
-    {% include "navbar.html"%}
-    <h1>Lineal Application</h1>
-    
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+{% include "navbar.html"%}
+
+<div class="container mt-4">
+
+    <h1>Linear Regression - Application</h1>
+
+    <hr>
+
+    <h3>Problem Description</h3>
+    <p>
+        The objective of this project is to predict the total number of Olympic medals a country can win
+        based on the number of gold, silver, and bronze medals.
+    </p>
+
+    <h3>Dataset Explanation</h3>
+    <p>
+        The dataset used comes from Kaggle and contains information about countries and their medal counts
+        during the Tokyo 2021 Olympic Games.
+    </p>
+
+    <h3>Variables Used</h3>
+    <ul>
+        <li><strong>Independent Variables:</strong> Gold, Silver, Bronze</li>
+        <li><strong>Dependent Variable:</strong> Total Medals</li>
+    </ul>
+
+    <h3>Data Preparation</h3>
+    <p>
+        The dataset was cleaned and processed by selecting relevant columns and ensuring that all values
+        were numeric. Missing values were checked and handled before training the model.
+    </p>
+
+    <h3>Regression Graph</h3>
+    <p>
+        The regression graph shows the relationship between the variables and helps visualize how well
+        the model fits the data.
+    </p>
+
+    <img src="{{ url_for('static', filename='graph.png') }}" class="img-fluid" alt="Regression Graph">
+
+    <h3 class="mt-4">Interpretation of Results</h3>
+    <p>
+        The model indicates a strong relationship between the number of gold, silver, and bronze medals
+        and the total number of medals. As these values increase, the predicted total medals also increase.
+    </p>
+
+    <hr>
+
+    <h3>Prediction Form (Flask)</h3>
+
+    <form action="{{ url_for('predict') }}" method="POST">
+
+        <div class="mb-3">
+            <label>Gold Medals</label>
+            <input type="number" name="gold" class="form-control" required>
+        </div>
+
+        <div class="mb-3">
+            <label>Silver Medals</label>
+            <input type="number" name="silver" class="form-control" required>
+        </div>
+
+        <div class="mb-3">
+            <label>Bronze Medals</label>
+            <input type="number" name="bronze" class="form-control" required>
+        </div>
+
+        <button type="submit" class="btn btn-success">Predict</button>
+    </form>
+
+    {% if prediction %}
+        <div class="alert alert-info mt-3">
+            <strong>Prediction Result:</strong> {{ prediction }} total medals
+        </div>
+    {% endif %}
+
+</div>
+
 </body>
 </html>
