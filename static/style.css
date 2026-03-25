@@ -4,16 +4,26 @@ body {
             background-color: #f4f6f9;
         }
 
-        .header {
+        .titleOne {
             background-color: #cb1b1b;
             color: white;
             padding: 15px;
             text-align: center;
             font-size: 28px;
             font-weight: bold;
-            position: sticky;
             top: 0;
             z-index: 1000;
+        }
+
+        .titleMainMenu {
+            background-color: #102386;
+            color: white;
+            padding: 15px;
+            text-align: center;
+            font-size: 28px;
+            font-weight: bold;
+            border-radius: 8px;
+            margin-bottom: 20px;
         }
 
         .layout {
@@ -35,8 +45,13 @@ body {
         }
 
         .sidebar ul {
-            list-style: none;
-            padding: 0;
+            list-style: disc;
+            padding-left: 20px;
+        }
+
+        .sidebar ul ul {
+            list-style: circle;
+            margin-left: 15px;
         }
 
         .sidebar li {
@@ -50,6 +65,32 @@ body {
         }
 
         .sidebar a:hover {
+            color: #000;
+        }
+
+        .centeredContent{
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20 px;
+        }
+
+        .centeredContent ul{
+            list-style: disc;
+            padding-left: 20px;
+        }
+
+        .centeredContent ul ul{
+            list-style: circle;
+            margin-left: 15px;
+        }
+
+        .centeredContent a {
+            text-decoration: none;
+            color: #333;
+            font-weight: normal;
+        }
+
+        .centeredContent a:hover {
             color: #000;
         }
 
