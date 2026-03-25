@@ -3,87 +3,121 @@
 <head>
     <meta charset="UTF-8">
     <title>Linear Regression Application</title>
+    <link rel = "stylesheet" href="{{url_for('static',filename='style.css')}}">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
+    {% include "navbar.html"%}
+    <div class="main">
+        <div class="content">
+            <div class="title">
+                <h1> Lineal Regression Concepts</h1>
+            </div>
 
-{% include "navbar.html"%}
+            <h1>What is linear regression?</h1>
+            <p>
+                Linear regression is a supervised learning algorithm used to model the relationship 
+                between a <strong>dependent variable</strong> and one or more </strong>independent variables</strong>.
+                It is characterized by:
+            </p>
+            <ul>
+                <li>It assumes a linear relationship between input and output.</li>
+                <li>It uses a line of best fit to make predictions.</li>
+                <li>It is used for forecasting, trend analysis, and predictive modeling.</li>
+            </ul>
 
-<div class="container mt-4">
+            <h1></h1>
 
-    <h1>Linear Regression - Application</h1>
+            <h1>Independent and dependent</h1>
+            <h2>Dependent variable</h2>
+            <p>
+                The dependent variable is the one whose outcome is conditioned by the independent variable. 7
+                This variable gives rise to what we want to predict.
+            </p>
+            <p>
+                It is usually assigned the letter <strong>Y</strong> as an identifier
+            </p>
+            <h2>Independent variable</h2>
+            <p>
+                The independent variable is the data or factor used to make predictions.
+                It remains constant and impacts the dependent variable.The independent variable is the data or factor used to make predictions.
+                This does not change.
+            </p>
+            <p>
+                It is usually assigned the letter <strong>X</strong> as an identifier
+            </p>
 
-    <hr>
+            <h1>Training data</h1>
 
-    <h3>Problem Description</h3>
-    <p>
-        The objective of this project is to predict the total number of Olympic medals a country can win
-        based on the number of gold, silver, and bronze medals.
-    </p>
+            <p>
+                Training data is the information given to the machine learning model so that it learns to make predictions, 
+                recognize patterns, and generate content.
 
-    <h3>Dataset Explanation</h3>
-    <p>
-        The dataset used comes from Kaggle and contains information about countries and their medal counts
-        during the Tokyo 2021 Olympic Games.
-    </p>
+                Training data is typically found in data sheets that contain characteristics describing the data, called attributes.
+                For example, a data sheet on factory equipment includes attributes such as temperature or repair time.
+            </p>
 
-    <h3>Variables Used</h3>
-    <ul>
-        <li><strong>Independent Variables:</strong> Gold, Silver, Bronze</li>
-        <li><strong>Dependent Variable:</strong> Total Medals</li>
-    </ul>
+            <p>
+                For a model to be considered "well trained", it must have processed a large amount of data and that data must be of high quality.
+            </p>
 
-    <h3>Data Preparation</h3>
-    <p>
-        The dataset was cleaned and processed by selecting relevant columns and ensuring that all values
-        were numeric. Missing values were checked and handled before training the model.
-    </p>
+            <h1>Regression Line</h1>
+            <p>
+                The regression line is the best-fit straight line that represents the relationship between variables. 
+                It minimizes the difference between actual values and predicted values.
+                This line helps us predict the dependent variable for new and unknown data.
+            </p>
+            
+            <h1>Slope and intercept</h1>
+            <p>
+                For simple linear regression, the straight line formula is used.
+            </p>
+            <h2>
+                <strong>y= mx + b </strong>
+            </h2>
+            <p>
+                The <strong>slope (m)</strong> indicates how much Y changes when X increases by one unit.
+                The <strong>intercept (b)</strong> is the value of Y when X = 0.
+            </p>
 
-    <h3>Regression Graph</h3>
-    <p>
-        The regression graph shows the relationship between the variables and helps visualize how well
-        the model fits the data.
-    </p>
+            <h1>Assumptions about linear regression </h1>
+            <ol>
+                <li>The relationship between X and Y is a straight line</li>
+                <li>The errors do not affect each other</li>
+                <li>The error should have the same dispersion among the data</li>
+                <li>The errors must have a normal distribution</li>
+            </ol>
 
-    <img src="{{ url_for('static', filename='graph.png') }}" class="img-fluid" alt="Regression Graph">
+            <h1>Gradiente descent</h1>
+            <p>
+                It is an optimization technique used to minimize prediction error. It works by repeatedly 
+                adjusting parameters to reduce the difference.
+            </p>
+            <h2>How it works</h2>
+            <ul>
+                <li>Assign random values ​for the slope and intercept</li>
+                <li>Calculate the error between the predicted and actual values</li>
+                <li>Calculate how much each value contributes to the error</li>
+                <li>Update the parameters to reduce the error</li>
+                <li>Repeat the process until the error is reduced as much as possible.</li>
+            </ul>>
 
-    <h3 class="mt-4">Interpretation of Results</h3>
-    <p>
-        The model indicates a strong relationship between the number of gold, silver, and bronze medals
-        and the total number of medals. As these values increase, the predicted total medals also increase.
-    </p>
-
-    <hr>
-
-    <h3>Prediction Form (Flask)</h3>
-
-    <form action="{{ url_for('predict') }}" method="POST">
-
-        <div class="mb-3">
-            <label>Gold Medals</label>
-            <input type="number" name="gold" class="form-control" required>
+            <h1>Example of application</h1>
+            <p>
+                A real-life example is advertising expenditure and revenue.
+                Where:
+            </p>
+            <ul>
+                <li>The independent variable is advertising investment.</li>
+                <li>The dependent variable is revenue</li>
+            </ul>
+            <p>The regression model would be as follows:</p>
+            <p> Income = B0 + B1(advertising investment)</p>
+            <p> Where b0 is the total revenue without advertising investment
+                B1 is the average revenue after increasing advertising
+            </p>
         </div>
-
-        <div class="mb-3">
-            <label>Silver Medals</label>
-            <input type="number" name="silver" class="form-control" required>
-        </div>
-
-        <div class="mb-3">
-            <label>Bronze Medals</label>
-            <input type="number" name="bronze" class="form-control" required>
-        </div>
-
-        <button type="submit" class="btn btn-success">Predict</button>
-    </form>
-
-    {% if prediction %}
-        <div class="alert alert-info mt-3">
-            <strong>Prediction Result:</strong> {{ prediction }} total medals
-        </div>
-    {% endif %}
-
-</div>
-
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

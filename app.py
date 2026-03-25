@@ -47,7 +47,7 @@ def sg_page():
 
 
 @app.route('/BBVA')
-def jm_page():
+def bbva_page():
     return render_template('BBVAPipeline.html',
                            titulo="Case One",
                            des="Machine Learning Class")
@@ -65,8 +65,6 @@ def md_page():
 def sb_page():
     return render_template('santiago.html')
 
-
-# 🔥 NUEVAS RUTAS (OBLIGATORIAS)
 @app.route('/linearRegression/concepts')
 def linealConcept():
     return render_template('linealRConcepts.html')
@@ -77,7 +75,6 @@ def linealApplication():
     return render_template('linealRApplication.html')
 
 
-# 🔥 PREDICCIÓN
 @app.route('/predict', methods=['POST'])
 def predict():
     gold = float(request.form['gold'])

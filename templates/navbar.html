@@ -21,10 +21,21 @@
                         </a>
 
                         <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="{{ url_for('jm_page') }}">BBVA Pipeline</a></li>
+                            <li><a class="dropdown-item" href="{{ url_for('bbva_page') }}">BBVA Pipeline</a></li>
                             <li><a class="dropdown-item" href="{{ url_for('sg_page') }}">Sergio</a></li>
                             <li><a class="dropdown-item" href="{{ url_for('md_page') }}">Medina</a></li>
                             <li><a class="dropdown-item" href="{{ url_for('sb_page') }}">Santiago</a></li>
+                        </ul>
+                    </li>
+
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                            Lineal Regression
+                        </a>
+
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="{{ url_for('linealConcept') }}">Concepts</a></li>
+                            <li><a class="dropdown-item" href="{{ url_for('linealApplication') }}">Application</a></li>
                         </ul>
                     </li>
                 </ul>
