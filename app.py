@@ -5,21 +5,18 @@ import matplotlib.pyplot as plt
 
 app = Flask(__name__)
 
-
+# ================== DATASET ==================
 df = pd.read_csv('medals.csv')
 
-
-print(df.columns)
-
-
+# VARIABLES CORRECTAS
 X = df[['Gold Medal', 'Silver Medal', 'Bronze Medal']]
 y = df['Total']
 
-
+# MODELO
 model = LinearRegression()
 model.fit(X, y)
 
-
+# ================== GRÁFICA ==================
 plt.figure()
 
 x = df['Gold Medal']
@@ -37,6 +34,7 @@ plt.savefig('static/graph.png')
 plt.close()
 
 
+# ================== RUTAS ==================
 
 @app.route('/')
 def home():
@@ -50,13 +48,17 @@ def sg_page():
 
 @app.route('/BBVA')
 def jm_page():
-    return render_template('BBVAPipeline.html', titulo="Case One",
+    return render_template('BBVAPipeline.html',
+                           titulo="Case One",
                            des="Machine Learning Class")
 
 
 @app.route('/MD')
 def md_page():
-    return render_template('medina.html')
+    try:
+        return render_template('medina.html')
+    except Exception as e:
+        return f"<h1>Error en /casodeuso</h1><p>{str(e)}</p>"
 
 
 @app.route('/SB')
@@ -64,6 +66,7 @@ def sb_page():
     return render_template('santiago.html')
 
 
+# 🔥 NUEVAS RUTAS (OBLIGATORIAS)
 @app.route('/linearRegression/concepts')
 def linealConcept():
     return render_template('linealRConcepts.html')
@@ -74,6 +77,7 @@ def linealApplication():
     return render_template('linealRApplication.html')
 
 
+# 🔥 PREDICCIÓN
 @app.route('/predict', methods=['POST'])
 def predict():
     gold = float(request.form['gold'])
@@ -86,6 +90,6 @@ def predict():
                            prediction=round(prediction, 2))
 
 
-
+# ================== RUN ==================
 if __name__ == '__main__':
     app.run(debug=True)
