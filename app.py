@@ -15,26 +15,29 @@ df = pd.read_csv('medals.csv')
 def home():
     return render_template('mainMenu.html')
 
-@app.route('/SG')
-def sg_page():
+
+@app.route('/BankFraud')
+def bank_page():
     return render_template('BankFraud.html')
 
+
 @app.route('/BBVA')
-def jm_page():
+def bbva_page():
     return render_template('BBVAPipeline.html',
                            titulo="Case One",
                            des="Machine Learning Class")
 
-@app.route('/MD')
-def md_page():
+
+@app.route('/FacialRecognition')
+def facial_page():
     try:
-        return render_template('medina.html')
+        return render_template('FacialReconogized.html')
     except Exception as e:
         return f"<h1>Error en /casodeuso</h1><p>{str(e)}</p>"
 
 @app.route('/SB')
-def sb_page():
-    return render_template('santiago.html')
+def customerChurn_page():
+    return render_template('customerChurn.html')
 
 @app.route('/linearRegression/concepts')
 def linealConcept():
@@ -46,7 +49,6 @@ def linealApplication():
     columns = list(df.select_dtypes(include='number').columns)
     return render_template('linealRApplication.html', columns=columns)
 
-# ================== PREDICCION ==================
 @app.route('/predict', methods=['POST'])
 def predict():
     x_col = request.form['x_variable']

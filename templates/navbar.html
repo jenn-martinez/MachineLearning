@@ -21,10 +21,21 @@
                         </a>
 
                         <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="{{ url_for('jm_page') }}">BBVA Pipeline</a></li>
-                            <li><a class="dropdown-item" href="{{ url_for('sg_page') }}">BankFraud</a></li>
-                            <li><a class="dropdown-item" href="{{ url_for('md_page') }}">Medina</a></li>
-                            <li><a class="dropdown-item" href="{{ url_for('sb_page') }}">Santiago</a></li>
+                            <li><a class="dropdown-item" href="{{ url_for('bbva_page') }}">BBVA Pipeline</a></li>
+                            <li><a class="dropdown-item" href="{{ url_for('bank_page') }}">Bank Fraud</a></li>
+                            <li><a class="dropdown-item" href="{{ url_for('facial_page') }}">Facial Recognition</a></li>
+                            <li><a class="dropdown-item" href="{{ url_for('customerChurn_page') }}">Customer Chrun</a></li>
+                        </ul>
+                    </li>
+
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                            Supervised Learning
+                        </a>
+
+                        <ul class="dropdown-menu">
+                           <li><a class="dropdown-item" href="{{ url_for('linealConcept') }}">Linear Regression: Concepts</a></li>
+                            <li><a class="dropdown-item" href="{{ url_for('linealApplication') }}">Linear Regression: Application</a></li>
                         </ul>
                     </li>
                 </ul>
