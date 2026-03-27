@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Logistic Regression Concepts</title>
+    <link rel="stylesheet" href="{{url_for('static',filename='style.css')}}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    {% include "navbar.html"%}
+<div class="layout">
+    <div class="sidebar">
+        <h3>Sections</h3>
+        <ul>
+            <li><a href="#what">What is logistic regression?</a></li>
+            <li>
+                <a href="#types">Types of classification</a>
+                <ol>
+                    <ul>
+                        <li><a href="#binary">Binary classification</a></li>
+                        <li><a href="#multiclass">Multiclass classification</a></li>
+                    </ul>
+                </ol>
+            </li>
+            <li><a href="#sigmoid">Sigmoid function</a></li>
+            <li><a href="#decision">Decision boundary</a></li>
+            <li><a href="#equation">Model equation</a></li>
+            <li><a href="#assumptions">Assumptions about logistic regression</a></li>
+            <li><a href="#vs">Linear vs Logistic regression</a></li>
+            <li><a href="#example">Example of application</a></li>
+        </ul>
+    </div>
+    <div class="main">
+        <div class="content">
+            <div class="titleOne">
+                <h1>Logistic Regression Concepts</h1>
+            </div>
+            <div class="section">
+
+                <h1 id="what">What is logistic regression?</h1>
+                <p>
+                    Logistic regression is a supervised learning algorithm used to solve 
+                    <strong>classification</strong> problems. Unlike linear regression, it does not 
+                    predict a continuous number but instead predicts the 
+                    <strong>probability</strong> that a sample belongs to a specific class (0 or 1).
+                    It is characterized by:
+                </p>
+                <ul>
+                    <li>It predicts probabilities between 0 and 1 using the sigmoid function.</li>
+                    <li>It classifies data into discrete categories (Yes/No, Elite/Average).</li>
+                    <li>It is used for spam detection, medical diagnosis, and player classification.</li>
+                </ul>
+
+                <h1></h1>
+
+                <h1 id="types">Types of classification</h1>
+                <h2 id="binary">Binary classification</h2>
+                <p>
+                    Binary classification predicts one of two possible outcomes.
+                    The model outputs a probability and then assigns a class based on a threshold (usually 0.5).
+                </p>
+                <p>
+                    Example: Is a FIFA 24 player <strong>Elite</strong> (Overall ≥ 80)? → Yes (1) or No (0).
+                </p>
+                <h2 id="multiclass">Multiclass classification</h2>
+                <p>
+                    Multiclass classification predicts one of three or more possible outcomes.
+                    It extends binary logistic regression by using techniques like One-vs-Rest (OvR).
+                </p>
+                <p>
+                    Example: Classifying a player as <strong>Bronze, Silver, or Gold</strong> tier.
+                </p>
+
+                <h1 id="sigmoid">Sigmoid function</h1>
+                <p>
+                    The sigmoid function is the core of logistic regression. It transforms any real number 
+                    into a value between 0 and 1, interpreted as a probability.
+                </p>
+                <h2>
+                    <strong>p = 1 / (1 + e<sup>-z</sup>)</strong>
+                </h2>
+                <p>
+                    Where <strong>z</strong> is the linear combination of inputs and weights.
+                    If p ≥ 0.5 → class 1 (Elite). If p &lt; 0.5 → class 0 (Average).
+                </p>
+
+                <h1 id="decision">Decision boundary</h1>
+                <p>
+                    The decision boundary is the threshold that separates the two classes.
+                    It is the point where the model switches from predicting class 0 to class 1.
+                </p>
+                <p>
+                    By default the threshold is <strong>0.5</strong>, meaning if the predicted 
+                    probability is greater than 50%, the model classifies the sample as class 1.
+                </p>
+
+                <h1 id="equation">Model equation</h1>
+                <p>
+                    For logistic regression, the model first computes a linear combination:
+                </p>
+                <h2>
+                    <strong>z = β₀ + β₁x₁ + β₂x₂ + ... + βₙxₙ</strong>
+                </h2>
+                <p>
+                    Then applies the sigmoid function to obtain the final probability:
+                </p>
+                <h2>
+                    <strong>p = 1 / (1 + e<sup>-z</sup>)</strong>
+                </h2>
+                <p>
+                    Where β₀ is the intercept and β₁...βₙ are the feature coefficients learned during training.
+                </p>
+
+                <h1 id="assumptions">Assumptions about logistic regression</h1>
+                <ol>
+                    <li>The dependent variable must be binary or categorical</li>
+                    <li>The observations must be independent of each other</li>
+                    <li>There should be little or no multicollinearity among the input features</li>
+                    <li>A large sample size improves the reliability of the model</li>
+                </ol>
+
+                <h1 id="vs">Linear vs Logistic regression</h1>
+                <table class="table table-bordered table-striped mt-3">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>Aspect</th>
+                            <th>Linear Regression</th>
+                            <th>Logistic Regression</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Output</td>
+                            <td>Continuous number</td>
+                            <td>Probability (0 to 1)</td>
+                        </tr>
+                        <tr>
+                            <td>Task</td>
+                            <td>Prediction</td>
+                            <td>Classification</td>
+                        </tr>
+                        <tr>
+                            <td>Function</td>
+                            <td>Straight line (y = mx + b)</td>
+                            <td>S-shaped sigmoid curve</td>
+                        </tr>
+                        <tr>
+                            <td>Example</td>
+                            <td>Predict total Olympic medals</td>
+                            <td>Is FIFA player Elite? Yes/No</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h1 id="example">Example of application</h1>
+                <p>
+                    A real-life example is classifying FIFA 24 players as Elite or Average.
+                    Where:
+                </p>
+                <ul>
+                    <li>The independent variables are Pace, Shooting, Passing and Dribbling.</li>
+                    <li>The dependent variable is whether the player is Elite (Overall ≥ 80)</li>
+                </ul>
+                <p>The logistic regression model would be as follows:</p>
+                <p><strong>z = β₀ + β₁(Pace) + β₂(Shooting) + β₃(Passing) + β₄(Dribbling)</strong></p>
+                <p><strong>p = 1 / (1 + e<sup>-z</sup>)</strong></p>
+                <p>
+                    Where p is the probability of the player being Elite.
+                    If p ≥ 0.5 the model classifies the player as Elite, otherwise as Average.
+                </p>
+
+            </div>
+        </div>
+    </div>
+</div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
