@@ -52,23 +52,21 @@ def linealApplication():
 @app.route('/predict', methods=['POST'])
 def predict():
     x_col = request.form['x_variable']
-    y_col = request.form['y_variable']
     input_value = float(request.form['input_value'])
 
+    # Regresion simple: una sola variable X predice Y fijo (Total)
     X = df[[x_col]]
-    y = df[y_col]
+    y = df['Total']
 
-    # Entrena el modelo con las variables seleccionadas por el usuario
     model = LinearRegression()
     model.fit(X, y)
 
-    # Genera la grafica con las variables elegidas
     plt.figure()
     plt.scatter(df[x_col], y, color='blue', label='Real data')
     plt.plot(df[x_col], model.predict(X), color='red', label='Regression line')
     plt.xlabel(x_col)
-    plt.ylabel(y_col)
-    plt.title(f'Linear Regression: {x_col} vs {y_col}')
+    plt.ylabel('Total')
+    plt.title(f'Simple Linear Regression: {x_col} vs Total')
     plt.legend()
     plt.tight_layout()
     plt.savefig('static/graph.png')
@@ -77,12 +75,14 @@ def predict():
     prediction = model.predict([[input_value]])[0]
 
     columns = list(df.select_dtypes(include='number').columns)
+    columns = [col for col in columns if col != 'Total']
+
     return render_template('linealRApplication.html',
                            columns=columns,
                            prediction=round(prediction, 2),
                            x_col=x_col,
-                           y_col=y_col,
                            input_value=input_value)
+
 
 # ================== RUN ==================
 if __name__ == '__main__':
