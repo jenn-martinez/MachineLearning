@@ -12,46 +12,47 @@ from sklearn.preprocessing import StandardScaler
 app = Flask(__name__)
 
 # ================== DATASET ==================
+
 df = pd.read_csv('medals.csv')
 df_logistic = pd.read_csv('fifa24.csv')
-# ================== RUTAS ==================
+
+# ================== ROUTE ==================
+
 @app.route('/')
 def home():
     return render_template('mainMenu.html')
 
+#---------- USE CASE ----------
 
 @app.route('/BankFraud')
 def bank_page():
-    return render_template('BankFraud.html')
-
+    return render_template('caseUse/BankFraud.html')
 
 @app.route('/BBVA')
 def bbva_page():
-    return render_template('BBVAPipeline.html',
-                           titulo="Case One",
-                           des="Machine Learning Class")
-
+    return render_template('caseUse/BBVAPipeline.html')
 
 @app.route('/FacialRecognition')
 def facial_page():
     try:
-        return render_template('FacialReconogized.html')
+        return render_template('caseUse/FacialRecognized.html')
     except Exception as e:
         return f"<h1>Error en /casodeuso</h1><p>{str(e)}</p>"
 
-@app.route('/SB')
+@app.route('/customerChurn')
 def customerChurn_page():
-    return render_template('customerChurn.html')
+    return render_template('caseUse/customerChurn.html')
+
+#---------- LINEAR REGRESSION ----------
 
 @app.route('/linearRegression/concepts')
 def linealConcept():
-    return render_template('linealRConcepts.html')
+    return render_template('linearRegression/linealRConcepts.html')
 
-# Pasa las columnas del CSV al HTML para los dropdowns
 @app.route('/linearRegression/application')
 def linealApplication():
     columns = list(df.select_dtypes(include='number').columns)
-    return render_template('linealRApplication.html', columns=columns)
+    return render_template('linearRegression/linealRApplication.html', columns=columns)
 
 @app.route('/predict', methods=['POST'])
 def predict():
@@ -81,21 +82,22 @@ def predict():
     columns = list(df.select_dtypes(include='number').columns)
     columns = [col for col in columns if col != 'Total']
 
-    return render_template('linealRApplication.html',
+    return render_template('linearRegression/linealRApplication.html',
                            columns=columns,
                            prediction=round(prediction, 2),
                            x_col=x_col,
                            input_value=input_value)
 
-# ================== LOGISTIC REGRESSION ==================
+#---------- LOGISTIC REGRESSION ----------
+
 @app.route('/logisticRegression/concepts')
 def logisticConcept():
-    return render_template('logisticConcepts.html')
+    return render_template('logisticRegression/logisticConcepts.html')
 
 
 @app.route('/logisticRegression/application')
 def logisticApplication():
-    return render_template('logisticApplication.html')
+    return render_template('logisticRegression/logisticApplication.html')
 
 
 @app.route('/predict_logistic', methods=['POST'])
@@ -158,7 +160,7 @@ def predict_logistic():
     plt.close()
 
     result = "ELITE PLAYER" if pred_class == 1 else "AVERAGE PLAYER"
-    return render_template('logisticApplication.html',
+    return render_template('logisticRegression/logisticApplication.html',
                            result=result,
                            probability=f"{pred_prob:.1%}",
                            pace=pace_input,
@@ -167,6 +169,9 @@ def predict_logistic():
                            dribbling=dribbling_input,
                            train_acc=f"{train_accuracy:.1%}",
                            test_acc=f"{test_accuracy:.1%}")
+
+#---------- CLASSIFICATION PERPECTRON ----------
+
 
 # ================== RUN ==================
 if __name__ == '__main__':
