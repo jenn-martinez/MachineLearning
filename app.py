@@ -203,9 +203,12 @@ def predict_logistic():
                            test_acc=f"{test_accuracy:.1%}")
 
 #---------- CLASSIFICATION PERPCEPTRON ----------
+@app.route('/perceptron/concepts')
+def perceptronConcepts():
+    return render_template('classificationPerceptron/perceptronConcepts.html')
 
 @app.route('/perceptron/application', methods=['GET', 'POST'])
-def perceptron_app():
+def perceptronApp():
 
     #---------- Reparing data ----------
     X, y = prepare_perceptron_data()

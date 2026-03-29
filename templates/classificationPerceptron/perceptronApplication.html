@@ -2,55 +2,176 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name ="viewport" content="width=device-width, initial-scale=1.0">
     <title>Classification Perceptron Application</title>
-    <link rel = "stylesheet" href="{{url_for('static',filename='style.css')}}">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel = "stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <style>
+        body{
+            background-color: #f8f9fa; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        .card { border: none; border-radius: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); margin-bottom: 20px; }
+        .header-section { background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%); color: white; padding: 40px 0; border-radius: 0 0 25px 25px; margin-bottom: 30px; }
+        .metric-card { text-align: center; padding: 20px; background-color: white; border-left: 5px solid #0d6efd; }
+        .img-graph { border-radius: 10px; transition: transform .2s; cursor: zoom-in; }
+        .img-graph:hover { transform: scale(1.02); }
+        .badge-custom { font-size: 0.9rem; padding: 8px 12px;
+        }
+    </style>
 </head>
 <body>
+    <div class="header-section text-center">
+        <div class="container">
+            <h1><i class="bi bi-cp"></i> Perceptron classification model</h1>
+        </div>
+    </div>
     {% include "navbar.html"%}
     {% block content%}
     <div class="container">
-        <h2>Diagnostic Prediction (Breast Cancer) </h2>
-        <p>Enter the average cell mass values for a diagnosis:</p>
+        <div class="row">
+            <div class="card p-4">
+                <h3 class="text-primary"><i class="bi bi-journal-text"></i>Problem Descrption</h3>
+                <p>
+                    The objective is to classify breast tumors as <strong> Benin (0)</strong> or 
+                    <strong>Malignant (1) </strong> based on geometric characteristics obtained from 
+                    digitized images of a fine needle aspiration (FNA) of a breast mass.
+                </p>
+            
+                <hr>
 
-        <form action="/perceptron/application" method="POST">
-            <label>Average radius</label>
-            <input type="number" step="0.01" name="radius" required>
-
-            <label>Average texture</label>
-            <input type="number" step="0.01" name="texture" required>
-
-            <label>Average Perimeter</label>
-            <input type="number" step="0.01" name="perimeter" required>
-
-            <label>Average Area</label>
-            <input type="number" step="0.01" name="area" required>
-
-            <button type="submit">Make a Prediction</button>
-        </form>
-        {% if prediction is not none%}
-        <div class="result mt-3">
-            <h3>Result: {{"Malignant" if prediction == 1 else "Beningn"}}</h3>
-        </div>
-        {% endif %}
-
-        <div class="col-md-7">
-            <h2>Evaluation Metrics</h2>
-            <div class="row text-center mb-3">
-                <div class="col"><strong>Accuracy:</strong><b>{{ metrics.accuracy}}</b></div>
-                <div class="col"><strong>Precision:</strong><b>{{ metrics.Precision}}</b></div>
-                <div class="col"><strong>Recall:</strong><b>{{ metrics.recall}}</b></div>
-                <div class="col"><strong>F1-Score:</strong><b>{{ metrics.f1}}</b></div>
+                <h4><i class="bi bi-database"></i>Dataseet explanation</h4>
+                <p>
+                    <em>The Breast Cancer Wisconsin (Diagnostic)</em> dataset, obtained from Kaggle, was used. This dataset contains 30 tumor-related features.
+                    For this model, the top 10 average features were selected:
+                </p>
+                <div class="row text-muted">
+                    <div class="col-md-6">
+                        <h4><i class="bi bi database"></i>Variables used </h4>
+                        <ul>
+                            <li>Average radius (Radius from the center to points on the perimeter)</li>
+                            <li>Average texture (Standard deviation of grayscale)</li>
+                            <li>Average perimeter</li>
+                            <li>Average area</li>
+                        </ul>
+                    </div>
+                    <div class="col-md-6">
+                        <span class="badge bg-secondary badge-custom">Softness</span> 
+                        <span class="badge bg-secondary badge-custom">Compactness</span> 
+                        <span class="badge bg-secondary badge-custom">Concavity</span> 
+                        <span class="badge bg-secondary badge-custom">Concave points</span>
+                    </div>
+                </div>
             </div>
-            h3>Confusion Matrix</h3>
-            <img src="data:image/png;base64,{{ plot_url_cm }}" alt="Matriz de Confusión" style="max-width: 100%;">
+        </div>
 
-            <h3>Curve ROC / AUC</h3>
-            <img src="data:image/png;base64,{{ plot_url_roc }}" alt="Curva ROC" style="max-width: 100%;">
+        <div class="col-lg-4">
+            <div class="card p-4 bg-light border-primay">
+                <h4> <i class="bi bi-gear-fill"></i>Preparation of the Data (Pipeline) </h4>
+                <ul class="small">
+                    <li><strong>Cleaning:</strong> The IDs belonging to each diagnosis were removed and null values ​were used.</li>
+                    <li><strong>Scaling:</strong> Data standardization (Z-score) using the StandardScaler to transform the features into a 
+                        distribution with mean $\mu=0$ and variance $\sigma=1$, crucial for Perceptron convergence.
+                    <li><strong>Division:</strong> The dataset was divided into 80% for weighted training and 20% for testing.</li>
+                </ul>
+            </div>
+        </div>
 
-            <h3>Training Convergence (Errors per Epoch)</h3>
-            <img src="data:image/png;base64,{{ plot_url_errors }}" alt="Errores">
+        <div class="col-lg-5">
+            <section class="card p-4 h-100 shadow-lg">
+                <h3 class="section-title">Model training</h3>
+                <p>
+                    The Perceptron learns by iteratively updating a vector of weights ($W$) and a bias ($b$). The activation function used is 
+                    the Unit Step function.
+                </p>
+                <div class="img-container text-center">
+                    <h5>Learning Curve (Loss) </h5>
+                    <img src="data:image/png;base64,{{ plot_url_errors }}" class="img-fluid rounded" alt="Convergence graph">
+                    <p>
+                        It shows the reduction in updates (errors) as the model adjusts its weights at each epoch.
+                    </p>
+                </div>
+                <div class="mt-4 p-3 big-light rounded">
+                    <h6>Hyperparameters:</h6> 
+                        <ul class="mb-0"> 
+                            <li><strong>Learning Rate:</strong> 0.01</li> 
+                            <li><strong>Epoches:</strong> 100</li> 
+                            <li><strong>Function:</strong> $f(z) = 1$ if $z \ge 0$ else $0$ </li>
+                        </ul>
+                </div>
+            </section>
+        </div>
+        <div class="card p-5 border-primay">
+            <h3> Diagnostic Prediction (Breast Cancer)</h3>
+            <p>Enter the average cell mass values for a diagnosis:</p>
+            <form method="POST" class="row g-4">
+                <label class="form-label fw-bold">Average radius</label>
+                <input type="number" step="any" name="radius" class="form-control shadow-sm" required>
 
+                <label class="form-label fw-bold">Average texture</label>
+                <input type="number" step="any" name="texture" class="form-control shadow-sm" required>
+
+                <label class="form-label fw-bold">Average perimeter</label>
+                <input type="number" step="any" name="perimeter" class="form-control shadow-sm" required>
+
+                <label class="form-label fw-bold">Average Area</label>
+                <input type="number" step="any" name="area" class="form-control shadow-sm" required>
+
+                <button type="submit">Make a Prediction</button>
+            </form>
+
+            {% if prediction is not none%}
+            <div class="mt-5 text-center">
+                <div class="p-4 rounded-3 shadow {% if prediction == 1 %}bg-danger text-white{% else %}bg-success text-white{% endif %}">
+                    <h2 class="display-6">
+                        {% if prediction == 1 %}
+                        <i class="bi bi-radiactive"></i> Result: Malignant
+                        {% else %}
+                        <i class="bi bi-shield-check"></i> Result: Beningn
+                        {% endif %}
+                    </h2>
+                    <p>
+                        The prediction is based on the decision frontier calculated by the model after training.
+                    </p>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+        
+        <div class="col-md-7">
+            <div class="col-12"><h2 class="section-title">Evaluation Metrics</h2></div>
+            <div class="col-md-3 text-center"><strong>Accuracy:</strong><b>{{ metrics.accuracy}}</b></div>
+            <div class="col-md-3 text-center"><strong>Precision:</strong><b>{{ metrics.Precision}}</b></div>
+            <div class="col-md-3 text-center"><strong>Recall:</strong><b>{{ metrics.recall}}</b></div>
+            <div class="col-md-3 text-center"><strong>F1-Score:</strong><b>{{ metrics.f1}}</b></div>
+
+            <div class="row mt-4">
+                <div class="col-md-6">
+                    <div class="card p-4 h-100">
+                        <h5 class="text-center">Matriz de Confusión</h5>
+                        <img src="data:image/png;base64,{{ plot_url_cm }}" class="img-fluid" alt="Confusion Matrix">
+                        <p class="small text-muted mt-3">Allows visualization of the algorithm's performance by comparing actual values ​​against predictions,
+                            identifying False Positives and False Negatives.</p>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card p-4 h-100">
+                        <h5 class="text-center">Análisis de Curva ROC</h5>
+                        <img src="data:image/png;base64,{{ plot_url_roc }}" class="img-fluid" alt="ROC Curve">
+                        <p class="small text-muted mt-3">The ROC curve illustrates the model's discriminatory ability. The area under the curve (AUC) 
+                            represents the probability that the model correctly classifies a random sample.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="interpretation-box mt-5 mt-6 shadow-sm">
+                <h4><i class="bi big-lightnuld-fill"></i>Final Interpretation of the Results</h4></h4>
+                <p>
+                    The model exhibits robust performance. In the clinical setting, a high recall rate is the primary objective, as it indicates a low false negative rate (cases where cancer is present but was not detected).
+                </p>
+                <p>
+                    <strong>Conclusion:</strong> Although the Perceptron is a model limited to linearly separable problems, the results demonstrate that, after adequate standardization of the variables, the dataset
+                     presents a structure that allows for effective classification with this simple architecture
+                </p>
+            </div>
         </div>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
