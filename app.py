@@ -1,12 +1,16 @@
 from flask import Flask, render_template, request
 import pandas as pd
-from sklearn.linear_model import LinearRegression, LogisticRegression
 import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
+import base64
+import seaborn as sns
+import io
+from sklearn.linear_model import LinearRegression, LogisticRegression, Perceptron
 from sklearn.model_selection import train_test_split
-from sklearn.metrics import accuracy_score, classification_report
-from sklearn.preprocessing import StandardScaler
+from sklearn.metrics import accuracy_score, classification_report, confusion_matrix, precision_score, recall_score, f1_score, roc_curve, auc
+from sklearn.preprocessing import StandardScaler, LabelEncoder
+from perceptron import Perceptron
 
 
 app = Flask(__name__)
@@ -15,6 +19,14 @@ app = Flask(__name__)
 
 df = pd.read_csv('medals.csv')
 df_logistic = pd.read_csv('fifa24.csv')
+df_perceptron = pd.read_csv('breastCancerWisconsin.csv')
+
+#---------- Graphs base64 ----------
+def get_plot_url():
+    img = io.BytesIO()
+    plt.savefig(img, format='png', bbox_inches='tight')
+    img.seek(0)
+    return base64.b64encode(img.getvalue()).decode('utf-8')
 
 # ================== ROUTE ==================
 
@@ -172,6 +184,58 @@ def predict_logistic():
 
 #---------- CLASSIFICATION PERPECTRON ----------
 
+@app.route ('/perceptron/metrics')
+def perceptron_metrics():
+    if 'id' in df_perceptron.columns: df_perceptron.drop(columns=['id'])
+    if 'Unnamed: 32' in df_perceptron.columns: df_perceptron.drop(columns=['Unnamed: 32'])
+
+    le = LabelEncoder()
+    df_perceptron['diagnosis'] = le.fit_transform(df_perceptron['diagnosis'])
+
+    x = df_perceptron.iloc[:,1:11].values
+    y = df_perceptron['diagnosis'].values
+
+    X_train, X_test, y_train, y_test = train_test_split(x, y, test_size=0.2, random_state=42)
+    scaler = StandardScaler()
+    X_train_scaled = scaler.fit_transform(X_train)
+    X_test_scaled = scaler.transform(X_test)
+
+    #---------- Trainning ----------
+    p_or = Perceptron(learning_rate=0.1, epochs=100)
+    p_or.fit(X_train_scaled, y_train)
+
+    #---------- 
+    y_pred = p_or.predict(X_test_scaled)
+
+    res_metrics = {
+        "accuracy": round(accuracy_score(y_test, y_pred), 4), 
+        "precision": round(precision_score(y_test, y_pred), 4),
+        "recall": round(recall_score(y_test, y_pred), 4),
+        "f1": round(f1_score(y_test, y_pred), 4) 
+    }
+
+    plt.figure(figsize=(5,4))
+    cm = confusion_matrix(y_test, y_pred)
+    sns.heatmap(cm, annot=True, fmt='d', cmap='Reds')
+    plt.title('Matrix of Confusion - Breast Cancer')
+    plot_url_cm = get_plot_url
+    plt.close()
+
+    fpr, tpr, _ = roc_curve(y_test, y_pred)
+    roc_auc = auc(fpr, tpr)
+    plt.figure(figsize=(5,4))
+    plt.plot(fpr, tpr, color='darkorange', label=f'ROC curve (area = {roc_auc:2f})')
+    plt.plot([0,1], [0,1], color='navy', linestyle='--')
+    plt.xlabel('False Positive')
+    plt.ylabel('True Positive')
+    plt.legend(loc="lower right")
+    plot_url_roc = get_plot_url()
+    plt.close()
+
+    return render_template('classificationPerceptron/perceptronEvaluationMetrics.html',
+                           metrics=res_metrics,
+                           plot_url_cm=plot_url_cm,
+                           plot_url_roc=plot_url_roc)
 
 # ================== RUN ==================
 if __name__ == '__main__':
