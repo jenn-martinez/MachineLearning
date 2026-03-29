@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request
 import pandas as pd
+import numpy as np
 import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
@@ -8,7 +9,7 @@ import seaborn as sns
 import io
 from sklearn.linear_model import LinearRegression, LogisticRegression, Perceptron
 from sklearn.model_selection import train_test_split
-from sklearn.metrics import accuracy_score, classification_report, confusion_matrix, precision_score, recall_score, f1_score, roc_curve, auc
+from sklearn.metrics import accuracy_score, confusion_matrix, precision_score, recall_score, f1_score, roc_curve, auc
 from sklearn.preprocessing import StandardScaler, LabelEncoder
 from perceptron import Perceptron
 
@@ -32,15 +33,19 @@ def get_plot_url():
 #---------------
 scaler_p = StandardScaler()
 p_or = Perceptron(learning_rate=0.1, epochs=100)
+
 def prepare_perceptron_data():
-    if 'id' in df_perceptron.columns: df_perceptron.drop(columns=['id'])
-    if 'Unnamed: 32' in df_perceptron.columns: df_perceptron.drop(columns=['Unnamed: 32'])
+    df_p = df_perceptron.copy()
+    if 'id' in df_p.columns: 
+        df_p = df_p.drop(columns=['id'])
+    if 'Unnamed: 32' in df_p.columns: 
+        df_p = df_p.drop(columns=['Unnamed: 32'])
 
     le = LabelEncoder()
-    df_perceptron['diagnosis'] = le.fit_transform(df_perceptron['diagnosis'])
+    df_p['diagnosis'] = le.fit_transform(df_p['diagnosis'])
 
-    X = df_perceptron.iloc[:, 1:11].values
-    y = df_perceptron['diagnosis'].values
+    X = df_p.iloc[:, 1:11].values
+    y = df_p['diagnosis'].values
     return X, y
 
 # ================== ROUTE ==================
@@ -197,45 +202,23 @@ def predict_logistic():
                            train_acc=f"{train_accuracy:.1%}",
                            test_acc=f"{test_accuracy:.1%}")
 
-#---------- CLASSIFICATION PERPECTRON ----------
+#---------- CLASSIFICATION PERPCEPTRON ----------
 
-@app.route('/perceptron/application')
+@app.route('/perceptron/application', methods=['GET', 'POST'])
 def perceptron_app():
-    return render_template('classificationPerceptron/perceptronApplication.html')
 
-@app.route('/predict_perceptron', methods=['POST'])
-def predict_perceptron():
-    X,y = prepare_perceptron_data()
-    X_scaled = scaler_p.fit_transform(X)
-    p_or.fit(X_scaled, y)
-
-    inputs = [
-        float(request.form['radius']),
-        float(request.form['texture']),
-        float(request.form['perimeter']),
-        float(request.form['area']),
-        0, 0, 0, 0, 0, 0
-    ]
-    input_scaled = scaler_p.transform([inputs])
-    prediction = p_or.predict(input_scaled)[0]
-
-    return render_template('classificationPerceptron/perceptronApplication.html',
-                           prediction=int(prediction))
-
-@app.route ('/perceptron/metrics')
-def perceptron_metrics():
-
+    #---------- Reparing data ----------
     X, y = prepare_perceptron_data()
-
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
     X_train_scaled = scaler_p.fit_transform(X_train)
     X_test_scaled = scaler_p.transform(X_test)
 
-    #---------- Trainning ----------
+    #---------- Trainning Data ----------
     p_or.fit(X_train_scaled, y_train)
-    y_pred = p_or.predict(X_test_scaled)
 
+    #---------- Calculation of metrics ----------
+    y_pred = p_or.predict(X_test_scaled)
     res_metrics = {
         "accuracy": round(accuracy_score(y_test, y_pred), 4), 
         "precision": round(precision_score(y_test, y_pred), 4),
@@ -243,16 +226,23 @@ def perceptron_metrics():
         "f1": round(f1_score(y_test, y_pred), 4) 
     }
 
+    #---------- Graphics ----------
     #---------- Matrix of Confusion ----------
-    plt.figure(figsize=(5,4))
+    plt.figure(figsize=(4,3))
     cm = confusion_matrix(y_test, y_pred)
     sns.heatmap(cm, annot=True, fmt='d', cmap='Reds')
     plt.title('Matrix of Confusion')
     plot_url_cm = get_plot_url()
-    plt.close()
+
+    #---------- Curve ROC ----------
+    fpr, tpr, _ = roc_curve(y_test, y_pred)
+    plt.figure(figsize=(4,3))
+    plt.plot(fpr, tpr, label=f'ROC curve = {auc(fpr, tpr):.2f}')
+    plt.plot([0,1], [0,1], linestyle='--', color='gray')
+    plt.legend()
+    plot_url_roc = get_plot_url()
 
     #---------- ERRORS ----------
-
     plt.figure(figsize=(5, 4))
     plt.plot(range(1, len(p_or.errors_per_epoch) + 1), p_or.errors_per_epoch, marker='o')
     plt.xlabel('Epochs')
@@ -260,21 +250,28 @@ def perceptron_metrics():
     plt.title('Training Error')
     plot_url_errors = get_plot_url()
 
-    #---------- Curve ROC ----------
-    fpr, tpr, _ = roc_curve(y_test, y_pred)
-    roc_auc = auc(fpr, tpr)
-    plt.figure(figsize=(5,4))
-    plt.plot(fpr, tpr, label=f'ROC curve (area = {roc_auc:.2f})')
-    plt.plot([0,1], [0,1], linestyle='--')
-    plt.legend()
-    plot_url_roc = get_plot_url()
-    plt.close()
+    #---------- Prediction ----------
+    prediction = None
+    if request.method == 'POST':
+        avg_values = np.mean(X, axis=0)
+        inputs = [
+        float(request.form['radius']),
+        float(request.form['texture']),
+        float(request.form['perimeter']),
+        float(request.form['area']),
+        avg_values[4], avg_values[5], avg_values[6],
+        avg_values[7], avg_values[8], avg_values[9]
+        ]
 
-    return render_template('classificationPerceptron/perceptronEvaluationMetrics.html',
-                           metrics=res_metrics,
-                           plot_url_cm=plot_url_cm,
-                           plot_url_roc=plot_url_roc,
-                           plot_url_errors = plot_url_errors)
+        input_scaled = scaler_p.transform([inputs])
+        prediction = int(p_or.predict(input_scaled)[0])
+
+    return render_template('classificationPerceptron/perceptronApplication.html',
+                       metrics=res_metrics,
+                       plot_url_cm=plot_url_cm,
+                       plot_url_roc=plot_url_roc,
+                       plot_url_errors = plot_url_errors,
+                       prediction=prediction)
 
 # ================== RUN ==================
 if __name__ == '__main__':
