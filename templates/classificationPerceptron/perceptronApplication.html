@@ -28,9 +28,9 @@
 
             <button type="submit">Make a Prediction</button>
         </form>
-        {% if prediction%}
-        <div class="result">
-            <h3>Result: {{"Malignant if prediction == 1 else "Beningn"}}</h3>
+        {% if prediction is not none%}
+        <div class="result mt-3">
+            <h3>Result: {{"Malignant" if prediction == 1 else "Beningn"}}</h3>
         </div>
         {% endif %}
     </div>

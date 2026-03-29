@@ -26,7 +26,22 @@ def get_plot_url():
     img = io.BytesIO()
     plt.savefig(img, format='png', bbox_inches='tight')
     img.seek(0)
+    plt.close()
     return base64.b64encode(img.getvalue()).decode('utf-8')
+
+#---------------
+scaler_p = StandardScaler()
+p_or = Perceptron(learning_rate=0.1, epochs=100)
+def prepare_perceptron_data():
+    if 'id' in df_perceptron.columns: df_perceptron.drop(columns=['id'])
+    if 'Unnamed: 32' in df_perceptron.columns: df_perceptron.drop(columns=['Unnamed: 32'])
+
+    le = LabelEncoder()
+    df_perceptron['diagnosis'] = le.fit_transform(df_perceptron['diagnosis'])
+
+    X = df_perceptron.iloc[:, 1:11].values
+    y = df_perceptron['diagnosis'].values
+    return X, y
 
 # ================== ROUTE ==================
 
@@ -184,27 +199,41 @@ def predict_logistic():
 
 #---------- CLASSIFICATION PERPECTRON ----------
 
+@app.route('/perceptron/application')
+def perceptron_app():
+    return render_template('classificationPerceptron/perceptronApplication.html')
+
+@app.route('/predict_perceptron', methods=['POST'])
+def predict_perceptron():
+    X,y = prepare_perceptron_data()
+    X_scaled = scaler_p.fit_transform(X)
+    p_or.fit(X_scaled, y)
+
+    inputs = [
+        float(request.form['radius']),
+        float(request.form['texture']),
+        float(request.form['perimeter']),
+        float(request.form['area']),
+        0, 0, 0, 0, 0, 0
+    ]
+    input_scaled = scaler_p.transform([inputs])
+    prediction = p_or.predict(input_scaled)[0]
+
+    return render_template('classificationPerceptron/perceptronApplication.html',
+                           prediction=int(prediction))
+
 @app.route ('/perceptron/metrics')
 def perceptron_metrics():
-    if 'id' in df_perceptron.columns: df_perceptron.drop(columns=['id'])
-    if 'Unnamed: 32' in df_perceptron.columns: df_perceptron.drop(columns=['Unnamed: 32'])
 
-    le = LabelEncoder()
-    df_perceptron['diagnosis'] = le.fit_transform(df_perceptron['diagnosis'])
+    X, y = prepare_perceptron_data()
 
-    x = df_perceptron.iloc[:,1:11].values
-    y = df_perceptron['diagnosis'].values
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
-    X_train, X_test, y_train, y_test = train_test_split(x, y, test_size=0.2, random_state=42)
-    scaler = StandardScaler()
-    X_train_scaled = scaler.fit_transform(X_train)
-    X_test_scaled = scaler.transform(X_test)
+    X_train_scaled = scaler_p.fit_transform(X_train)
+    X_test_scaled = scaler_p.transform(X_test)
 
     #---------- Trainning ----------
-    p_or = Perceptron(learning_rate=0.1, epochs=100)
     p_or.fit(X_train_scaled, y_train)
-
-    #---------- 
     y_pred = p_or.predict(X_test_scaled)
 
     res_metrics = {
@@ -214,28 +243,38 @@ def perceptron_metrics():
         "f1": round(f1_score(y_test, y_pred), 4) 
     }
 
+    #---------- Matrix of Confusion ----------
     plt.figure(figsize=(5,4))
     cm = confusion_matrix(y_test, y_pred)
     sns.heatmap(cm, annot=True, fmt='d', cmap='Reds')
-    plt.title('Matrix of Confusion - Breast Cancer')
-    plot_url_cm = get_plot_url
+    plt.title('Matrix of Confusion')
+    plot_url_cm = get_plot_url()
     plt.close()
 
+    #---------- ERRORS ----------
+
+    plt.figure(figsize=(5, 4))
+    plt.plot(range(1, len(p_or.errors_per_epoch) + 1), p_or.errors_per_epoch, marker='o')
+    plt.xlabel('Epochs')
+    plt.ylabel('Number of updates')
+    plt.title('Training Error')
+    plot_url_errors = get_plot_url()
+
+    #---------- Curve ROC ----------
     fpr, tpr, _ = roc_curve(y_test, y_pred)
     roc_auc = auc(fpr, tpr)
     plt.figure(figsize=(5,4))
-    plt.plot(fpr, tpr, color='darkorange', label=f'ROC curve (area = {roc_auc:2f})')
-    plt.plot([0,1], [0,1], color='navy', linestyle='--')
-    plt.xlabel('False Positive')
-    plt.ylabel('True Positive')
-    plt.legend(loc="lower right")
+    plt.plot(fpr, tpr, label=f'ROC curve (area = {roc_auc:.2f})')
+    plt.plot([0,1], [0,1], linestyle='--')
+    plt.legend()
     plot_url_roc = get_plot_url()
     plt.close()
 
     return render_template('classificationPerceptron/perceptronEvaluationMetrics.html',
                            metrics=res_metrics,
                            plot_url_cm=plot_url_cm,
-                           plot_url_roc=plot_url_roc)
+                           plot_url_roc=plot_url_roc,
+                           plot_url_errors = plot_url_errors)
 
 # ================== RUN ==================
 if __name__ == '__main__':
