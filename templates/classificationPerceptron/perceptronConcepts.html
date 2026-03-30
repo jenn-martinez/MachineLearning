@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Machine Learning: Perceptron Diagnostic</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            display: flex;
+            background-color: #f4f4f4;
+        }
+
+        /* Top bar */
+        .topbar {
+            position: fixed;
+            width: 100%;
+            height: 60px;
+            background-color: #d71919;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 20px;
+            z-index: 1000;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 250px;
+            height: 100vh;
+            background: #e5e5e5;
+            padding: 80px 20px 20px 20px;
+            position: fixed;
+        }
+
+        .sidebar h2 {
+            margin-bottom: 15px;
+        }
+
+        .sidebar ul {
+            list-style: none;
+        }
+
+        .sidebar li {
+            margin: 10px 0;
+        }
+
+        .sidebar a {
+            text-decoration: none;
+            color: #333;
+        }
+
+        /* Main content */
+        .main {
+            margin-left: 250px;
+            padding: 120px 30px 30px 30px;
+            width: 100%;
+        }
+
+        .banner {
+            height: 250px;
+            background: url('https://images.unsplash.com/photo-1518770660439-4636190af475') center/cover;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 28px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        .card {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border: 1px solid #ddd;
+        }
+
+        h2 {
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        ul {
+            margin-left: 20px;
+        }
+
+        pre {
+            background: #1e1e1e;
+            color: #00ff9c;
+            padding: 15px;
+            border-radius: 8px;
+            overflow-x: auto;
+        }
+
+    </style>
+</head>
+<body>
+
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="../mainMenu.html">Machine Learning: Perceptron Diagnostic</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNavDropdown">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" href="../mainMenu.html">Home</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                            Use Case
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="../caseUse/BBVAPipeline.html">BBVA Pipeline</a></li>
+                            <li><a class="dropdown-item" href="../caseUse/BankFraud.html">Bank Fraud</a></li>
+                            <li><a class="dropdown-item" href="../caseUse/FacialRecognized.html">Facial Recognition</a></li>
+                            <li><a class="dropdown-item" href="../caseUse/customerChurn.html">Customer Churn</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                            Supervised Learning
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><h6 class="dropdown-header">Linear Regression</h6></li>
+                            <li><a class="dropdown-item" href="../linearRegression/linealRConcepts.html">Concepts</a></li>
+                            <li><a class="dropdown-item" href="../linearRegression/linealRApplication.html">Application</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><h6 class="dropdown-header">Logistic Regression</h6></li>
+                            <li><a class="dropdown-item" href="../logisticRegression/logisticConcepts.html">Concepts</a></li>
+                            <li><a class="dropdown-item" href="../logisticRegression/logisticApplication.html">Application</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><h6 class="dropdown-header">Perceptron classification model</h6></li>
+                            <li><a class="dropdown-item active" href="perceptronConcepts.html">Concepts</a></li>
+                            <li><a class="dropdown-item" href="perceptronApplication.html">Application</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <h2>Sections</h2>
+        <ul>
+            <li><a href="#def">Problem Description</a></li>
+            <li><a href="#exp">Dataset and Variables</a></li>
+            <li><a href="#train">Model Training</a></li>
+            <li><a href="#pred">Prediction</a></li>
+            <li><a href="#ej">Example Code</a></li>
+            <li><a href="#code-exp">Code Explanation</a></li>
+        </ul>
+    </div>
+
+    <!-- Main -->
+    <div class="main">
+
+        <div class="banner">
+            Perceptron Classification Model
+        </div>
+
+        <div class="card" id="def">
+            <h2>Problem Description</h2>
+            <p>
+                The objective is to classify data into two categories using a perceptron model.
+                This approach is commonly used in binary classification problems where the goal
+                is to separate data using a linear decision boundary.
+            </p>
+        </div>
+
+        <div class="card" id="exp">
+            <h2>Dataset and Variables</h2>
+            <p>
+                The dataset consists of numerical input features that represent measurable characteristics.
+                Each data point is labeled as either class 0 or class 1.
+            </p>
+            <ul>
+                <li>Input features (X)</li>
+                <li>Target labels (y)</li>
+                <li>Binary classification output</li>
+            </ul>
+        </div>
+
+        <div class="card" id="train">
+            <h2>Model Training</h2>
+            <ul>
+                <li>Initialize weights and bias</li>
+                <li>Compute linear combination</li>
+                <li>Apply activation function</li>
+                <li>Update weights based on error</li>
+                <li>Repeat for multiple epochs</li>
+            </ul>
+        </div>
+
+        <div class="card" id="pred">
+            <h2>Prediction</h2>
+            <p>
+                After training, the perceptron can classify new input data by applying the learned weights
+                and activation function to determine the output class.
+            </p>
+        </div>
+
+        <div class="card" id="ej">
+            <h2>Example Code (Expanded)</h2>
+            <pre>
+import numpy as np
+
+class Perceptron:
+    def __init__(self, learning_rate=0.1, epochs=100):
+        self.lr = learning_rate
+        self.epochs = epochs
+        self.weights = None
+        self.bias = None
+
+    def fit(self, X, y):
+        n_samples, n_features = X.shape
+        self.weights = np.zeros(n_features)
+        self.bias = 0
+
+        for _ in range(self.epochs):
+            for idx, xi in enumerate(X):
+                linear_output = np.dot(xi, self.weights) + self.bias
+                y_pred = 1 if linear_output >= 0 else 0
+
+                update = self.lr * (y[idx] - y_pred)
+                self.weights += update * xi
+                self.bias += update
+
+    def predict(self, X):
+        linear_output = np.dot(X, self.weights) + self.bias
+        return np.where(linear_output >= 0, 1, 0)
+
+
+# Training data
+X = np.array([
+    [2, 1],
+    [1, 1],
+    [2, 0],
+    [0, 1]
+])
+
+y = np.array([1, 1, 1, 0])
+
+# Train model
+model = Perceptron()
+model.fit(X, y)
+
+# Predictions
+test_data = np.array([[1, 0], [0, 1], [2, 2]])
+
+predictions = model.predict(test_data)
+
+print("Predictions:", predictions)
+            </pre>
+        </div>
+
+        <div class="card" id="code-exp">
+            <h2>Code Explanation</h2>
+            <p>
+                The provided code implements a basic Perceptron algorithm for binary classification.
+                It defines a class that initializes the learning rate, number of epochs, weights, and bias.
+            </p>
+
+            <p>
+                During training, the model processes each data point, computes a linear combination,
+                and applies a step activation function to determine the predicted class.
+            </p>
+
+            <p>
+                If the prediction is incorrect, the model updates its weights and bias using the error.
+                This allows the algorithm to improve over multiple iterations.
+            </p>
+
+            <p>
+                Finally, the model is used to predict new data, demonstrating its ability to generalize
+                from learned patterns.
+            </p>
+        </div>
+
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Machine Learning Use Case</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body { background-color: #f8f9fa; }
+
+        .layout { display: flex; min-height: 100vh; }
+
+        .sidebar {
+            width: 280px;
+            min-width: 280px;
+            background-color: #212529;
+            padding: 25px 15px;
+            position: sticky;
+            top: 0;
+            height: 100vh;
+            overflow-y: auto;
+        }
+
+        .sidebar .nav-link {
+            color: #adb5bd;
+            font-size: 0.85rem;
+            padding: 6px 12px;
+            border-radius: 6px;
+            transition: all 0.2s;
+        }
+
+        .sidebar .nav-link:hover {
+            color: #ffffff;
+            background-color: #343a40;
+        }
+
+        .sidebar .nav-link.active {
+            color: #ffffff;
+            background-color: #0d6efd;
+        }
+
+        .sidebar .sidebar-title {
+            color: #fff;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            padding: 10px 12px 5px;
+            color: #6c757d;
+        }
+
+        .sidebar .sub-nav .nav-link {
+            font-size: 0.8rem;
+            padding: 4px 12px 4px 24px;
+            color: #6c757d;
+        }
+
+        .sidebar .sub-nav .nav-link:hover {
+            color: #adb5bd;
+            background-color: #2b3035;
+        }
+
+        .main { flex: 1; padding: 40px 55px; }
+
+        .content h1.titleOne {
+            color: #0d6efd;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
+        .section { margin-bottom: 50px; }
+
+        .section h2 {
+            color: #198754;
+            margin-bottom: 15px;
+            border-left: 4px solid #198754;
+            padding-left: 12px;
+        }
+
+        .section h3 { margin-top: 25px; color: #343a40; }
+
+        .subtitle {
+            text-align: center;
+            color: #6c757d;
+            margin-bottom: 40px;
+            font-size: 1.05rem;
+        }
+
+        .card-custom { border-left: 4px solid #0d6efd; margin-bottom: 15px; }
+
+        .section-img {
+            width: 100%;
+            max-height: 350px;
+            object-fit: cover;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    {% include "navbar.html" %}
+
+    <div class="layout">
+
+        <!-- SIDEBAR -->
+        <div class="sidebar">
+            <p class="sidebar-title">Contents</p>
+            <nav class="nav flex-column">
+                <a class="nav-link" href="#definition">What is a Use Case?</a>
+                <a class="nav-link" href="#elements">Elements of a Use Case</a>
+                <a class="nav-link" href="#ml-types">Types of Machine Learning</a>
+                <a class="nav-link" href="#example">Example: Bank Fraud Detection</a>
+
+                <p class="sidebar-title mt-2">Inside the Example</p>
+                <nav class="nav flex-column sub-nav">
+                    <a class="nav-link" href="#how">How does it work?</a>
+                    <a class="nav-link" href="#technology">Technology Behind It</a>
+                    <a class="nav-link" href="#data">Data Used</a>
+                    <a class="nav-link" href="#training">Model Training</a>
+                    <a class="nav-link" href="#evaluation">Model Evaluation</a>
+                    <a class="nav-link" href="#applications">Real-World Applications</a>
+                    <a class="nav-link" href="#challenges">Challenges & Limitations</a>
+                    <a class="nav-link" href="#ethics">Ethical Considerations</a>
+                </nav>
+
+                <p class="sidebar-title mt-2">Final</p>
+                <a class="nav-link" href="#future">Future of Fraud Detection</a>
+                <a class="nav-link" href="#conclusion">Conclusion</a>
+            </nav>
+        </div>
+
+        <!-- MAIN CONTENT -->
+        <div class="main">
+            <div class="content">
+
+                <h1 class="titleOne">Machine Learning Use Case</h1>
+                <p class="subtitle">An in-depth exploration of Bank Fraud Detection as a real-world ML application</p>
+
+                <!-- WHAT IS A USE CASE -->
+                <div class="section">
+                    <h2 id="definition">What is a Machine Learning Use Case?</h2>
+                    <p>A Machine Learning use case is a practical application where algorithms learn from data to solve real-world problems. These systems enable decision automation, predictions, or pattern recognition that would be difficult or impossible to identify manually.</p>
+                    <p>Unlike traditional software that follows explicit rules, an ML system discovers its own rules by analyzing large amounts of data — adapting and improving over time without being explicitly reprogrammed.</p>
+                    <p>Use cases span virtually every industry: from healthcare and finance to entertainment and transportation. The key is a well-defined problem, sufficient data, and a clear metric to measure success.</p>
+                </div>
+
+                <hr>
+
+                <!-- ELEMENTS -->
+                <div class="section">
+                    <h2 id="elements">Elements of a Use Case</h2>
+                    <p>Every successful ML use case is built on a structured foundation. These elements are essential to ensure the system works correctly and delivers real value:</p>
+                    <ul class="list-group mb-3">
+                        <li class="list-group-item"><strong>Problem to solve:</strong> A clear, measurable objective the model must achieve.</li>
+                        <li class="list-group-item"><strong>Data collection:</strong> Gathering relevant, high-quality, and representative datasets.</li>
+                        <li class="list-group-item"><strong>Data preprocessing:</strong> Cleaning, normalizing, and transforming data to make it usable.</li>
+                        <li class="list-group-item"><strong>Model selection:</strong> Choosing the appropriate algorithm based on the problem type.</li>
+                        <li class="list-group-item"><strong>Model training:</strong> Feeding data into the algorithm so it can learn patterns.</li>
+                        <li class="list-group-item"><strong>Model evaluation:</strong> Measuring performance using metrics like accuracy, precision, and recall.</li>
+                        <li class="list-group-item"><strong>Implementation:</strong> Deploying the model into a real production system.</li>
+                        <li class="list-group-item"><strong>Monitoring:</strong> Continuously tracking the model's behavior and updating it as needed.</li>
+                    </ul>
+                </div>
+
+                <hr>
+
+                <!-- TYPES OF ML -->
+                <div class="section">
+                    <h2 id="ml-types">Types of Machine Learning</h2>
+                    <p>The approach chosen depends heavily on the type of problem and available data. The three main categories are:</p>
+                    <div class="row mt-3">
+                        <div class="col-md-4 mb-3">
+                            <div class="card h-100 card-custom">
+                                <div class="card-body">
+                                    <h5 class="card-title text-primary">Supervised Learning</h5>
+                                    <p class="card-text">The model learns from labeled data — each input has a known correct output. Used for classification and regression tasks.</p>
+                                    <p class="card-text"><small class="text-muted">Example: spam detection, fraud detection, credit scoring.</small></p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <div class="card h-100 card-custom">
+                                <div class="card-body">
+                                    <h5 class="card-title text-success">Unsupervised Learning</h5>
+                                    <p class="card-text">The model finds hidden patterns in unlabeled data. Used for clustering and anomaly detection.</p>
+                                    <p class="card-text"><small class="text-muted">Example: customer segmentation, unusual transaction grouping.</small></p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <div class="card h-100 card-custom">
+                                <div class="card-body">
+                                    <h5 class="card-title text-warning">Reinforcement Learning</h5>
+                                    <p class="card-text">The model learns through trial and error, receiving rewards for correct actions and penalties for incorrect ones.</p>
+                                    <p class="card-text"><small class="text-muted">Example: adaptive fraud rule systems, risk scoring agents.</small></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="mt-2">Bank fraud detection primarily uses <strong>supervised learning</strong>, as it requires labeled datasets of past transactions (fraudulent vs. legitimate) to train the model.</p>
+                </div>
+
+                <hr>
+
+                <!-- EXAMPLE -->
+                <div class="section">
+                    <h2 id="example">Example: Bank Fraud Detection</h2>
+
+                    <img src="https://pplx-res.cloudinary.com/image/upload/pplx_search_images/a26caaa762ee8060bbd922717f51dbef0a50da04.jpg"
+                         alt="Bank Fraud Detection ML diagram" class="section-img">
+
+                    <p>Bank fraud detection is one of the most critical and widely deployed ML use cases in the financial industry. It analyzes thousands of transactions per second to automatically flag suspicious activity — protecting customers and institutions from billions in losses each year.</p>
+                    <p>The technology has evolved from simple rule-based systems to sophisticated ML models that detect subtle, complex patterns invisible to human analysts.</p>
+
+                    <h3 id="how">How Does It Work?</h3>
+                    <ul class="list-group mb-3">
+                        <li class="list-group-item"><strong>1. Transaction capture:</strong> Every transaction triggers a real-time data event: amount, location, merchant, device, time, and user history.</li>
+                        <li class="list-group-item"><strong>2. Feature engineering:</strong> Raw data is transformed into meaningful signals — e.g., "distance from last transaction" or "transactions in the last 10 minutes."</li>
+                        <li class="list-group-item"><strong>3. Model scoring:</strong> The ML model assigns a fraud probability score (0 to 1) to the transaction in real time.</li>
+                        <li class="list-group-item"><strong>4. Threshold decision:</strong> If the score exceeds a defined threshold, the transaction is flagged, blocked, or sent for manual review.</li>
+                        <li class="list-group-item"><strong>5. Feedback loop:</strong> Confirmed fraud cases are fed back into the model as new training data, continuously improving accuracy.</li>
+                    </ul>
+
+                    <h3 id="technology">Technology Behind It</h3>
+
+                    <img src="https://pplx-res.cloudinary.com/image/upload/pplx_search_images/b58028a59c72def6c7b786580115465028036220.jpg"
+                         alt="Graph Neural Network fraud detection" class="section-img">
+
+                    <ul class="list-group mb-3">
+                        <li class="list-group-item"><strong>Random Forest:</strong> An ensemble of decision trees that votes on whether a transaction is fraudulent. Robust, interpretable, and fast.</li>
+                        <li class="list-group-item"><strong>Gradient Boosting (XGBoost/LightGBM):</strong> Sequentially builds trees that correct previous errors. Industry standard for tabular financial data.</li>
+                        <li class="list-group-item"><strong>Neural Networks:</strong> Captures complex non-linear relationships in high-dimensional transaction data.</li>
+                        <li class="list-group-item"><strong>Graph Neural Networks (GNN):</strong> Models relationships between accounts, merchants, and devices to detect coordinated fraud rings.</li>
+                        <li class="list-group-item"><strong>Autoencoders:</strong> Unsupervised models that learn normal patterns and flag deviations as anomalies.</li>
+                    </ul>
+
+                    <h3 id="data">Data Used for Training</h3>
+                    <div class="row mt-2">
+                        <div class="col-md-6 mb-3">
+                            <div class="alert alert-info">
+                                <strong>Transaction features:</strong> Amount, currency, merchant category, time of day, day of week, and geographic location.
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <div class="alert alert-success">
+                                <strong>User behavior:</strong> Historical spending patterns, average transaction size, typical merchants, and device fingerprints.
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <div class="alert alert-warning">
+                                <strong>Contextual signals:</strong> IP address, geolocation mismatch, velocity (multiple transactions in short time), and card-not-present flags.
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <div class="alert alert-danger">
+                                <strong>Class imbalance:</strong> Fraudulent transactions represent less than 0.1% of all transactions — requiring special techniques like SMOTE or class weighting.
+                            </div>
+                        </div>
+                    </div>
+                    <p>Popular datasets include the <strong>IEEE-CIS Fraud Detection dataset</strong> and the <strong>Credit Card Fraud Detection dataset</strong> from Kaggle, with 284,807 transactions and only 492 fraud cases.</p>
+
+                    <h3 id="training">Model Training</h3>
+                    <ul class="list-group mb-3">
+                        <li class="list-group-item"><strong>Handling class imbalance:</strong> SMOTE, undersampling, or cost-sensitive learning prevent the model from always predicting "legitimate."</li>
+                        <li class="list-group-item"><strong>Feature scaling:</strong> Transaction amounts and time features are normalized so no single variable dominates.</li>
+                        <li class="list-group-item"><strong>Cross-validation:</strong> Time-based splits simulate real deployment conditions and avoid data leakage.</li>
+                        <li class="list-group-item"><strong>Hyperparameter tuning:</strong> Grid search or Bayesian optimization finds the optimal model configuration.</li>
+                        <li class="list-group-item"><strong>Ensemble methods:</strong> Combining multiple models improves robustness against novel fraud patterns.</li>
+                    </ul>
+
+                    <h3 id="evaluation">Model Evaluation</h3>
+                    <ul class="list-group mb-3">
+                        <li class="list-group-item"><strong>Precision:</strong> Of all flagged transactions, what percentage are actually fraud? Reduces false alarms.</li>
+                        <li class="list-group-item"><strong>Recall:</strong> Of all actual fraud cases, what percentage did the model catch? Minimizes financial losses.</li>
+                        <li class="list-group-item"><strong>F1-Score:</strong> Harmonic mean of precision and recall — the key balanced metric.</li>
+                        <li class="list-group-item"><strong>AUC-ROC:</strong> Measures ability to distinguish fraud from legitimate transactions across all thresholds.</li>
+                        <li class="list-group-item"><strong>PR-AUC:</strong> More informative than ROC-AUC for highly imbalanced datasets like fraud detection.</li>
+                    </ul>
+
+                    <h3 id="applications">Real-World Applications</h3>
+                    <div class="row mt-2">
+                        <div class="col-md-4">
+                            <div class="alert alert-info"><strong>Credit card fraud</strong><br>Visa and Mastercard use real-time ML scoring to block fraudulent charges instantly across billions of daily transactions.</div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="alert alert-success"><strong>Online banking</strong><br>Banks detect unauthorized logins by analyzing device fingerprints, location, and behavioral biometrics.</div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="alert alert-warning"><strong>E-commerce payments</strong><br>PayPal and Stripe evaluate every payment in milliseconds, reducing chargebacks and protecting merchants.</div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="alert alert-danger"><strong>Insurance fraud</strong><br>Insurers detect fraudulent claims by identifying anomalous patterns in claim submissions and histories.</div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="alert alert-primary"><strong>Anti-money laundering</strong><br>Graph-based ML traces complex transaction networks to detect laundering schemes across multiple accounts.</div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="alert alert-dark"><strong>Account takeover</strong><br>ML detects when a legitimate account is used by a bad actor based on behavioral and device changes.</div>
+                        </div>
+                    </div>
+
+                    <h3 id="challenges">Challenges & Limitations</h3>
+                    <ul class="list-group mb-3">
+                        <li class="list-group-item"><strong>Adversarial adaptation:</strong> Fraudsters continuously evolve their tactics, requiring frequent model retraining.</li>
+                        <li class="list-group-item"><strong>False positives:</strong> Blocking legitimate transactions frustrates customers and damages user experience.</li>
+                        <li class="list-group-item"><strong>Data imbalance:</strong> The extreme rarity of fraud makes it difficult to train models with sufficient fraud examples.</li>
+                        <li class="list-group-item"><strong>Latency constraints:</strong> Models must decide in under 100 milliseconds to avoid delaying real-time transactions.</li>
+                        <li class="list-group-item"><strong>Concept drift:</strong> Spending patterns change over time, causing model performance to degrade without retraining.</li>
+                        <li class="list-group-item"><strong>Explainability:</strong> Regulators require banks to explain why a transaction was blocked — a challenge for black-box models.</li>
+                    </ul>
+
+                    <h3 id="ethics">Ethical Considerations</h3>
+                    <ul class="list-group mb-3">
+                        <li class="list-group-item"><strong>Discrimination risk:</strong> Biased training data may cause models to disproportionately flag transactions from certain demographic groups.</li>
+                        <li class="list-group-item"><strong>Privacy:</strong> Fraud detection requires collecting detailed behavioral and location data, raising surveillance concerns.</li>
+                        <li class="list-group-item"><strong>Transparency:</strong> Customers have a right to understand why their transaction was blocked and how to dispute it.</li>
+                        <li class="list-group-item"><strong>Data security:</strong> Financial datasets are extremely sensitive — a breach could expose millions to further fraud.</li>
+                        <li class="list-group-item"><strong>Regulatory compliance:</strong> Models must comply with GDPR and PCI-DSS, which impose strict rules on data handling and algorithmic decisions.</li>
+                    </ul>
+                </div>
+
+                <hr>
+
+                <!-- FUTURE -->
+                <div class="section">
+                    <h2 id="future">The Future of Fraud Detection</h2>
+
+                    <img src="https://pplx-res.cloudinary.com/image/upload/pplx_search_images/dc06b4d3976dd601cf6d1845ff1df7e15e1b8b04.jpg"
+                         alt="ML pipeline architecture for fraud detection" class="section-img">
+
+                    <ul class="list-group mb-3">
+                        <li class="list-group-item"><strong>Real-time graph analytics:</strong> Detecting coordinated fraud rings by analyzing the full network of accounts, devices, and merchants simultaneously.</li>
+                        <li class="list-group-item"><strong>Federated learning:</strong> Multiple banks train fraud models collaboratively without sharing raw customer data.</li>
+                        <li class="list-group-item"><strong>LLMs for fraud:</strong> Analyzing unstructured data like chats and emails to detect social engineering and phishing attempts.</li>
+                        <li class="list-group-item"><strong>Explainable AI (XAI):</strong> SHAP and LIME provide human-readable explanations for each fraud decision, satisfying regulators.</li>
+                        <li class="list-group-item"><strong>Behavioral biometrics:</strong> Continuously authenticating users based on how they type, swipe, or hold their phone.</li>
+                    </ul>
+                    <p>As fraud evolves with AI-generated synthetic identities and deepfake attacks, ML-based defenses will continue to be the financial industry's most critical line of defense.</p>
+                </div>
+
+                <hr>
+
+                <!-- CONCLUSION -->
+                <div class="section">
+                    <h2 id="conclusion">Conclusion</h2>
+                    <div class="alert alert-primary">
+                        Bank fraud detection is a powerful example of how Machine Learning can protect millions of people in real time. From blocking a stolen credit card in milliseconds to uncovering complex money laundering networks, its impact is both immediate and far-reaching. Responsible deployment demands careful attention to fairness, transparency, privacy, and continuous adaptation. As engineers and data scientists, understanding not just how these systems work — but also their societal implications — is essential to building financial technology that is both effective and trustworthy.
+                    </div>
+                    <div class="mt-3">
+                        <span class="badge bg-primary me-1">Supervised Learning</span>
+                        <span class="badge bg-success me-1">Random Forest</span>
+                        <span class="badge bg-warning text-dark me-1">Real Time</span>
+                        <span class="badge bg-danger me-1">Fraud Detection</span>
+                        <span class="badge bg-info text-dark">XGBoost</span>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name ="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Perceptron Classification Application</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel = "stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <link rel = "stylesheet" href="{{url_for('static',filename='style.css')}}">
+</head>
+<body>
+    {% include "navbar.html" %}
+
+    <div class="layout">
+        <nav class="sidebar shadow-sm">
+            <h3>Sections</h3>
+            <ul>
+                <li><a href="#problem">Problem Descrption</a></li>
+                <li><a href="#dataset">Dataset Explanation And Variables used</a></li>
+                <li><a href="#pipeline">Data Pipeline</a></li>
+                <li><a href="#training" >Model Training</a></li>
+                <li><a href="#prediction">Prediction</a></li>
+                <li><a href="#metrics">Metrics</a></li>
+                <li><a href="#final">Final Interpetation And Conclusion</a></li>
+            </ul>
+        </nav>
+
+        <main class="main">
+            <div class="content">
+
+                <div class="titlePerceptron">
+                    <div class="overlay"></div>
+                    <h1> Perceptron classification model</h1>
+                </div>
+
+                <section id="problem" class="card p-4 shadow-sm mb-4">
+                    <h3 class="text-primary">Problem Description</h3>
+                    <p>
+                        The objective is to classify breast tumors as <strong> Benin (0)</strong> or 
+                        <strong>Malignant (1) </strong> based on geometric characteristics obtained from 
+                        digitized images of a fine needle aspiration (FNA) of a breast mass.
+                    </p>
+                </section>
+
+                <div class="row d-flex align-items-stretch">
+                    <div class="col-md-7">
+                        <section id="dataset" class="card p-4 h-100 shadow-sm">    
+                            <h4>Dataset explanation</h4>
+                            <p class="small">
+                                The Breast Cancer Wisconsin (Diagnostic) dataset, obtained from Kaggle, was used. This dataset contains:
+                                30 tumor-related characteristics.
+                                For this model, the 10 most important average characteristics were selected.
+                                For practical purposes, the user is only asked for 4 physical dimensions; the remaining 6 are filled in with the average values 
+                                for a normal person according to the original dataset.
+                                The 10 characteristics used are:
+                            </p>
+                            <div class="row g-2">
+                                <div class="col-md-6">
+                                    <h4><i class="bi bi database"></i>variables requested from the user: </h4>
+                                    <ul class="small text-muted">
+                                        <li>Average radius </li>
+                                        <li>Average texture </li>
+                                        <li>Average perimeter</li>
+                                        <li>Average area</li>
+                                    </ul>
+                                </div>
+                                <div class="col-md-6">
+                                    <h4><i class="bi bi database"></i>Filled variables:</h4>
+                                    <span class="badge bg-secondary badge-custom">Smoothness</span> 
+                                    <span class="badge bg-secondary badge-custom">Compactness</span> 
+                                    <span class="badge bg-secondary badge-custom">Concavity</span> 
+                                    <span class="badge bg-secondary badge-custom">Concave points</span>
+                                    <span class="badge bg-secondary badge-custom">Symmetry</span> 
+                                    <span class="badge bg-secondary badge-custom">Fractal Dim.</span>
+                                </div>
+                            </div>
+                        </section>
+                    </div>
+
+                    <div class="col-md-5">
+                        <section id="pipeline" class="card p-4 h-100 shadow-sm bg-light border-primay">
+                            <h4>Preparation of the Data (Pipeline)</h4>
+                            <ul class="small">
+                                <li><strong>Cleaning:</strong> The IDs belonging to each diagnosis were removed and null values ​were used.</li>
+                                <li><strong>Scaling:</strong> Data standardization (Z-score) using the StandardScaler to transform the features into a 
+                                    distribution with mean mu=0 and variance sigma=1, crucial for Perceptron convergence.
+                                <li><strong>Division:</strong> The dataset was divided into 80% for weighted training and 20% for testing.</li>
+                            </ul>
+                        </section>
+                    </div>
+                </div>
+
+                <section id="training" class="card p-4 mt-4 shadow-sm ">
+                    <h3>Model training</h3>
+                    <p>
+                        The Perceptron learns by iteratively updating a vector of weights (W) and a bias (b). The activation function used is 
+                        the Unit Step function.
+                    </p>
+                    <div class="row align-items-center">
+                        <div class="col-md-6 text-center">
+                            <h5><strong>Learning Curve (Loss)</strong></h5>
+                            <img src="data:image/png;base64,{{ plot_url_errors }}" class="img-fluid rounded" alt="Convergence graph">
+                            <p>
+                                It shows the reduction in updates (errors) as the model adjusts its weights at each epoch.
+                            </p>
+                        </div>
+                        <div class="cold-md-6">
+                            <div class="p-3 bg-white border rounded">
+                                <h6>Hyperparameters:</h6> 
+                                <ul class="mb-0"> 
+                                    <li><strong>Learning Rate:</strong> 0.01</li> 
+                                    <li><strong>Epoches:</strong> 100</li> 
+                                    <li><strong>Function:</strong> f(z) = 1 if z >= 0 else 0 </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="prediction" class="card p-5 mt-4 border-primay shadow">
+                    <h3 class="text-center mb-4"> <strong>Diagnostic Prediction (Breast Cancer)</strong></h3>
+                    <p>Enter the average cell mass values for a diagnosis:</p>
+                    <form method="POST" action="#prediction" class="row g-3">
+                        <div class="cold-md-6">
+                            <label class="form-label fw-bold small">Average radius</label>
+                            <input type="number" step="any" name="radius" class="form-control shadow-sm" required>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold small">Average texture</label>
+                            <input type="number" step="any" name="texture" class="form-control shadow-sm" required>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold small">Average perimeter</label>
+                            <input type="number" step="any" name="perimeter" class="form-control shadow-sm" required>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold small">Average Area</label>
+                            <input type="number" step="any" name="area" class="form-control shadow-sm" required>
+                        </div>
+                        
+                        <div class="col-12 text-center mt-4">
+                            <button type="submit" class="btn btn-primary btn-lg w-100">Make a Prediction</button>
+                        </div>
+                    </form>
+
+                    {% if prediction is not none%}
+                    <div class="mt-4 animate__animated animate__fadeIn">
+                        <div class="p-4 rounded-3 shadow  text-center {% if prediction == 1 %}bg-danger text-white{% else %}bg-success text-white{% endif %}">
+                            <h2 class="mb-0">
+                                {% if prediction == 1 %}
+                                <i class="bi bi-exclamation-triangle"></i> Result: Malignant
+                                {% else %}
+                                <i class="bi bi-shield-check"></i> Result: Beningn
+                                {% endif %}
+                            </h2>
+                        </div>
+                        <p>
+                            The prediction is based on the decision frontier calculated by the model after training.
+                        </p>
+                    </div>
+                    {% endif %}
+                </section>
+
+                <section id="metrics" class="mt-5">
+                    <h2 class="section-title mb-4">Evaluation Metrics</h2>
+                    <div class="row g-4 text-center">
+                        <div class="col-md-3">
+                            <div class="card p-3 border-left-blue">
+                                <small class="text-muted">Accuracy</small>
+                                <h4 class="mb-0">{{metrics.accuracy}}</h4>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="card p-3 border-left-blue">
+                                <small class="text-muted">Precicsion</small>
+                                <h4 class="mb-0">{{metrics.precision}}</h4>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="card p-3 border-left-blue">
+                                <small class="text-muted">Recall</small>
+                                <h4 class="mb-0">{{metrics.recall}}</h4>
+                            </div>
+                        </div>
+
+                        <div class="col-md-3">
+                            <div class="card p-3 border-left-blue">
+                                <small class="text-muted">F1-Score</small>
+                                <h4 class="mb-0">{{metrics.f1}}</h4>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mt-4">
+                        <div class="col-md-6">
+                            <div class="card p-3 h-100 text-center">
+                                <h5>Confusion Matrix</h5>
+                                <img src="data:image/png;base64,{{ plot_url_cm }}" class="img-fluid" alt="Confusion Matrix">
+                                <p class="small text-muted mt-3">Allows visualization of the algorithm's performance by comparing actual values ​​against predictions,
+                                    identifying False Positives and False Negatives.</p>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="card p-3 h-100 text-center">
+                                <h5>ROC Curve Analysis</h5>
+                                <img src="data:image/png;base64,{{ plot_url_roc }}" class="img-fluid" alt="ROC Curve">
+                                <p class="small text-muted mt-3">The ROC curve illustrates the model's discriminatory ability. The area under the curve (AUC) 
+                                    represents the probability that the model correctly classifies a random sample.</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="final">
+                    <div class="interpretation-box mt-5 mt-6 shadow-sm">
+                        <h4><i class="bi big-lightnuld-fill"></i><strong>Final Interpretation of the Results</strong></h4></h4>
+                        <p>
+                            The model exhibits robust performance. In the clinical setting, a high recall rate is the primary objective, as it indicates a low false negative rate (cases where cancer is present but was not detected).
+                        </p>
+                        <p>
+                            <strong>Conclusion:</strong> Although the Perceptron is a model limited to linearly separable problems, the results demonstrate that, after adequate standardization of the variables, the dataset
+                            presents a structure that allows for effective classification with this simple architecture
+                        </p>
+                    </div>
+                </section>     
+            </div>
+        </main>
+    </div>
+
+    <div class="header-section text-center">
+        <div class="container">
+            <h1><i class="bi bi-cp"></i></h1>
+        </div>
+    </div>
+        
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
