@@ -13,40 +13,16 @@ from sklearn.metrics import accuracy_score, confusion_matrix, precision_score, r
 from sklearn.preprocessing import StandardScaler, LabelEncoder
 from perceptron import Perceptron
 
+from models.linearRegression import train_predict
+from models.logisticRegression import train_predict_logistic
+from models.perceptron_model import train_perceptron, prediction_perceptron
 
 app = Flask(__name__)
 
 # ================== DATASET ==================
-
 df = pd.read_csv('medals.csv')
 df_logistic = pd.read_csv('fifa24.csv')
 df_perceptron = pd.read_csv('breastCancerWisconsin.csv')
-
-#---------- Graphs base64 ----------
-def get_plot_url():
-    img = io.BytesIO()
-    plt.savefig(img, format='png', bbox_inches='tight')
-    img.seek(0)
-    plt.close()
-    return base64.b64encode(img.getvalue()).decode('utf-8')
-
-#---------------
-scaler_p = StandardScaler()
-p_or = Perceptron(learning_rate=0.1, epochs=100)
-
-def prepare_perceptron_data():
-    df_p = df_perceptron.copy()
-    if 'id' in df_p.columns: 
-        df_p = df_p.drop(columns=['id'])
-    if 'Unnamed: 32' in df_p.columns: 
-        df_p = df_p.drop(columns=['Unnamed: 32'])
-
-    le = LabelEncoder()
-    df_p['diagnosis'] = le.fit_transform(df_p['diagnosis'])
-
-    X = df_p.iloc[:, 1:11].values
-    y = df_p['diagnosis'].values
-    return X, y
 
 # ================== ROUTE ==================
 
@@ -84,6 +60,7 @@ def linealConcept():
 @app.route('/linearRegression/application')
 def linealApplication():
     columns = list(df.select_dtypes(include='number').columns)
+    columns = [col for col in columns if col != 'Total']
     return render_template('linearRegression/linealRApplication.html', columns=columns)
 
 @app.route('/predict', methods=['POST'])
@@ -91,33 +68,14 @@ def predict():
     x_col = request.form['x_variable']
     input_value = float(request.form['input_value'])
 
-    # Regresion simple: una sola variable X predice Y fijo (Total)
-    X = df[[x_col]]
-    y = df['Total']
-
-    model = LinearRegression()
-    model.fit(X, y)
-
-    plt.figure()
-    plt.scatter(df[x_col], y, color='blue', label='Real data')
-    plt.plot(df[x_col], model.predict(X), color='red', label='Regression line')
-    plt.xlabel(x_col)
-    plt.ylabel('Total')
-    plt.title(f'Simple Linear Regression: {x_col} vs Total')
-    plt.legend()
-    plt.tight_layout()
-    plt.savefig('static/graph.png')
-    plt.close()
-
-    prediction = model.predict([[input_value]])[0]
-
+    prediction = train_predict(df, x_col, input_value)
     columns = list(df.select_dtypes(include='number').columns)
     columns = [col for col in columns if col != 'Total']
 
     return render_template('linearRegression/linealRApplication.html',
                            columns=columns,
-                           prediction=round(prediction, 2),
-                           x_col=x_col,
+                           prediction=prediction,
+                           x_col=x_col, 
                            input_value=input_value)
 
 #---------- LOGISTIC REGRESSION ----------
@@ -134,73 +92,20 @@ def logisticApplication():
 
 @app.route('/predict_logistic', methods=['POST'])
 def predict_logistic():
-    # 1. Preparacion de datos
-    df_log = df_logistic.copy()
-    df_log['Elite'] = (df_log['Overall'] >= 80).astype(int)
-
-    X = df_log[['Pace', 'Shooting', 'Passing', 'Dribbling']].fillna(0)
-    y = df_log['Elite']
-
-    # 2. Split train/test
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
-
-    # 3. Scaling
-    scaler = StandardScaler()
-    X_train_scaled = scaler.fit_transform(X_train)
-    X_test_scaled = scaler.transform(X_test)
-
-    # 4. Entrenamiento del modelo
-    model = LogisticRegression(random_state=42, max_iter=1000)
-    model.fit(X_train_scaled, y_train)
-
-    # 5. Evaluacion del modelo
-    train_accuracy = accuracy_score(y_train, model.predict(X_train_scaled))
-    test_accuracy = accuracy_score(y_test, model.predict(X_test_scaled))
-
-    # 6. Prediccion con inputs del usuario
     pace_input = float(request.form['pace'])
     shooting_input = float(request.form['shooting'])
     passing_input = float(request.form['passing'])
     dribbling_input = float(request.form['dribbling'])
 
-    user_input = scaler.transform([[pace_input, shooting_input, passing_input, dribbling_input]])
-    pred_class = model.predict(user_input)[0]
-    pred_prob = model.predict_proba(user_input)[0][1]
-
-    # 7. Grafica
-    plt.figure(figsize=(12, 5))
-
-    plt.subplot(1, 2, 1)
-    scatter = plt.scatter(X['Pace'], X['Shooting'], c=y, cmap='RdYlBu_r', alpha=0.6)
-    plt.colorbar(scatter, label='Elite (1) / Average (0)')
-    plt.scatter([pace_input], [shooting_input], color='black', s=200, marker='*', label='Your Input')
-    plt.xlabel('Pace')
-    plt.ylabel('Shooting')
-    plt.title('Logistic Regression: Elite Player?')
-    plt.legend()
-
-    plt.subplot(1, 2, 2)
-    plt.text(0.1, 0.75, f'Train Accuracy:  {train_accuracy:.1%}', fontsize=13)
-    plt.text(0.1, 0.55, f'Test Accuracy:   {test_accuracy:.1%}', fontsize=13)
-    plt.text(0.1, 0.35, f'Prediction:      {"ELITE" if pred_class else "AVERAGE"}', fontsize=13)
-    plt.text(0.1, 0.15, f'Probability:     {pred_prob:.1%}', fontsize=13)
-    plt.axis('off')
-    plt.title('Model Performance')
-
-    plt.tight_layout()
-    plt.savefig('static/logistic_graph.png', dpi=150)
-    plt.close()
-
-    result = "ELITE PLAYER" if pred_class == 1 else "AVERAGE PLAYER"
+    result_data = train_predict_logistic(
+        df_logistic,
+        pace_input,
+        shooting_input,
+        passing_input,
+        dribbling_input
+    )
     return render_template('logisticRegression/logisticApplication.html',
-                           result=result,
-                           probability=f"{pred_prob:.1%}",
-                           pace=pace_input,
-                           shooting=shooting_input,
-                           passing=passing_input,
-                           dribbling=dribbling_input,
-                           train_acc=f"{train_accuracy:.1%}",
-                           test_acc=f"{test_accuracy:.1%}")
+                           **result_data)
 
 #---------- CLASSIFICATION PERPCEPTRON ----------
 @app.route('/perceptron/concepts')
@@ -209,72 +114,24 @@ def perceptronConcepts():
 
 @app.route('/perceptron/application', methods=['GET', 'POST'])
 def perceptronApp():
+    data = train_perceptron(df_perceptron)
 
-    #---------- Reparing data ----------
-    X, y = prepare_perceptron_data()
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
-
-    X_train_scaled = scaler_p.fit_transform(X_train)
-    X_test_scaled = scaler_p.transform(X_test)
-
-    #---------- Trainning Data ----------
-    p_or.fit(X_train_scaled, y_train)
-
-    #---------- Calculation of metrics ----------
-    y_pred = p_or.predict(X_test_scaled)
-    res_metrics = {
-        "accuracy": round(accuracy_score(y_test, y_pred), 4), 
-        "precision": round(precision_score(y_test, y_pred), 4),
-        "recall": round(recall_score(y_test, y_pred), 4),
-        "f1": round(f1_score(y_test, y_pred), 4) 
-    }
-
-    #---------- Graphics ----------
-    #---------- Matrix of Confusion ----------
-    plt.figure(figsize=(4,3))
-    cm = confusion_matrix(y_test, y_pred)
-    sns.heatmap(cm, annot=True, fmt='d', cmap='Reds')
-    plt.title('Matrix of Confusion')
-    plot_url_cm = get_plot_url()
-
-    #---------- Curve ROC ----------
-    fpr, tpr, _ = roc_curve(y_test, y_pred)
-    plt.figure(figsize=(4,3))
-    plt.plot(fpr, tpr, label=f'ROC curve = {auc(fpr, tpr):.2f}')
-    plt.plot([0,1], [0,1], linestyle='--', color='gray')
-    plt.legend()
-    plot_url_roc = get_plot_url()
-
-    #---------- ERRORS ----------
-    plt.figure(figsize=(5, 4))
-    plt.plot(range(1, len(p_or.errors_per_epoch) + 1), p_or.errors_per_epoch, marker='o')
-    plt.xlabel('Epochs')
-    plt.ylabel('Number of updates')
-    plt.title('Training Error')
-    plot_url_errors = get_plot_url()
-
-    #---------- Prediction ----------
     prediction = None
-    if request.method == 'POST':
-        avg_values = np.mean(X, axis=0)
-        inputs = [
-        float(request.form['radius']),
-        float(request.form['texture']),
-        float(request.form['perimeter']),
-        float(request.form['area']),
-        avg_values[4], avg_values[5], avg_values[6],
-        avg_values[7], avg_values[8], avg_values[9]
-        ]
 
-        input_scaled = scaler_p.transform([inputs])
-        prediction = int(p_or.predict(input_scaled)[0])
+    if request.method == 'POST':
+        prediction = prediction_perceptron(
+            data["model"],
+            data["scaler"],
+            data["X"],
+            request.form
+        )
 
     return render_template('classificationPerceptron/perceptronApplication.html',
-                       metrics=res_metrics,
-                       plot_url_cm=plot_url_cm,
-                       plot_url_roc=plot_url_roc,
-                       plot_url_errors = plot_url_errors,
-                       prediction=prediction)
+                           metrics=data["metrics"],
+                           plot_url_cm=data["plot_url_cm"],
+                           plot_url_roc=data["plot_url_roc"],
+                           plot_url_errors=data["plot_url_errors"],
+                           prediction=prediction)
 
 # ================== RUN ==================
 if __name__ == '__main__':
