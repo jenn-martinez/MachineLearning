@@ -1,18 +1,5 @@
 from flask import Flask, render_template, request
 import pandas as pd
-import numpy as np
-import matplotlib
-matplotlib.use('Agg')
-import matplotlib.pyplot as plt
-import base64
-import seaborn as sns
-import io
-from sklearn.linear_model import LinearRegression, LogisticRegression, Perceptron
-from sklearn.model_selection import train_test_split
-from sklearn.metrics import accuracy_score, confusion_matrix, precision_score, recall_score, f1_score, roc_curve, auc
-from sklearn.preprocessing import StandardScaler, LabelEncoder
-from perceptron import Perceptron
-
 from models.linearRegression import train_predict
 from models.logisticRegression import train_predict_logistic
 from models.perceptron_model import train_perceptron, prediction_perceptron
