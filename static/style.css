@@ -35,7 +35,7 @@ body {
     width: 300px;
     background-color: #ffffff;
     padding: 20px;
-    position: fixed;
+    position: relative;
     top: 70px;
     left: 0;
     height: calc(100vh - 70px);
@@ -137,7 +137,7 @@ body {
 }
 
 .overlay {
-    position: absolute;
+    position: sticky;
     inset: 0;
     background: rgba(0, 0, 0, 0.4);
     z-index: 1;
