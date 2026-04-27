@@ -1,4 +1,18 @@
 /* Navbar*/
+.nav-link {
+    display: block;
+    padding: 10px;
+    color: rgb(179, 177, 177);
+    text-decoration: none;
+    /* border-left: 30px solid transparent; */
+}
+
+.nav-link:hover,
+.nav-link.active {
+    color: white;
+    border-left: 3px solid var(--accent);
+} 
+
 .sidebar li {
     position: relative;
 }
@@ -25,7 +39,7 @@
     position: relative;
 }
 
-.dropdown-submenu .dropdown-menu {
+.dropdown-submenu .dropdown-menu{
     display: none;
     position: relative;
     top: 0;
@@ -33,6 +47,6 @@
     margin-top: -1px;
 }
 
-.dropdown-submenu:hover .dropdown-menu {
+.dropdown-submenu:hover .dropdown-menu{
     display: block;
 }

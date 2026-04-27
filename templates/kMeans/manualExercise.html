@@ -1,800 +1,800 @@
 {% extends "base.html"%}
 {% block title %}K-Means Manual Exercise {% endblock%}
 {% block content %}
+
 <div class="page-container">
     <aside class="sidebar">
-        <h3>Sections</h3>
-        <ul>
-            <li><a href="#dataset">Dataset</a></li>
-            <li>
-                <a href="#iteration1">Iteration 1</a>
-                <ul>
-                    <li><a href="#initial1">Initial Centroids</a></li>
-                    <li><a href="#distance1">Distances</a></li>
-                    <li><a href="#cluster1">Clusters</a></li>
-                    <li><a href="#table1">Results Table</a></li>
-                    <li><a href="#centroidU1">Centroids Updated</a></li>
-                </ul>
-            </li>
+        <h3 class="sidebar-title">Sections</h3>
+        <nav class="nav flex-column">
+            <a class="nav-link" href="#dataset">Dataset</a>
+            <a class="nav-link" href="#iteration1">Iteration 1</a>
+            <div class="sub-nav">
+                <a class="nav-link" href="#initial1">Initial Centroids</a>
+                <a class="nav-link" href="#distance1">Distances</a>
+                <a class="nav-link" href="#cluster1">Clusters</a>
+                <a class="nav-link" href="#table1">Results Table</a>
+                <a class="nav-link" href="#centroidU1">Centroids Updated</a>
+            </div>
+                        
+            <a class="nav-link" href="#iteration2">Iteration 2</a>
+            <div class="sub-nav">
+                <a class="nav-link" href="#initial2">Initial Centroids</a>
+                <a class="nav-link" href="#distance2">Distances</a>
+                <a class="nav-link" href="#cluster2">Clusters</a>
+                <a class="nav-link" href="#table2">Results Table</a>
+                <a class="nav-link" href="#centroidU2">Centroids Updated</a></li>
+            </div>
             
-            <li>
-                <a href="#iteration2">Iteration 2</a>
-                <ul>
-                    <li><a href="#initial2">Initial Centroids</a></li>
-                    <li><a href="#distance2">Distances</a></li>
-                    <li><a href="#cluster2">Clusters</a></li>
-                    <li><a href="#table2">Results Table</a></li>
-                    <li><a href="#centroidU2">Centroids Updated</a></li>
-                </ul>
-            </li>
-            <li>
-                <a href="#iteration3">Iteration 3</a>
-                <ul>
-                    <li><a href="#initial3">Initial Centroids</a></li>
-                    <li><a href="#distance3">Distances</a></li>
-                    <li><a href="#cluster3">Clusters</a></li>
-                    <li><a href="#table3">Results Table</a></li>
-                </ul>
-            </li>
-            <li><a href="#variance">Variance Analysis</a></li>
-            <li><a href="#results">Final Results</a></li>
-        </ul>
+            <a class="nav-link" href="#iteration3">Iteration 3</a>
+            <div class="sub-nav">
+                <a class="nav-link" href="#initial3">Initial Centroids</a>
+                <a class="nav-link" href="#distance3">Distances</a>
+                <a class="nav-link" href="#cluster3">Clusters</a>
+                <a class="nav-link" href="#table3">Results Table</a>
+            </div>
+                    
+            <a class="nav-link" href="#variance">Variance Comparison</a>
+            <a class="nav-link" href="#results">Final Results</a></li>
+        </nav>
     </aside>
 
-    <main class="main content">
-        <section class="hero">
-            <h1>K-Means <br><span>Manual Simulation</span></h1>
-        </section>
+    <main class="main">
+        <div class="container">
+            <section class="hero">
+                <h1>K-Means <br><span>Manual Simulation</span></h1>
+            </section>
 
-        <section class="section-light">
-            <p>
-                Step-by-step clustering process including distance calculations,
-                centroid updates, and variance analysis.
-            </p>
-        </section>
-        <section class="section-light" id="dataset">
-            <h2>1. Dataset Explanation</h2>
-            <p>
-                This dataset was generated using artificial intelligence and contains 
-                information on 100 students. Each record includes the number of weekly study 
-                hours (features 1) and the corresponding academic grade (features 2). 
-                The objective of this dataset is to identify groups of students based on their academic performance.
-            </p>
-            <p>The original data was used, which is:</p>
+            <section class="section-light">
+                <p>
+                    Step-by-step clustering process including distance calculations,
+                    centroid updates, and variance analysis.
+                </p>
+            </section>
+            <section class="section-light" id="dataset">
+                <h2>1. Dataset Explanation</h2>
+                <p>
+                    This dataset was generated using artificial intelligence and contains 
+                    information on 100 students. Each record includes the number of weekly study 
+                    hours (features 1) and the corresponding academic grade (features 2). 
+                    The objective of this dataset is to identify groups of students based on their academic performance.
+                </p>
+                <p>The original data was used, which is:</p>
+                
+            <!-- inicial data     -->
+                <div class="tables">
+                    <div class="table-card">
+                        <table>
+                            <tr>
+                                <th>Person</th>
+                                <th>StudyHours</th>
+                                <th>Grade</th>
+                            </tr>
+                            <tr><td>P1</td><td>2</td><td>50</td></tr>
+                            <tr><td>P2</td><td>3</td><td>55</td></tr>
+                            <tr><td>P3</td><td>4</td><td>60</td></tr>
+                            <tr><td>P4</td><td>5</td><td>65</td></tr>
+                            <tr><td>P5</td><td>6</td><td>70</td></tr>
+                            <tr><td>P6</td><td>7</td><td>75</td></tr>
+                            <tr><td>P7</td><td>8</td><td>80</td></tr>
+                            <tr><td>P8</td><td>9</td><td>85</td></tr>
+                            <tr><td>P9</td><td>10</td><td>90</td></tr>
+                            <tr><td>P10</td><td>11</td><td>95</td></tr>
+                            <tr><td>P11</td><td>3</td><td>52</td></tr>
+                            <tr><td>P12</td><td>4</td><td>57</td></tr>
+                            <tr><td>P13</td><td>5</td><td>62</td></tr>
+                            <tr><td>P14</td><td>6</td><td>67</td></tr>
+                            <tr><td>P15</td><td>7</td><td>72</td></tr>
+                            <tr><td>P16</td><td>8</td><td>77</td></tr>
+                            <tr><td>P17</td><td>9</td><td>82</td></tr>
+                            <tr><td>P18</td><td>10</td><td>87</td></tr>
+                            <tr><td>P19</td><td>11</td><td>92</td></tr>
+                            <tr><td>P20</td><td>12</td><td>97</td></tr>
+                            <tr><td>P21</td><td>2</td><td>48</td></tr>
+                            <tr><td>P22</td><td>3</td><td>53</td></tr>
+                            <tr><td>P23</td><td>4</td><td>58</td></tr>
+                            <tr><td>P24</td><td>5</td><td>63</td></tr>
+                            <tr><td>P25</td><td>6</td><td>68</td></tr>
+                            <tr><td>P26</td><td>7</td><td>73</td></tr>
+                            <tr><td>P27</td><td>8</td><td>78</td></tr>
+                            <tr><td>P28</td><td>9</td><td>83</td></tr>
+                            <tr><td>P29</td><td>10</td><td>88</td></tr>
+                            <tr><td>P30</td><td>11</td><td>93</td></tr>
+                            <tr><td>P31</td><td>1</td><td>45</td></tr>
+                            <tr><td>P32</td><td>2</td><td>50</td></tr>
+                            <tr><td>P33</td><td>3</td><td>55</td></tr>
+                            <tr><td>P34</td><td>4</td><td>60</td></tr>
+                            <tr><td>P35</td><td>5</td><td>65</td></tr>
+                            <tr><td>P36</td><td>6</td><td>70</td></tr>
+                            <tr><td>P37</td><td>7</td><td>75</td></tr>
+                            <tr><td>P38</td><td>8</td><td>80</td></tr>
+                            <tr><td>P39</td><td>9</td><td>85</td></tr>
+                            <tr><td>P40</td><td>10</td><td>90</td></tr>
+                            <tr><td>P41</td><td>11</td><td>94</td></tr>
+                            <tr><td>P42</td><td>12</td><td>98</td></tr>
+                            <tr><td>P43</td><td>2</td><td>49</td></tr>
+                            <tr><td>P44</td><td>3</td><td>54</td></tr>
+                            <tr><td>P45</td><td>4</td><td>59</td></tr>
+                            <tr><td>P46</td><td>5</td><td>64</td></tr>
+                            <tr><td>P47</td><td>6</td><td>69</td></tr>
+                            <tr><td>P48</td><td>7</td><td>74</td></tr>
+                            <tr><td>P49</td><td>8</td><td>79</td></tr>
+                            <tr><td>P50</td><td>9</td><td>84</td></tr>
+                            <tr><td>P51</td><td>10</td><td>89</td></tr>
+                            <tr><td>P52</td><td>11</td><td>94</td></tr>
+                            <tr><td>P53</td><td>12</td><td>99</td></tr>
+                            <tr><td>P54</td><td>1</td><td>44</td></tr>
+                            <tr><td>P55</td><td>2</td><td>48</td></tr>
+                            <tr><td>P56</td><td>3</td><td>53</td></tr>
+                            <tr><td>P57</td><td>4</td><td>58</td></tr>
+                            <tr><td>P58</td><td>5</td><td>63</td></tr>
+                            <tr><td>P59</td><td>6</td><td>68</td></tr>
+                            <tr><td>P60</td><td>7</td><td>73</td></tr>
+                            <tr><td>P61</td><td>8</td><td>78</td></tr>
+                            <tr><td>P62</td><td>9</td><td>83</td></tr>
+                            <tr><td>P63</td><td>10</td><td>88</td></tr>
+                            <tr><td>P64</td><td>11</td><td>93</td></tr>
+                            <tr><td>P65</td><td>12</td><td>97</td></tr>
+                            <tr><td>P66</td><td>2</td><td>50</td></tr>
+                            <tr><td>P67</td><td>3</td><td>55</td></tr>
+                            <tr><td>P68</td><td>4</td><td>60</td></tr>
+                            <tr><td>P69</td><td>5</td><td>65</td></tr>
+                            <tr><td>P70</td><td>6</td><td>70</td></tr>
+                            <tr><td>P71</td><td>7</td><td>75</td></tr>
+                            <tr><td>P72</td><td>8</td><td>80</td></tr>
+                            <tr><td>P73</td><td>9</td><td>85</td></tr>
+                            <tr><td>P74</td><td>10</td><td>90</td></tr>
+                            <tr><td>P75</td><td>11</td><td>95</td></tr>
+                            <tr><td>P76</td><td>12</td><td>98</td></tr>
+                            <tr><td>P77</td><td>1</td><td>43</td></tr>
+                            <tr><td>P78</td><td>2</td><td>47</td></tr>
+                            <tr><td>P79</td><td>3</td><td>52</td></tr>
+                            <tr><td>P80</td><td>4</td><td>57</td></tr>
+                            <tr><td>P81</td><td>5</td><td>62</td></tr>
+                            <tr><td>P82</td><td>6</td><td>67</td></tr>
+                            <tr><td>P83</td><td>7</td><td>72</td></tr>
+                            <tr><td>P84</td><td>8</td><td>77</td></tr>
+                            <tr><td>P85</td><td>9</td><td>82</td></tr>
+                            <tr><td>P86</td><td>10</td><td>87</td></tr>
+                            <tr><td>P87</td><td>11</td><td>92</td></tr>
+                            <tr><td>P88</td><td>12</td><td>96</td></tr>
+                            <tr><td>P89</td><td>2</td><td>49</td></tr>
+                            <tr><td>P90</td><td>3</td><td>54</td></tr>
+                            <tr><td>P91</td><td>4</td><td>59</td></tr>
+                            <tr><td>P92</td><td>5</td><td>64</td></tr>
+                            <tr><td>P93</td><td>6</td><td>69</td></tr>
+                            <tr><td>P94</td><td>7</td><td>74</td></tr>
+                            <tr><td>P95</td><td>8</td><td>79</td></tr>
+                            <tr><td>P96</td><td>9</td><td>84</td></tr>
+                            <tr><td>P97</td><td>10</td><td>89</td></tr>
+                            <tr><td>P98</td><td>11</td><td>94</td></tr>
+                            <tr><td>P99</td><td>12</td><td>98</td></tr>
+                            <tr><td>P100</td><td>1</td><td>42</td></tr>
+                        </table>
+                    </div>
+                </div>
+                <p>
+                    The complete dataset (100 records) was processed in the same way for all iterations.
+                </p>
+            </section>
+
+            <!-- Iteration 1-->
             
-        <!-- inicial data     -->
-            <div class="tables">
-                <div class="table-card">
-                    <table>
-                        <tr>
-                            <th>Person</th>
-                            <th>StudyHours</th>
-                            <th>Grade</th>
-                        </tr>
-                        <tr><td>P1</td><td>2</td><td>50</td></tr>
-                        <tr><td>P2</td><td>3</td><td>55</td></tr>
-                        <tr><td>P3</td><td>4</td><td>60</td></tr>
-                        <tr><td>P4</td><td>5</td><td>65</td></tr>
-                        <tr><td>P5</td><td>6</td><td>70</td></tr>
-                        <tr><td>P6</td><td>7</td><td>75</td></tr>
-                        <tr><td>P7</td><td>8</td><td>80</td></tr>
-                        <tr><td>P8</td><td>9</td><td>85</td></tr>
-                        <tr><td>P9</td><td>10</td><td>90</td></tr>
-                        <tr><td>P10</td><td>11</td><td>95</td></tr>
-                        <tr><td>P11</td><td>3</td><td>52</td></tr>
-                        <tr><td>P12</td><td>4</td><td>57</td></tr>
-                        <tr><td>P13</td><td>5</td><td>62</td></tr>
-                        <tr><td>P14</td><td>6</td><td>67</td></tr>
-                        <tr><td>P15</td><td>7</td><td>72</td></tr>
-                        <tr><td>P16</td><td>8</td><td>77</td></tr>
-                        <tr><td>P17</td><td>9</td><td>82</td></tr>
-                        <tr><td>P18</td><td>10</td><td>87</td></tr>
-                        <tr><td>P19</td><td>11</td><td>92</td></tr>
-                        <tr><td>P20</td><td>12</td><td>97</td></tr>
-                        <tr><td>P21</td><td>2</td><td>48</td></tr>
-                        <tr><td>P22</td><td>3</td><td>53</td></tr>
-                        <tr><td>P23</td><td>4</td><td>58</td></tr>
-                        <tr><td>P24</td><td>5</td><td>63</td></tr>
-                        <tr><td>P25</td><td>6</td><td>68</td></tr>
-                        <tr><td>P26</td><td>7</td><td>73</td></tr>
-                        <tr><td>P27</td><td>8</td><td>78</td></tr>
-                        <tr><td>P28</td><td>9</td><td>83</td></tr>
-                        <tr><td>P29</td><td>10</td><td>88</td></tr>
-                        <tr><td>P30</td><td>11</td><td>93</td></tr>
-                        <tr><td>P31</td><td>1</td><td>45</td></tr>
-                        <tr><td>P32</td><td>2</td><td>50</td></tr>
-                        <tr><td>P33</td><td>3</td><td>55</td></tr>
-                        <tr><td>P34</td><td>4</td><td>60</td></tr>
-                        <tr><td>P35</td><td>5</td><td>65</td></tr>
-                        <tr><td>P36</td><td>6</td><td>70</td></tr>
-                        <tr><td>P37</td><td>7</td><td>75</td></tr>
-                        <tr><td>P38</td><td>8</td><td>80</td></tr>
-                        <tr><td>P39</td><td>9</td><td>85</td></tr>
-                        <tr><td>P40</td><td>10</td><td>90</td></tr>
-                        <tr><td>P41</td><td>11</td><td>94</td></tr>
-                        <tr><td>P42</td><td>12</td><td>98</td></tr>
-                        <tr><td>P43</td><td>2</td><td>49</td></tr>
-                        <tr><td>P44</td><td>3</td><td>54</td></tr>
-                        <tr><td>P45</td><td>4</td><td>59</td></tr>
-                        <tr><td>P46</td><td>5</td><td>64</td></tr>
-                        <tr><td>P47</td><td>6</td><td>69</td></tr>
-                        <tr><td>P48</td><td>7</td><td>74</td></tr>
-                        <tr><td>P49</td><td>8</td><td>79</td></tr>
-                        <tr><td>P50</td><td>9</td><td>84</td></tr>
-                        <tr><td>P51</td><td>10</td><td>89</td></tr>
-                        <tr><td>P52</td><td>11</td><td>94</td></tr>
-                        <tr><td>P53</td><td>12</td><td>99</td></tr>
-                        <tr><td>P54</td><td>1</td><td>44</td></tr>
-                        <tr><td>P55</td><td>2</td><td>48</td></tr>
-                        <tr><td>P56</td><td>3</td><td>53</td></tr>
-                        <tr><td>P57</td><td>4</td><td>58</td></tr>
-                        <tr><td>P58</td><td>5</td><td>63</td></tr>
-                        <tr><td>P59</td><td>6</td><td>68</td></tr>
-                        <tr><td>P60</td><td>7</td><td>73</td></tr>
-                        <tr><td>P61</td><td>8</td><td>78</td></tr>
-                        <tr><td>P62</td><td>9</td><td>83</td></tr>
-                        <tr><td>P63</td><td>10</td><td>88</td></tr>
-                        <tr><td>P64</td><td>11</td><td>93</td></tr>
-                        <tr><td>P65</td><td>12</td><td>97</td></tr>
-                        <tr><td>P66</td><td>2</td><td>50</td></tr>
-                        <tr><td>P67</td><td>3</td><td>55</td></tr>
-                        <tr><td>P68</td><td>4</td><td>60</td></tr>
-                        <tr><td>P69</td><td>5</td><td>65</td></tr>
-                        <tr><td>P70</td><td>6</td><td>70</td></tr>
-                        <tr><td>P71</td><td>7</td><td>75</td></tr>
-                        <tr><td>P72</td><td>8</td><td>80</td></tr>
-                        <tr><td>P73</td><td>9</td><td>85</td></tr>
-                        <tr><td>P74</td><td>10</td><td>90</td></tr>
-                        <tr><td>P75</td><td>11</td><td>95</td></tr>
-                        <tr><td>P76</td><td>12</td><td>98</td></tr>
-                        <tr><td>P77</td><td>1</td><td>43</td></tr>
-                        <tr><td>P78</td><td>2</td><td>47</td></tr>
-                        <tr><td>P79</td><td>3</td><td>52</td></tr>
-                        <tr><td>P80</td><td>4</td><td>57</td></tr>
-                        <tr><td>P81</td><td>5</td><td>62</td></tr>
-                        <tr><td>P82</td><td>6</td><td>67</td></tr>
-                        <tr><td>P83</td><td>7</td><td>72</td></tr>
-                        <tr><td>P84</td><td>8</td><td>77</td></tr>
-                        <tr><td>P85</td><td>9</td><td>82</td></tr>
-                        <tr><td>P86</td><td>10</td><td>87</td></tr>
-                        <tr><td>P87</td><td>11</td><td>92</td></tr>
-                        <tr><td>P88</td><td>12</td><td>96</td></tr>
-                        <tr><td>P89</td><td>2</td><td>49</td></tr>
-                        <tr><td>P90</td><td>3</td><td>54</td></tr>
-                        <tr><td>P91</td><td>4</td><td>59</td></tr>
-                        <tr><td>P92</td><td>5</td><td>64</td></tr>
-                        <tr><td>P93</td><td>6</td><td>69</td></tr>
-                        <tr><td>P94</td><td>7</td><td>74</td></tr>
-                        <tr><td>P95</td><td>8</td><td>79</td></tr>
-                        <tr><td>P96</td><td>9</td><td>84</td></tr>
-                        <tr><td>P97</td><td>10</td><td>89</td></tr>
-                        <tr><td>P98</td><td>11</td><td>94</td></tr>
-                        <tr><td>P99</td><td>12</td><td>98</td></tr>
-                        <tr><td>P100</td><td>1</td><td>42</td></tr>
-                    </table>
+            <section class="section-light">
+                <h2>2. Iteration Process</h2>
+                <h3 id="iteration1">Iteration 1</h3>
+                <h3 id="inicial1">Initial Centroids</h3>
+                <p>The initial centroids were chosen manually, ensuring that the points of each one were distinct; these centroids were:</p>
+                <div class="centroid-grid">
+                    <div class="centroid-item"><strong>Centroid 1:</strong>P1 (2,50)</div>
+                    <div class="centroid-item"><strong>Centroid 2:</strong>P35 (5,65)</div>
+                    <div class="centroid-item"><strong>Centroid 3:</strong>P88 (12,96)</div>
                 </div>
-            </div>
-            <p>
-                The complete dataset (100 records) was processed in the same way for all iterations.
-            </p>
-        </section>
+            </section>
 
-        <!-- Iteration 1-->
-
-        <section class="section-light">
-            <h2>2. Iteration Process</h2>
-            <h3 id="iteration1">Iteration 1</h3>
-            <h3 id="inicial1">Initial Centroids</h3>
-            <p>The initial centroids were chosen manually, ensuring that the points of each one were distinct; these centroids were:</p>
-            <div class="card-grid">
-                <div class="centroid-item"><strong>Centroid 1:</strong>P1 (2,50)</div>
-                <div class="centroid-item"><strong>Centroid 2:</strong>P35 (5,65)</div>
-                <div class="centroid-item"><strong>Centroid 3:</strong>P88 (12,96)</div>
-            </div>
-        </section>
-
-        <section class="section-light" id="distance1">
-            <h2>Distance Calculation</h2>
-            <div class="cards">
-                <div class="card">
-                    <p>
-                        Distances were calculated using the Euclidean distance formula:
-                        d = √((x - xc)² + (y - yc)²)
-                    </p>
-                    <p>
-                        Example: For point P2 (3,55) and centroid C1 (2,50):
-                        d = √((3-2)² + (55-50)²) ≈ 5.10
-                    </p>
+            <section class="section-light" id="distance1">
+                <h3>Distance Calculation</h3>
+                <div class="cards">
+                    <div class="card">
+                        <p>
+                            Distances were calculated using the Euclidean distance formula:
+                            d = √((x - xc)² + (y - yc)²)
+                        </p>
+                        <p>
+                            Example: For point P2 (3,55) and centroid C1 (2,50):
+                            d = √((3-2)² + (55-50)²) ≈ 5.10
+                        </p>
+                    </div>
                 </div>
-            </div>
-        </section>
+            </section>
 
-        <section class="section section-light" id="cluster1">
-            <h2>Cluster assignments</h2>
-            <div class="cards">
-                <div class="card">
-                    <p>
-                        Each data point was assigned to the nearest centroid based on the calculated minimum distance.
-                        For example:
-                        The distances for P5 were:
-                    </p>
-                    <ul>
-                        <li>d(C1): 20.40</li>
-                        <li>d(C2): 5.10</li>
-                        <li>d(C3): 26.68</li>
-                    </ul>
-                    <p>
-                        Since C2 is the shortest distance to a centroid, it was added to cluster 2.
-                    </p>
+            <section class="section section-light" id="cluster1">
+                <h3>Cluster assignments</h3>
+                <div class="cards">
+                    <div class="card">
+                        <p>
+                            Each data point was assigned to the nearest centroid based on the calculated minimum distance.
+                            For example:
+                            The distances for P5 were:
+                        </p>
+                        <ul>
+                            <li>d(C1): 20.40</li>
+                            <li>d(C2): 5.10</li>
+                            <li>d(C3): 26.68</li>
+                        </ul>
+                        <p>
+                            Since C2 is the shortest distance to a centroid, it was added to cluster 2.
+                        </p>
+                    </div>
                 </div>
-            </div>
-        </section>
+            </section>
 
-        <section class="section-light" id="table1">
-            <h2>Distance Tables and Cluster Assignments</h2>
-            <div class="tables">
-                <div class="table-card">
-                    <table>
-                        <tr>
-                            <th>Person</th>
-                            <th>StudyHours</th>
-                            <th>Grade</th>
-                            <th>d(C1)</th>
-                            <th>d(C2)</th>
-                            <th>d(C3)</th>
-                            <th>Cluster</th>
-                        </tr>
-                        <tr><td>P1</td><td>2,00</td><td>50,00</td><td>0,00</td><td>15,30</td><td>47,07</td><td>C1</td></tr>
-                        <tr><td>P2</td><td>3,00</td><td>55,00</td><td>5,10</td><td>10,20</td><td>41,98</td><td>C1</td></tr>
-                        <tr><td>P3</td><td>4,00</td><td>60,00</td><td>10,20</td><td>5,10</td><td>36,88</td><td>C2</td></tr>
-                        <tr><td>P4</td><td>5,00</td><td>65,00</td><td>15,30</td><td>0,00</td><td>31,78</td><td>C2</td></tr>
-                        <tr><td>P5</td><td>6,00</td><td>70,00</td><td>20,40</td><td>5,10</td><td>26,68</td><td>C2</td></tr>
-                        <tr><td>P6</td><td>7,00</td><td>75,00</td><td>25,50</td><td>10,20</td><td>21,59</td><td>C2</td></tr>
-                        <tr><td>P7</td><td>8,00</td><td>80,00</td><td>30,59</td><td>15,30</td><td>16,49</td><td>C2</td></tr>
-                        <tr><td>P8</td><td>9,00</td><td>85,00</td><td>35,69</td><td>20,40</td><td>11,40</td><td>C3</td></tr>
-                        <tr><td>P9</td><td>10,00</td><td>90,00</td><td>40,79</td><td>25,50</td><td>6,32</td><td>C3</td></tr>
-                        <tr><td>P10</td><td>11,00</td><td>95,00</td><td>45,89</td><td>30,59</td><td>1,41</td><td>C3</td></tr>
-                        <tr><td>P11</td><td>3,00</td><td>52,00</td><td>2,24</td><td>13,15</td><td>44,91</td><td>C1</td></tr>
-                        <tr><td>P12</td><td>4,00</td><td>57,00</td><td>7,28</td><td>8,06</td><td>39,81</td><td>C1</td></tr>
-                        <tr><td>P13</td><td>5,00</td><td>62,00</td><td>12,37</td><td>3,00</td><td>34,71</td><td>C2</td></tr>
-                        <tr><td>P14</td><td>6,00</td><td>67,00</td><td>17,46</td><td>2,24</td><td>29,61</td><td>C2</td></tr>
-                        <tr><td>P15</td><td>7,00</td><td>72,00</td><td>22,56</td><td>7,28</td><td>24,52</td><td>C2</td></tr>
-                        <tr><td>P16</td><td>8,00</td><td>77,00</td><td>27,66</td><td>12,37</td><td>19,42</td><td>C2</td></tr>
-                        <tr><td>P17</td><td>9,00</td><td>82,00</td><td>32,76</td><td>17,46</td><td>14,32</td><td>C3</td></tr>
-                        <tr><td>P18</td><td>10,00</td><td>87,00</td><td>37,85</td><td>22,56</td><td>9,22</td><td>C3</td></tr>
-                        <tr><td>P19</td><td>11,00</td><td>92,00</td><td>42,95</td><td>27,66</td><td>4,12</td><td>C3</td></tr>
-                        <tr><td>P20</td><td>12,00</td><td>97,00</td><td>48,05</td><td>32,76</td><td>1,00</td><td>C3</td></tr>
-                        <tr><td>P21</td><td>2,00</td><td>48,00</td><td>2,00</td><td>17,26</td><td>49,03</td><td>C1</td></tr>
-                        <tr><td>P22</td><td>3,00</td><td>53,00</td><td>3,16</td><td>12,17</td><td>43,93</td><td>C1</td></tr>
-                        <tr><td>P23</td><td>4,00</td><td>58,00</td><td>8,25</td><td>7,07</td><td>38,83</td><td>C2</td></tr>
-                        <tr><td>P24</td><td>5,00</td><td>63,00</td><td>13,34</td><td>2,00</td><td>33,73</td><td>C2</td></tr>
-                        <tr><td>P25</td><td>6,00</td><td>68,00</td><td>18,44</td><td>3,16</td><td>28,64</td><td>C2</td></tr>
-                        <tr><td>P26</td><td>7,00</td><td>73,00</td><td>23,54</td><td>8,25</td><td>23,54</td><td>C2</td></tr>
-                        <tr><td>P27</td><td>8,00</td><td>78,00</td><td>28,64</td><td>13,34</td><td>18,44</td><td>C2</td></tr>
-                        <tr><td>P28</td><td>9,00</td><td>83,00</td><td>33,73</td><td>18,44</td><td>13,34</td><td>C3</td></tr>
-                        <tr><td>P29</td><td>10,00</td><td>88,00</td><td>38,83</td><td>23,54</td><td>8,25</td><td>C3</td></tr>
-                        <tr><td>P30</td><td>11,00</td><td>93,00</td><td>43,93</td><td>28,64</td><td>3,16</td><td>C3</td></tr>
-                        <tr><td>P31</td><td>1,00</td><td>45,00</td><td>5,10</td><td>20,40</td><td>52,17</td><td>C1</td></tr>
-                        <tr><td>P32</td><td>2,00</td><td>50,00</td><td>0,00</td><td>15,30</td><td>47,07</td><td>C1</td></tr>
-                        <tr><td>P33</td><td>3,00</td><td>55,00</td><td>5,10</td><td>10,20</td><td>41,98</td><td>C1</td></tr>
-                        <tr><td>P34</td><td>4,00</td><td>60,00</td><td>10,20</td><td>5,10</td><td>36,88</td><td>C2</td></tr>
-                        <tr><td>P35</td><td>5,00</td><td>65,00</td><td>15,30</td><td>0,00</td><td>31,78</td><td>C2</td></tr>
-                        <tr><td>P36</td><td>6,00</td><td>70,00</td><td>20,40</td><td>5,10</td><td>26,68</td><td>C2</td></tr>
-                        <tr><td>P37</td><td>7,00</td><td>75,00</td><td>25,50</td><td>10,20</td><td>21,59</td><td>C2</td></tr>
-                        <tr><td>P38</td><td>8,00</td><td>80,00</td><td>30,59</td><td>15,30</td><td>16,49</td><td>C2</td></tr>
-                        <tr><td>P39</td><td>9,00</td><td>85,00</td><td>35,69</td><td>20,40</td><td>11,40</td><td>C3</td></tr>
-                        <tr><td>P40</td><td>10,00</td><td>90,00</td><td>40,79</td><td>25,50</td><td>6,32</td><td>C3</td></tr>
-                        <tr><td>P41</td><td>11,00</td><td>94,00</td><td>44,91</td><td>29,61</td><td>2,24</td><td>C3</td></tr>
-                        <tr><td>P42</td><td>12,00</td><td>98,00</td><td>49,03</td><td>33,73</td><td>2,00</td><td>C3</td></tr>
-                        <tr><td>P43</td><td>2,00</td><td>49,00</td><td>1,00</td><td>16,28</td><td>48,05</td><td>C1</td></tr>
-                        <tr><td>P44</td><td>3,00</td><td>54,00</td><td>4,12</td><td>11,18</td><td>42,95</td><td>C1</td></tr>
-                        <tr><td>P45</td><td>4,00</td><td>59,00</td><td>9,22</td><td>6,08</td><td>37,85</td><td>C2</td></tr>
-                        <tr><td>P46</td><td>5,00</td><td>64,00</td><td>14,32</td><td>1,00</td><td>32,76</td><td>C2</td></tr>
-                        <tr><td>P47</td><td>6,00</td><td>69,00</td><td>19,42</td><td>4,12</td><td>27,66</td><td>C2</td></tr>
-                        <tr><td>P48</td><td>7,00</td><td>74,00</td><td>24,52</td><td>9,22</td><td>22,56</td><td>C2</td></tr>
-                        <tr><td>P49</td><td>8,00</td><td>79,00</td><td>29,61</td><td>14,32</td><td>17,46</td><td>C2</td></tr>
-                        <tr><td>P50</td><td>9,00</td><td>84,00</td><td>34,71</td><td>19,42</td><td>12,37</td><td>C3</td></tr>
-                        <tr><td>P51</td><td>10,00</td><td>89,00</td><td>39,81</td><td>24,52</td><td>7,28</td><td>C3</td></tr>
-                        <tr><td>P52</td><td>11,00</td><td>94,00</td><td>44,91</td><td>29,61</td><td>2,24</td><td>C3</td></tr>
-                        <tr><td>P53</td><td>12,00</td><td>99,00</td><td>50,01</td><td>34,71</td><td>3,00</td><td>C3</td></tr>
-                        <tr><td>P54</td><td>1,00</td><td>44,00</td><td>6,08</td><td>21,38</td><td>53,15</td><td>C1</td></tr>
-                        <tr><td>P55</td><td>2,00</td><td>48,00</td><td>2,00</td><td>17,26</td><td>49,03</td><td>C1</td></tr>
-                        <tr><td>P56</td><td>3,00</td><td>53,00</td><td>3,16</td><td>12,17</td><td>43,93</td><td>C1</td></tr>
-                        <tr><td>P57</td><td>4,00</td><td>58,00</td><td>8,25</td><td>7,07</td><td>38,83</td><td>C2</td></tr>
-                        <tr><td>P58</td><td>5,00</td><td>63,00</td><td>13,34</td><td>2,00</td><td>33,73</td><td>C2</td></tr>
-                        <tr><td>P59</td><td>6,00</td><td>68,00</td><td>18,44</td><td>3,16</td><td>28,64</td><td>C2</td></tr>
-                        <tr><td>P60</td><td>7,00</td><td>73,00</td><td>23,54</td><td>8,25</td><td>23,54</td><td>C2</td></tr>
-                        <tr><td>P61</td><td>8,00</td><td>78,00</td><td>28,64</td><td>13,34</td><td>18,44</td><td>C2</td></tr>
-                        <tr><td>P62</td><td>9,00</td><td>83,00</td><td>33,73</td><td>18,44</td><td>13,34</td><td>C3</td></tr>
-                        <tr><td>P63</td><td>10,00</td><td>88,00</td><td>38,83</td><td>23,54</td><td>8,25</td><td>C3</td></tr>
-                        <tr><td>P64</td><td>11,00</td><td>93,00</td><td>43,93</td><td>28,64</td><td>3,16</td><td>C3</td></tr>
-                        <tr><td>P65</td><td>12,00</td><td>97,00</td><td>48,05</td><td>32,76</td><td>1,00</td><td>C3</td></tr>
-                        <tr><td>P66</td><td>2,00</td><td>50,00</td><td>0,00</td><td>15,30</td><td>47,07</td><td>C1</td></tr>
-                        <tr><td>P67</td><td>3,00</td><td>55,00</td><td>5,10</td><td>10,20</td><td>41,98</td><td>C1</td></tr>
-                        <tr><td>P68</td><td>4,00</td><td>60,00</td><td>10,20</td><td>5,10</td><td>36,88</td><td>C2</td></tr>
-                        <tr><td>P69</td><td>5,00</td><td>65,00</td><td>15,30</td><td>0,00</td><td>31,78</td><td>C2</td></tr>
-                        <tr><td>P70</td><td>6,00</td><td>70,00</td><td>20,40</td><td>5,10</td><td>26,68</td><td>C2</td></tr>
-                        <tr><td>P71</td><td>7,00</td><td>75,00</td><td>25,50</td><td>10,20</td><td>21,59</td><td>C2</td></tr>
-                        <tr><td>P72</td><td>8,00</td><td>80,00</td><td>30,59</td><td>15,30</td><td>16,49</td><td>C2</td></tr>
-                        <tr><td>P73</td><td>9,00</td><td>85,00</td><td>35,69</td><td>20,40</td><td>11,40</td><td>C3</td></tr>
-                        <tr><td>P74</td><td>10,00</td><td>90,00</td><td>40,79</td><td>25,50</td><td>6,32</td><td>C3</td></tr>
-                        <tr><td>P75</td><td>11,00</td><td>95,00</td><td>45,89</td><td>30,59</td><td>1,41</td><td>C3</td></tr>
-                        <tr><td>P76</td><td>12,00</td><td>98,00</td><td>49,03</td><td>33,73</td><td>2,00</td><td>C3</td></tr>
-                        <tr><td>P77</td><td>1,00</td><td>43,00</td><td>7,07</td><td>22,36</td><td>54,13</td><td>C1</td></tr>
-                        <tr><td>P78</td><td>2,00</td><td>47,00</td><td>3,00</td><td>18,25</td><td>50,01</td><td>C1</td></tr>
-                        <tr><td>P79</td><td>3,00</td><td>52,00</td><td>2,24</td><td>13,15</td><td>44,91</td><td>C1</td></tr>
-                        <tr><td>P80</td><td>4,00</td><td>57,00</td><td>7,28</td><td>8,06</td><td>39,81</td><td>C1</td></tr>
-                        <tr><td>P81</td><td>5,00</td><td>62,00</td><td>12,37</td><td>3,00</td><td>34,71</td><td>C2</td></tr>
-                        <tr><td>P82</td><td>6,00</td><td>67,00</td><td>17,46</td><td>2,24</td><td>29,61</td><td>C2</td></tr>
-                        <tr><td>P83</td><td>7,00</td><td>72,00</td><td>22,56</td><td>7,28</td><td>24,52</td><td>C2</td></tr>
-                        <tr><td>P84</td><td>8,00</td><td>77,00</td><td>27,66</td><td>12,37</td><td>19,42</td><td>C2</td></tr>
-                        <tr><td>P85</td><td>9,00</td><td>82,00</td><td>32,76</td><td>17,46</td><td>14,32</td><td>C3</td></tr>
-                        <tr><td>P86</td><td>10,00</td><td>87,00</td><td>37,85</td><td>22,56</td><td>9,22</td><td>C3</td></tr>
-                        <tr><td>P87</td><td>11,00</td><td>92,00</td><td>42,95</td><td>27,66</td><td>4,12</td><td>C3</td></tr>
-                        <tr><td>P88</td><td>12,00</td><td>96,00</td><td>47,07</td><td>31,78</td><td>0,00</td><td>C3</td></tr>
-                        <tr><td>P89</td><td>2,00</td><td>49,00</td><td>1,00</td><td>16,28</td><td>48,05</td><td>C1</td></tr>
-                        <tr><td>P90</td><td>3,00</td><td>54,00</td><td>4,12</td><td>11,18</td><td>42,95</td><td>C1</td></tr>
-                        <tr><td>P91</td><td>4,00</td><td>59,00</td><td>9,22</td><td>6,08</td><td>37,85</td><td>C2</td></tr>
-                        <tr><td>P92</td><td>5,00</td><td>64,00</td><td>14,32</td><td>1,00</td><td>32,76</td><td>C2</td></tr>
-                        <tr><td>P93</td><td>6,00</td><td>69,00</td><td>19,42</td><td>4,12</td><td>27,66</td><td>C2</td></tr>
-                        <tr><td>P94</td><td>7,00</td><td>74,00</td><td>24,52</td><td>9,22</td><td>22,56</td><td>C2</td></tr>
-                        <tr><td>P95</td><td>8,00</td><td>79,00</td><td>29,61</td><td>14,32</td><td>17,46</td><td>C2</td></tr>
-                        <tr><td>P96</td><td>9,00</td><td>84,00</td><td>34,71</td><td>19,42</td><td>12,37</td><td>C3</td></tr>
-                        <tr><td>P97</td><td>10,00</td><td>89,00</td><td>39,81</td><td>24,52</td><td>7,28</td><td>C3</td></tr>
-                        <tr><td>P98</td><td>11,00</td><td>94,00</td><td>44,91</td><td>29,61</td><td>2,24</td><td>C3</td></tr>
-                        <tr><td>P99</td><td>12,00</td><td>98,00</td><td>49,03</td><td>33,73</td><td>2,00</td><td>C3</td></tr>
-                        <tr><td>P100</td><td>1,00</td><td>42,00</td><td>8,06</td><td>23,35</td><td>55,11</td><td>C1</td></tr>
-                    </table>
+            <section class="section-light" id="table1">
+                <h3>Distance Tables and Cluster Assignments</h3>
+                <div class="tables">
+                    <div class="table-card">
+                        <table>
+                            <tr>
+                                <th>Person</th>
+                                <th>StudyHours</th>
+                                <th>Grade</th>
+                                <th>d(C1)</th>
+                                <th>d(C2)</th>
+                                <th>d(C3)</th>
+                                <th>Cluster</th>
+                            </tr>
+                            <tr><td>P1</td><td>2,00</td><td>50,00</td><td>0,00</td><td>15,30</td><td>47,07</td><td>C1</td></tr>
+                            <tr><td>P2</td><td>3,00</td><td>55,00</td><td>5,10</td><td>10,20</td><td>41,98</td><td>C1</td></tr>
+                            <tr><td>P3</td><td>4,00</td><td>60,00</td><td>10,20</td><td>5,10</td><td>36,88</td><td>C2</td></tr>
+                            <tr><td>P4</td><td>5,00</td><td>65,00</td><td>15,30</td><td>0,00</td><td>31,78</td><td>C2</td></tr>
+                            <tr><td>P5</td><td>6,00</td><td>70,00</td><td>20,40</td><td>5,10</td><td>26,68</td><td>C2</td></tr>
+                            <tr><td>P6</td><td>7,00</td><td>75,00</td><td>25,50</td><td>10,20</td><td>21,59</td><td>C2</td></tr>
+                            <tr><td>P7</td><td>8,00</td><td>80,00</td><td>30,59</td><td>15,30</td><td>16,49</td><td>C2</td></tr>
+                            <tr><td>P8</td><td>9,00</td><td>85,00</td><td>35,69</td><td>20,40</td><td>11,40</td><td>C3</td></tr>
+                            <tr><td>P9</td><td>10,00</td><td>90,00</td><td>40,79</td><td>25,50</td><td>6,32</td><td>C3</td></tr>
+                            <tr><td>P10</td><td>11,00</td><td>95,00</td><td>45,89</td><td>30,59</td><td>1,41</td><td>C3</td></tr>
+                            <tr><td>P11</td><td>3,00</td><td>52,00</td><td>2,24</td><td>13,15</td><td>44,91</td><td>C1</td></tr>
+                            <tr><td>P12</td><td>4,00</td><td>57,00</td><td>7,28</td><td>8,06</td><td>39,81</td><td>C1</td></tr>
+                            <tr><td>P13</td><td>5,00</td><td>62,00</td><td>12,37</td><td>3,00</td><td>34,71</td><td>C2</td></tr>
+                            <tr><td>P14</td><td>6,00</td><td>67,00</td><td>17,46</td><td>2,24</td><td>29,61</td><td>C2</td></tr>
+                            <tr><td>P15</td><td>7,00</td><td>72,00</td><td>22,56</td><td>7,28</td><td>24,52</td><td>C2</td></tr>
+                            <tr><td>P16</td><td>8,00</td><td>77,00</td><td>27,66</td><td>12,37</td><td>19,42</td><td>C2</td></tr>
+                            <tr><td>P17</td><td>9,00</td><td>82,00</td><td>32,76</td><td>17,46</td><td>14,32</td><td>C3</td></tr>
+                            <tr><td>P18</td><td>10,00</td><td>87,00</td><td>37,85</td><td>22,56</td><td>9,22</td><td>C3</td></tr>
+                            <tr><td>P19</td><td>11,00</td><td>92,00</td><td>42,95</td><td>27,66</td><td>4,12</td><td>C3</td></tr>
+                            <tr><td>P20</td><td>12,00</td><td>97,00</td><td>48,05</td><td>32,76</td><td>1,00</td><td>C3</td></tr>
+                            <tr><td>P21</td><td>2,00</td><td>48,00</td><td>2,00</td><td>17,26</td><td>49,03</td><td>C1</td></tr>
+                            <tr><td>P22</td><td>3,00</td><td>53,00</td><td>3,16</td><td>12,17</td><td>43,93</td><td>C1</td></tr>
+                            <tr><td>P23</td><td>4,00</td><td>58,00</td><td>8,25</td><td>7,07</td><td>38,83</td><td>C2</td></tr>
+                            <tr><td>P24</td><td>5,00</td><td>63,00</td><td>13,34</td><td>2,00</td><td>33,73</td><td>C2</td></tr>
+                            <tr><td>P25</td><td>6,00</td><td>68,00</td><td>18,44</td><td>3,16</td><td>28,64</td><td>C2</td></tr>
+                            <tr><td>P26</td><td>7,00</td><td>73,00</td><td>23,54</td><td>8,25</td><td>23,54</td><td>C2</td></tr>
+                            <tr><td>P27</td><td>8,00</td><td>78,00</td><td>28,64</td><td>13,34</td><td>18,44</td><td>C2</td></tr>
+                            <tr><td>P28</td><td>9,00</td><td>83,00</td><td>33,73</td><td>18,44</td><td>13,34</td><td>C3</td></tr>
+                            <tr><td>P29</td><td>10,00</td><td>88,00</td><td>38,83</td><td>23,54</td><td>8,25</td><td>C3</td></tr>
+                            <tr><td>P30</td><td>11,00</td><td>93,00</td><td>43,93</td><td>28,64</td><td>3,16</td><td>C3</td></tr>
+                            <tr><td>P31</td><td>1,00</td><td>45,00</td><td>5,10</td><td>20,40</td><td>52,17</td><td>C1</td></tr>
+                            <tr><td>P32</td><td>2,00</td><td>50,00</td><td>0,00</td><td>15,30</td><td>47,07</td><td>C1</td></tr>
+                            <tr><td>P33</td><td>3,00</td><td>55,00</td><td>5,10</td><td>10,20</td><td>41,98</td><td>C1</td></tr>
+                            <tr><td>P34</td><td>4,00</td><td>60,00</td><td>10,20</td><td>5,10</td><td>36,88</td><td>C2</td></tr>
+                            <tr><td>P35</td><td>5,00</td><td>65,00</td><td>15,30</td><td>0,00</td><td>31,78</td><td>C2</td></tr>
+                            <tr><td>P36</td><td>6,00</td><td>70,00</td><td>20,40</td><td>5,10</td><td>26,68</td><td>C2</td></tr>
+                            <tr><td>P37</td><td>7,00</td><td>75,00</td><td>25,50</td><td>10,20</td><td>21,59</td><td>C2</td></tr>
+                            <tr><td>P38</td><td>8,00</td><td>80,00</td><td>30,59</td><td>15,30</td><td>16,49</td><td>C2</td></tr>
+                            <tr><td>P39</td><td>9,00</td><td>85,00</td><td>35,69</td><td>20,40</td><td>11,40</td><td>C3</td></tr>
+                            <tr><td>P40</td><td>10,00</td><td>90,00</td><td>40,79</td><td>25,50</td><td>6,32</td><td>C3</td></tr>
+                            <tr><td>P41</td><td>11,00</td><td>94,00</td><td>44,91</td><td>29,61</td><td>2,24</td><td>C3</td></tr>
+                            <tr><td>P42</td><td>12,00</td><td>98,00</td><td>49,03</td><td>33,73</td><td>2,00</td><td>C3</td></tr>
+                            <tr><td>P43</td><td>2,00</td><td>49,00</td><td>1,00</td><td>16,28</td><td>48,05</td><td>C1</td></tr>
+                            <tr><td>P44</td><td>3,00</td><td>54,00</td><td>4,12</td><td>11,18</td><td>42,95</td><td>C1</td></tr>
+                            <tr><td>P45</td><td>4,00</td><td>59,00</td><td>9,22</td><td>6,08</td><td>37,85</td><td>C2</td></tr>
+                            <tr><td>P46</td><td>5,00</td><td>64,00</td><td>14,32</td><td>1,00</td><td>32,76</td><td>C2</td></tr>
+                            <tr><td>P47</td><td>6,00</td><td>69,00</td><td>19,42</td><td>4,12</td><td>27,66</td><td>C2</td></tr>
+                            <tr><td>P48</td><td>7,00</td><td>74,00</td><td>24,52</td><td>9,22</td><td>22,56</td><td>C2</td></tr>
+                            <tr><td>P49</td><td>8,00</td><td>79,00</td><td>29,61</td><td>14,32</td><td>17,46</td><td>C2</td></tr>
+                            <tr><td>P50</td><td>9,00</td><td>84,00</td><td>34,71</td><td>19,42</td><td>12,37</td><td>C3</td></tr>
+                            <tr><td>P51</td><td>10,00</td><td>89,00</td><td>39,81</td><td>24,52</td><td>7,28</td><td>C3</td></tr>
+                            <tr><td>P52</td><td>11,00</td><td>94,00</td><td>44,91</td><td>29,61</td><td>2,24</td><td>C3</td></tr>
+                            <tr><td>P53</td><td>12,00</td><td>99,00</td><td>50,01</td><td>34,71</td><td>3,00</td><td>C3</td></tr>
+                            <tr><td>P54</td><td>1,00</td><td>44,00</td><td>6,08</td><td>21,38</td><td>53,15</td><td>C1</td></tr>
+                            <tr><td>P55</td><td>2,00</td><td>48,00</td><td>2,00</td><td>17,26</td><td>49,03</td><td>C1</td></tr>
+                            <tr><td>P56</td><td>3,00</td><td>53,00</td><td>3,16</td><td>12,17</td><td>43,93</td><td>C1</td></tr>
+                            <tr><td>P57</td><td>4,00</td><td>58,00</td><td>8,25</td><td>7,07</td><td>38,83</td><td>C2</td></tr>
+                            <tr><td>P58</td><td>5,00</td><td>63,00</td><td>13,34</td><td>2,00</td><td>33,73</td><td>C2</td></tr>
+                            <tr><td>P59</td><td>6,00</td><td>68,00</td><td>18,44</td><td>3,16</td><td>28,64</td><td>C2</td></tr>
+                            <tr><td>P60</td><td>7,00</td><td>73,00</td><td>23,54</td><td>8,25</td><td>23,54</td><td>C2</td></tr>
+                            <tr><td>P61</td><td>8,00</td><td>78,00</td><td>28,64</td><td>13,34</td><td>18,44</td><td>C2</td></tr>
+                            <tr><td>P62</td><td>9,00</td><td>83,00</td><td>33,73</td><td>18,44</td><td>13,34</td><td>C3</td></tr>
+                            <tr><td>P63</td><td>10,00</td><td>88,00</td><td>38,83</td><td>23,54</td><td>8,25</td><td>C3</td></tr>
+                            <tr><td>P64</td><td>11,00</td><td>93,00</td><td>43,93</td><td>28,64</td><td>3,16</td><td>C3</td></tr>
+                            <tr><td>P65</td><td>12,00</td><td>97,00</td><td>48,05</td><td>32,76</td><td>1,00</td><td>C3</td></tr>
+                            <tr><td>P66</td><td>2,00</td><td>50,00</td><td>0,00</td><td>15,30</td><td>47,07</td><td>C1</td></tr>
+                            <tr><td>P67</td><td>3,00</td><td>55,00</td><td>5,10</td><td>10,20</td><td>41,98</td><td>C1</td></tr>
+                            <tr><td>P68</td><td>4,00</td><td>60,00</td><td>10,20</td><td>5,10</td><td>36,88</td><td>C2</td></tr>
+                            <tr><td>P69</td><td>5,00</td><td>65,00</td><td>15,30</td><td>0,00</td><td>31,78</td><td>C2</td></tr>
+                            <tr><td>P70</td><td>6,00</td><td>70,00</td><td>20,40</td><td>5,10</td><td>26,68</td><td>C2</td></tr>
+                            <tr><td>P71</td><td>7,00</td><td>75,00</td><td>25,50</td><td>10,20</td><td>21,59</td><td>C2</td></tr>
+                            <tr><td>P72</td><td>8,00</td><td>80,00</td><td>30,59</td><td>15,30</td><td>16,49</td><td>C2</td></tr>
+                            <tr><td>P73</td><td>9,00</td><td>85,00</td><td>35,69</td><td>20,40</td><td>11,40</td><td>C3</td></tr>
+                            <tr><td>P74</td><td>10,00</td><td>90,00</td><td>40,79</td><td>25,50</td><td>6,32</td><td>C3</td></tr>
+                            <tr><td>P75</td><td>11,00</td><td>95,00</td><td>45,89</td><td>30,59</td><td>1,41</td><td>C3</td></tr>
+                            <tr><td>P76</td><td>12,00</td><td>98,00</td><td>49,03</td><td>33,73</td><td>2,00</td><td>C3</td></tr>
+                            <tr><td>P77</td><td>1,00</td><td>43,00</td><td>7,07</td><td>22,36</td><td>54,13</td><td>C1</td></tr>
+                            <tr><td>P78</td><td>2,00</td><td>47,00</td><td>3,00</td><td>18,25</td><td>50,01</td><td>C1</td></tr>
+                            <tr><td>P79</td><td>3,00</td><td>52,00</td><td>2,24</td><td>13,15</td><td>44,91</td><td>C1</td></tr>
+                            <tr><td>P80</td><td>4,00</td><td>57,00</td><td>7,28</td><td>8,06</td><td>39,81</td><td>C1</td></tr>
+                            <tr><td>P81</td><td>5,00</td><td>62,00</td><td>12,37</td><td>3,00</td><td>34,71</td><td>C2</td></tr>
+                            <tr><td>P82</td><td>6,00</td><td>67,00</td><td>17,46</td><td>2,24</td><td>29,61</td><td>C2</td></tr>
+                            <tr><td>P83</td><td>7,00</td><td>72,00</td><td>22,56</td><td>7,28</td><td>24,52</td><td>C2</td></tr>
+                            <tr><td>P84</td><td>8,00</td><td>77,00</td><td>27,66</td><td>12,37</td><td>19,42</td><td>C2</td></tr>
+                            <tr><td>P85</td><td>9,00</td><td>82,00</td><td>32,76</td><td>17,46</td><td>14,32</td><td>C3</td></tr>
+                            <tr><td>P86</td><td>10,00</td><td>87,00</td><td>37,85</td><td>22,56</td><td>9,22</td><td>C3</td></tr>
+                            <tr><td>P87</td><td>11,00</td><td>92,00</td><td>42,95</td><td>27,66</td><td>4,12</td><td>C3</td></tr>
+                            <tr><td>P88</td><td>12,00</td><td>96,00</td><td>47,07</td><td>31,78</td><td>0,00</td><td>C3</td></tr>
+                            <tr><td>P89</td><td>2,00</td><td>49,00</td><td>1,00</td><td>16,28</td><td>48,05</td><td>C1</td></tr>
+                            <tr><td>P90</td><td>3,00</td><td>54,00</td><td>4,12</td><td>11,18</td><td>42,95</td><td>C1</td></tr>
+                            <tr><td>P91</td><td>4,00</td><td>59,00</td><td>9,22</td><td>6,08</td><td>37,85</td><td>C2</td></tr>
+                            <tr><td>P92</td><td>5,00</td><td>64,00</td><td>14,32</td><td>1,00</td><td>32,76</td><td>C2</td></tr>
+                            <tr><td>P93</td><td>6,00</td><td>69,00</td><td>19,42</td><td>4,12</td><td>27,66</td><td>C2</td></tr>
+                            <tr><td>P94</td><td>7,00</td><td>74,00</td><td>24,52</td><td>9,22</td><td>22,56</td><td>C2</td></tr>
+                            <tr><td>P95</td><td>8,00</td><td>79,00</td><td>29,61</td><td>14,32</td><td>17,46</td><td>C2</td></tr>
+                            <tr><td>P96</td><td>9,00</td><td>84,00</td><td>34,71</td><td>19,42</td><td>12,37</td><td>C3</td></tr>
+                            <tr><td>P97</td><td>10,00</td><td>89,00</td><td>39,81</td><td>24,52</td><td>7,28</td><td>C3</td></tr>
+                            <tr><td>P98</td><td>11,00</td><td>94,00</td><td>44,91</td><td>29,61</td><td>2,24</td><td>C3</td></tr>
+                            <tr><td>P99</td><td>12,00</td><td>98,00</td><td>49,03</td><td>33,73</td><td>2,00</td><td>C3</td></tr>
+                            <tr><td>P100</td><td>1,00</td><td>42,00</td><td>8,06</td><td>23,35</td><td>55,11</td><td>C1</td></tr>
+                        </table>
+                    </div>
                 </div>
-            </div>
-        </section>
+            </section>
 
-        <section class="section-light" id="centroidU1">
-            <h2>Centroid Updates</h2>
-            <p>
-                Once the clusters were assigned, the new centroids were calculated by averaging the points belonging to each clustering (C1, C2, and C3).
-                The result was:
-            </p>
-            <div class="card-grid">
-                <div class="centroid-item">
-                    <p><strong>Centroid 1:</strong> (2.39,50.52)</p>
+            <section class="section-light" id="centroidU1">
+                <h3>Centroid Updates</h3>
+                <p>
+                    Once the clusters were assigned, the new centroids were calculated by averaging the points belonging to each clustering (C1, C2, and C3).
+                    The result was:
+                </p>
+                <div class="centroid-grid">
+                    <div class="centroid-item">
+                        <p><strong>Centroid 1:</strong> (2.39,50.52)</p>
+                    </div>
+                    <div class="centroid-item">
+                        <p><strong>Centroid 2:</strong> (6.09,69.21)</p>
+                    </div>
+                    <div class="centroid-item">
+                        <p><strong>Centroid 3:</strong> (10.41,90.47)</p>
+                    </div>
                 </div>
-                <div class="centroid-item">
-                    <p><strong>Centroid 2:</strong> (6.09,69.21)</p>
+            </section>
+
+            <!-- Iteration 2 -->
+
+            <section class="section-light" id="iteration2">
+                <h2>Iteration 2</h2>
+                <p>
+                    This iteration uses updated centroids from iteration 1
+                </p>
+                <h3 id="initial2">Initial Centroids</h3>
+                <p>The initial centroids were:</p>
+                <div class="centroid-grid">
+                    <div class="centroid-item"><strong>Centroid 1:</strong>(2.39,50.52)</div>
+                    <div class="centroid-item"><strong>Centroid 2:</strong>(6.09,69.21)</div>
+                    <div class="centroid-item"><strong>Centroid 3:</strong>(10.41,90.47)</div>
                 </div>
-                <div class="centroid-item">
-                    <p><strong>Centroid 3:</strong> (10.41,90.47)</p>
+            </section>
+
+            <section class="section-light" id="distance2">
+                <h3>Distance Calculation</h3>
+                <div class="cards">
+                    <div class="card">
+                        <p>
+                            The distance is calculated the same as in iteration 1
+                        </p>
+                        <p>
+                            Example: For point P5 (6,70) and centroid C2 (6.09,69.21):
+                            d = √((6-6.09)² + (70-69.21)²) ≈ 0.80
+                        </p>
+                    </div>
                 </div>
-            </div>
-        </section>
+            </section>
 
-        <!-- Iteration 2 -->
-
-        <section class="section-light" id="iteration2">
-            <h2>Iteration 2</h2>
-            <p>
-                This iteration uses updated centroids from iteration 1
-            </p>
-            <h3 id="initial2">Initial Centroids</h3>
-            <p>The initial centroids were:</p>
-            <div class="card-grid">
-                <div class="centroid-item"><strong>Centroid 1:</strong>(2.39,50.52)</div>
-                <div class="centroid-item"><strong>Centroid 2:</strong>(6.09,69.21)</div>
-                <div class="centroid-item"><strong>Centroid 3:</strong>(10.41,90.47)</div>
-            </div>
-        </section>
-
-        <section class="section-light" id="distance2">
-            <h2>Distance Calculation</h2>
-            <div class="cards">
-                <div class="card">
-                    <p>
-                        The distance is calculated the same as in iteration 1
-                    </p>
-                    <p>
-                        Example: For point P5 (6,70) and centroid C2 (6.09,69.21):
-                        d = √((6-6.09)² + (70-69.21)²) ≈ 0.80
-                    </p>
+            <section class="section section-light" id="cluster2">
+                <h3>Cluster assignments</h3>
+                <div class="cards">
+                    <div class="card">
+                        <p>
+                            The clusters were assigned in the same way as in iteration 1. 
+                            For this case, for example, at point P5 we have the following distances:
+                        </p>
+                        <ul>
+                            <li>d(C1): 19.81</li>
+                            <li>d(C2): 0.80</li>
+                            <li>d(C3): 20.94</li>
+                        </ul>
+                        <p>
+                            Since C2 is the shortest distance to a centroid, it was added to cluster 2.
+                        </p>
+                    </div>
                 </div>
-            </div>
-        </section>
+            </section>
 
-        <section class="section section-light" id="cluster2">
-            <h2>Cluster assignments</h2>
-            <div class="cards">
-                <div class="card">
-                    <p>
-                        The clusters were assigned in the same way as in iteration 1. 
-                        For this case, for example, at point P5 we have the following distances:
-                    </p>
-                    <ul>
-                        <li>d(C1): 19.81</li>
-                        <li>d(C2): 0.80</li>
-                        <li>d(C3): 20.94</li>
-                    </ul>
-                    <p>
-                        Since C2 is the shortest distance to a centroid, it was added to cluster 2.
-                    </p>
+            <section class="section-light" id="table2">
+                <h3>Distance Tables and Cluster Assignments</h3>
+                <div class="tables">
+                    <div class="table-card">
+                        <table>
+                            <tr>
+                                <th>Person</th>
+                                <th>StudyHours</th>
+                                <th>Grade</th>
+                                <th>d(C1)</th>
+                                <th>d(C2)</th>
+                                <th>d(C3)</th>
+                                <th>Cluster</th>
+                            </tr>
+                            <tr><td>P1</td><td>2,00</td><td>50,00</td><td>0,65</td><td>19,64</td><td>41,34</td><td>C1</td></tr>
+                            <tr><td>P2</td><td>3,00</td><td>55,00</td><td>4,52</td><td>14,54</td><td>36,24</td><td>C1</td></tr>
+                            <tr><td>P3</td><td>4,00</td><td>60,00</td><td>9,61</td><td>9,44</td><td>31,14</td><td>C2</td></tr>
+                            <tr><td>P4</td><td>5,00</td><td>65,00</td><td>14,71</td><td>4,35</td><td>26,04</td><td>C2</td></tr>
+                            <tr><td>P5</td><td>6,00</td><td>70,00</td><td>19,81</td><td>0,80</td><td>20,94</td><td>C2</td></tr>
+                            <tr><td>P6</td><td>7,00</td><td>75,00</td><td>24,91</td><td>5,86</td><td>15,84</td><td>C2</td></tr>
+                            <tr><td>P7</td><td>8,00</td><td>80,00</td><td>30,01</td><td>10,96</td><td>10,74</td><td>C3</td></tr>
+                            <tr><td>P8</td><td>9,00</td><td>85,00</td><td>35,11</td><td>16,06</td><td>5,65</td><td>C3</td></tr>
+                            <tr><td>P9</td><td>10,00</td><td>90,00</td><td>40,20</td><td>21,15</td><td>0,63</td><td>C3</td></tr>
+                            <tr><td>P10</td><td>11,00</td><td>95,00</td><td>45,30</td><td>26,25</td><td>4,57</td><td>C3</td></tr>
+                            <tr><td>P11</td><td>3,00</td><td>52,00</td><td>1,60</td><td>17,49</td><td>39,18</td><td>C1</td></tr>
+                            <tr><td>P12</td><td>4,00</td><td>57,00</td><td>6,68</td><td>12,39</td><td>34,08</td><td>C1</td></tr>
+                            <tr><td>P13</td><td>5,00</td><td>62,00</td><td>11,77</td><td>7,29</td><td>28,98</td><td>C2</td></tr>
+                            <tr><td>P14</td><td>6,00</td><td>67,00</td><td>16,87</td><td>2,21</td><td>23,88</td><td>C2</td></tr>
+                            <tr><td>P15</td><td>7,00</td><td>72,00</td><td>21,97</td><td>2,93</td><td>18,78</td><td>C2</td></tr>
+                            <tr><td>P16</td><td>8,00</td><td>77,00</td><td>27,07</td><td>8,02</td><td>13,68</td><td>C2</td></tr>
+                            <tr><td>P17</td><td>9,00</td><td>82,00</td><td>32,16</td><td>13,12</td><td>8,59</td><td>C3</td></tr>
+                            <tr><td>P18</td><td>10,00</td><td>87,00</td><td>37,26</td><td>18,21</td><td>3,49</td><td>C3</td></tr>
+                            <tr><td>P19</td><td>11,00</td><td>92,00</td><td>42,36</td><td>23,31</td><td>1,64</td><td>C3</td></tr>
+                            <tr><td>P20</td><td>12,00</td><td>97,00</td><td>47,46</td><td>28,41</td><td>6,72</td><td>C3</td></tr>
+                            <tr><td>P21</td><td>2,00</td><td>48,00</td><td>2,55</td><td>21,60</td><td>43,30</td><td>C1</td></tr>
+                            <tr><td>P22</td><td>3,00</td><td>53,00</td><td>2,55</td><td>16,50</td><td>38,20</td><td>C1</td></tr>
+                            <tr><td>P23</td><td>4,00</td><td>58,00</td><td>7,65</td><td>11,40</td><td>33,10</td><td>C1</td></tr>
+                            <tr><td>P24</td><td>5,00</td><td>63,00</td><td>12,75</td><td>6,30</td><td>28,00</td><td>C2</td></tr>
+                            <tr><td>P25</td><td>6,00</td><td>68,00</td><td>17,85</td><td>1,21</td><td>22,90</td><td>C2</td></tr>
+                            <tr><td>P26</td><td>7,00</td><td>73,00</td><td>22,95</td><td>3,90</td><td>17,80</td><td>C2</td></tr>
+                            <tr><td>P27</td><td>8,00</td><td>78,00</td><td>28,04</td><td>9,00</td><td>12,70</td><td>C2</td></tr>
+                            <tr><td>P28</td><td>9,00</td><td>83,00</td><td>33,14</td><td>14,09</td><td>7,60</td><td>C3</td></tr>
+                            <tr><td>P29</td><td>10,00</td><td>88,00</td><td>38,24</td><td>19,19</td><td>2,50</td><td>C3</td></tr>
+                            <tr><td>P30</td><td>11,00</td><td>93,00</td><td>43,34</td><td>24,29</td><td>2,60</td><td>C3</td></tr>
+                            <tr><td>P31</td><td>1,00</td><td>45,00</td><td>5,69</td><td>24,74</td><td>46,43</td><td>C1</td></tr>
+                            <tr><td>P32</td><td>2,00</td><td>50,00</td><td>0,65</td><td>19,64</td><td>41,34</td><td>C1</td></tr>
+                            <tr><td>P33</td><td>3,00</td><td>55,00</td><td>4,52</td><td>14,54</td><td>36,24</td><td>C1</td></tr>
+                            <tr><td>P34</td><td>4,00</td><td>60,00</td><td>9,61</td><td>9,44</td><td>31,14</td><td>C2</td></tr>
+                            <tr><td>P35</td><td>5,00</td><td>65,00</td><td>14,71</td><td>4,35</td><td>26,04</td><td>C2</td></tr>
+                            <tr><td>P36</td><td>6,00</td><td>70,00</td><td>19,81</td><td>0,80</td><td>20,94</td><td>C2</td></tr>
+                            <tr><td>P37</td><td>7,00</td><td>75,00</td><td>24,91</td><td>5,86</td><td>15,84</td><td>C2</td></tr>
+                            <tr><td>P38</td><td>8,00</td><td>80,00</td><td>30,01</td><td>10,96</td><td>10,74</td><td>C3</td></tr>
+                            <tr><td>P39</td><td>9,00</td><td>85,00</td><td>35,11</td><td>16,06</td><td>5,65</td><td>C3</td></tr>
+                            <tr><td>P40</td><td>10,00</td><td>90,00</td><td>40,20</td><td>21,15</td><td>0,63</td><td>C3</td></tr>
+                            <tr><td>P41</td><td>11,00</td><td>94,00</td><td>44,32</td><td>25,27</td><td>3,58</td><td>C3</td></tr>
+                            <tr><td>P42</td><td>12,00</td><td>98,00</td><td>48,44</td><td>29,39</td><td>7,70</td><td>C3</td></tr>
+                            <tr><td>P43</td><td>2,00</td><td>49,00</td><td>1,57</td><td>20,62</td><td>42,32</td><td>C1</td></tr>
+                            <tr><td>P44</td><td>3,00</td><td>54,00</td><td>3,53</td><td>15,52</td><td>37,22</td><td>C1</td></tr>
+                            <tr><td>P45</td><td>4,00</td><td>59,00</td><td>8,63</td><td>10,42</td><td>32,12</td><td>C1</td></tr>
+                            <tr><td>P46</td><td>5,00</td><td>64,00</td><td>13,73</td><td>5,32</td><td>27,02</td><td>C2</td></tr>
+                            <tr><td>P47</td><td>6,00</td><td>69,00</td><td>18,83</td><td>0,23</td><td>21,92</td><td>C2</td></tr>
+                            <tr><td>P48</td><td>7,00</td><td>74,00</td><td>23,93</td><td>4,88</td><td>16,82</td><td>C2</td></tr>
+                            <tr><td>P49</td><td>8,00</td><td>79,00</td><td>29,03</td><td>9,97</td><td>11,72</td><td>C2</td></tr>
+                            <tr><td>P50</td><td>9,00</td><td>84,00</td><td>34,12</td><td>15,07</td><td>6,62</td><td>C3</td></tr>
+                            <tr><td>P51</td><td>10,00</td><td>89,00</td><td>39,22</td><td>20,17</td><td>1,53</td><td>C3</td></tr>
+                            <tr><td>P52</td><td>11,00</td><td>94,00</td><td>44,32</td><td>25,27</td><td>3,58</td><td>C3</td></tr>
+                            <tr><td>P53</td><td>12,00</td><td>99,00</td><td>49,42</td><td>30,37</td><td>8,68</td><td>C3</td></tr>
+                            <tr><td>P54</td><td>1,00</td><td>44,00</td><td>6,67</td><td>25,72</td><td>47,41</td><td>C1</td></tr>
+                            <tr><td>P55</td><td>2,00</td><td>48,00</td><td>2,55</td><td>21,60</td><td>43,30</td><td>C1</td></tr>
+                            <tr><td>P56</td><td>3,00</td><td>53,00</td><td>2,55</td><td>16,50</td><td>38,20</td><td>C1</td></tr>
+                            <tr><td>P57</td><td>4,00</td><td>58,00</td><td>7,65</td><td>11,40</td><td>33,10</td><td>C1</td></tr>
+                            <tr><td>P58</td><td>5,00</td><td>63,00</td><td>12,75</td><td>6,30</td><td>28,00</td><td>C2</td></tr>
+                            <tr><td>P59</td><td>6,00</td><td>68,00</td><td>17,85</td><td>1,21</td><td>22,90</td><td>C2</td></tr>
+                            <tr><td>P60</td><td>7,00</td><td>73,00</td><td>22,95</td><td>3,90</td><td>17,80</td><td>C2</td></tr>
+                            <tr><td>P61</td><td>8,00</td><td>78,00</td><td>28,04</td><td>9,00</td><td>12,70</td><td>C2</td></tr>
+                            <tr><td>P62</td><td>9,00</td><td>83,00</td><td>33,14</td><td>14,09</td><td>7,60</td><td>C3</td></tr>
+                            <tr><td>P63</td><td>10,00</td><td>88,00</td><td>38,24</td><td>19,19</td><td>2,50</td><td>C3</td></tr>
+                            <tr><td>P64</td><td>11,00</td><td>93,00</td><td>43,34</td><td>24,29</td><td>2,60</td><td>C3</td></tr>
+                            <tr><td>P65</td><td>12,00</td><td>97,00</td><td>47,46</td><td>28,41</td><td>6,72</td><td>C3</td></tr>
+                            <tr><td>P66</td><td>2,00</td><td>50,00</td><td>0,65</td><td>19,64</td><td>41,34</td><td>C1</td></tr>
+                            <tr><td>P67</td><td>3,00</td><td>55,00</td><td>4,52</td><td>14,54</td><td>36,24</td><td>C1</td></tr>
+                            <tr><td>P68</td><td>4,00</td><td>60,00</td><td>9,61</td><td>9,44</td><td>31,14</td><td>C2</td></tr>
+                            <tr><td>P69</td><td>5,00</td><td>65,00</td><td>14,71</td><td>4,35</td><td>26,04</td><td>C2</td></tr>
+                            <tr><td>P70</td><td>6,00</td><td>70,00</td><td>19,81</td><td>0,80</td><td>20,94</td><td>C2</td></tr>
+                            <tr><td>P71</td><td>7,00</td><td>75,00</td><td>24,91</td><td>5,86</td><td>15,84</td><td>C2</td></tr>
+                            <tr><td>P72</td><td>8,00</td><td>80,00</td><td>30,01</td><td>10,96</td><td>10,74</td><td>C3</td></tr>
+                            <tr><td>P73</td><td>9,00</td><td>85,00</td><td>35,11</td><td>16,06</td><td>5,65</td><td>C3</td></tr>
+                            <tr><td>P74</td><td>10,00</td><td>90,00</td><td>40,20</td><td>21,15</td><td>0,63</td><td>C3</td></tr>
+                            <tr><td>P75</td><td>11,00</td><td>95,00</td><td>45,30</td><td>26,25</td><td>4,57</td><td>C3</td></tr>
+                            <tr><td>P76</td><td>12,00</td><td>98,00</td><td>48,44</td><td>29,39</td><td>7,70</td><td>C3</td></tr>
+                            <tr><td>P77</td><td>1,00</td><td>43,00</td><td>7,65</td><td>26,70</td><td>48,39</td><td>C1</td></tr>
+                            <tr><td>P78</td><td>2,00</td><td>47,00</td><td>3,54</td><td>22,58</td><td>44,28</td><td>C1</td></tr>
+                            <tr><td>P79</td><td>3,00</td><td>52,00</td><td>1,60</td><td>17,49</td><td>39,18</td><td>C1</td></tr>
+                            <tr><td>P80</td><td>4,00</td><td>57,00</td><td>6,68</td><td>12,39</td><td>34,08</td><td>C1</td></tr>
+                            <tr><td>P81</td><td>5,00</td><td>62,00</td><td>11,77</td><td>7,29</td><td>28,98</td><td>C2</td></tr>
+                            <tr><td>P82</td><td>6,00</td><td>67,00</td><td>16,87</td><td>2,21</td><td>23,88</td><td>C2</td></tr>
+                            <tr><td>P83</td><td>7,00</td><td>72,00</td><td>21,97</td><td>2,93</td><td>18,78</td><td>C2</td></tr>
+                            <tr><td>P84</td><td>8,00</td><td>77,00</td><td>27,07</td><td>8,02</td><td>13,68</td><td>C2</td></tr>
+                            <tr><td>P86</td><td>10,00</td><td>87,00</td><td>37,26</td><td>18,21</td><td>3,49</td><td>C3</td></tr>
+                            <tr><td>P87</td><td>11,00</td><td>92,00</td><td>42,36</td><td>23,31</td><td>1,64</td><td>C3</td></tr>
+                            <tr><td>P88</td><td>12,00</td><td>96,00</td><td>46,48</td><td>27,43</td><td>5,75</td><td>C3</td></tr>
+                            <tr><td>P89</td><td>2,00</td><td>49,00</td><td>1,57</td><td>20,62</td><td>42,32</td><td>C1</td></tr>
+                            <tr><td>P90</td><td>3,00</td><td>54,00</td><td>3,53</td><td>15,52</td><td>37,22</td><td>C1</td></tr>
+                            <tr><td>P91</td><td>4,00</td><td>59,00</td><td>8,63</td><td>10,42</td><td>32,12</td><td>C1</td></tr>
+                            <tr><td>P92</td><td>5,00</td><td>64,00</td><td>13,73</td><td>5,32</td><td>27,02</td><td>C2</td></tr>
+                            <tr><td>P93</td><td>6,00</td><td>69,00</td><td>18,83</td><td>0,23</td><td>21,92</td><td>C2</td></tr>
+                            <tr><td>P94</td><td>7,00</td><td>74,00</td><td>23,93</td><td>4,88</td><td>16,82</td><td>C2</td></tr>
+                            <tr><td>P95</td><td>8,00</td><td>79,00</td><td>29,03</td><td>9,97</td><td>11,72</td><td>C2</td></tr>
+                            <tr><td>P96</td><td>9,00</td><td>84,00</td><td>34,12</td><td>15,07</td><td>6,62</td><td>C3</td></tr>
+                            <tr><td>P97</td><td>10,00</td><td>89,00</td><td>39,22</td><td>20,17</td><td>1,53</td><td>C3</td></tr>
+                            <tr><td>P98</td><td>11,00</td><td>94,00</td><td>44,32</td><td>25,27</td><td>3,58</td><td>C3</td></tr>
+                            <tr><td>P99</td><td>12,00</td><td>98,00</td><td>48,44</td><td>29,39</td><td>7,70</td><td>C3</td></tr>
+                            <tr><td>P100</td><td>1,00</td><td>42,00</td><td>8,63</td><td>27,68</td><td>49,38</td><td>C1</td></tr>
+                        </table>
+                    </div>
                 </div>
-            </div>
-        </section>
+            </section>
 
-        <section class="section-light" id="table2">
-            <h2>Distance Tables and Cluster Assignments</h2>
-            <div class="tables">
-                <div class="table-card">
-                    <table>
-                        <tr>
-                            <th>Person</th>
-                            <th>StudyHours</th>
-                            <th>Grade</th>
-                            <th>d(C1)</th>
-                            <th>d(C2)</th>
-                            <th>d(C3)</th>
-                            <th>Cluster</th>
-                        </tr>
-                        <tr><td>P1</td><td>2,00</td><td>50,00</td><td>0,65</td><td>19,64</td><td>41,34</td><td>C1</td></tr>
-                        <tr><td>P2</td><td>3,00</td><td>55,00</td><td>4,52</td><td>14,54</td><td>36,24</td><td>C1</td></tr>
-                        <tr><td>P3</td><td>4,00</td><td>60,00</td><td>9,61</td><td>9,44</td><td>31,14</td><td>C2</td></tr>
-                        <tr><td>P4</td><td>5,00</td><td>65,00</td><td>14,71</td><td>4,35</td><td>26,04</td><td>C2</td></tr>
-                        <tr><td>P5</td><td>6,00</td><td>70,00</td><td>19,81</td><td>0,80</td><td>20,94</td><td>C2</td></tr>
-                        <tr><td>P6</td><td>7,00</td><td>75,00</td><td>24,91</td><td>5,86</td><td>15,84</td><td>C2</td></tr>
-                        <tr><td>P7</td><td>8,00</td><td>80,00</td><td>30,01</td><td>10,96</td><td>10,74</td><td>C3</td></tr>
-                        <tr><td>P8</td><td>9,00</td><td>85,00</td><td>35,11</td><td>16,06</td><td>5,65</td><td>C3</td></tr>
-                        <tr><td>P9</td><td>10,00</td><td>90,00</td><td>40,20</td><td>21,15</td><td>0,63</td><td>C3</td></tr>
-                        <tr><td>P10</td><td>11,00</td><td>95,00</td><td>45,30</td><td>26,25</td><td>4,57</td><td>C3</td></tr>
-                        <tr><td>P11</td><td>3,00</td><td>52,00</td><td>1,60</td><td>17,49</td><td>39,18</td><td>C1</td></tr>
-                        <tr><td>P12</td><td>4,00</td><td>57,00</td><td>6,68</td><td>12,39</td><td>34,08</td><td>C1</td></tr>
-                        <tr><td>P13</td><td>5,00</td><td>62,00</td><td>11,77</td><td>7,29</td><td>28,98</td><td>C2</td></tr>
-                        <tr><td>P14</td><td>6,00</td><td>67,00</td><td>16,87</td><td>2,21</td><td>23,88</td><td>C2</td></tr>
-                        <tr><td>P15</td><td>7,00</td><td>72,00</td><td>21,97</td><td>2,93</td><td>18,78</td><td>C2</td></tr>
-                        <tr><td>P16</td><td>8,00</td><td>77,00</td><td>27,07</td><td>8,02</td><td>13,68</td><td>C2</td></tr>
-                        <tr><td>P17</td><td>9,00</td><td>82,00</td><td>32,16</td><td>13,12</td><td>8,59</td><td>C3</td></tr>
-                        <tr><td>P18</td><td>10,00</td><td>87,00</td><td>37,26</td><td>18,21</td><td>3,49</td><td>C3</td></tr>
-                        <tr><td>P19</td><td>11,00</td><td>92,00</td><td>42,36</td><td>23,31</td><td>1,64</td><td>C3</td></tr>
-                        <tr><td>P20</td><td>12,00</td><td>97,00</td><td>47,46</td><td>28,41</td><td>6,72</td><td>C3</td></tr>
-                        <tr><td>P21</td><td>2,00</td><td>48,00</td><td>2,55</td><td>21,60</td><td>43,30</td><td>C1</td></tr>
-                        <tr><td>P22</td><td>3,00</td><td>53,00</td><td>2,55</td><td>16,50</td><td>38,20</td><td>C1</td></tr>
-                        <tr><td>P23</td><td>4,00</td><td>58,00</td><td>7,65</td><td>11,40</td><td>33,10</td><td>C1</td></tr>
-                        <tr><td>P24</td><td>5,00</td><td>63,00</td><td>12,75</td><td>6,30</td><td>28,00</td><td>C2</td></tr>
-                        <tr><td>P25</td><td>6,00</td><td>68,00</td><td>17,85</td><td>1,21</td><td>22,90</td><td>C2</td></tr>
-                        <tr><td>P26</td><td>7,00</td><td>73,00</td><td>22,95</td><td>3,90</td><td>17,80</td><td>C2</td></tr>
-                        <tr><td>P27</td><td>8,00</td><td>78,00</td><td>28,04</td><td>9,00</td><td>12,70</td><td>C2</td></tr>
-                        <tr><td>P28</td><td>9,00</td><td>83,00</td><td>33,14</td><td>14,09</td><td>7,60</td><td>C3</td></tr>
-                        <tr><td>P29</td><td>10,00</td><td>88,00</td><td>38,24</td><td>19,19</td><td>2,50</td><td>C3</td></tr>
-                        <tr><td>P30</td><td>11,00</td><td>93,00</td><td>43,34</td><td>24,29</td><td>2,60</td><td>C3</td></tr>
-                        <tr><td>P31</td><td>1,00</td><td>45,00</td><td>5,69</td><td>24,74</td><td>46,43</td><td>C1</td></tr>
-                        <tr><td>P32</td><td>2,00</td><td>50,00</td><td>0,65</td><td>19,64</td><td>41,34</td><td>C1</td></tr>
-                        <tr><td>P33</td><td>3,00</td><td>55,00</td><td>4,52</td><td>14,54</td><td>36,24</td><td>C1</td></tr>
-                        <tr><td>P34</td><td>4,00</td><td>60,00</td><td>9,61</td><td>9,44</td><td>31,14</td><td>C2</td></tr>
-                        <tr><td>P35</td><td>5,00</td><td>65,00</td><td>14,71</td><td>4,35</td><td>26,04</td><td>C2</td></tr>
-                        <tr><td>P36</td><td>6,00</td><td>70,00</td><td>19,81</td><td>0,80</td><td>20,94</td><td>C2</td></tr>
-                        <tr><td>P37</td><td>7,00</td><td>75,00</td><td>24,91</td><td>5,86</td><td>15,84</td><td>C2</td></tr>
-                        <tr><td>P38</td><td>8,00</td><td>80,00</td><td>30,01</td><td>10,96</td><td>10,74</td><td>C3</td></tr>
-                        <tr><td>P39</td><td>9,00</td><td>85,00</td><td>35,11</td><td>16,06</td><td>5,65</td><td>C3</td></tr>
-                        <tr><td>P40</td><td>10,00</td><td>90,00</td><td>40,20</td><td>21,15</td><td>0,63</td><td>C3</td></tr>
-                        <tr><td>P41</td><td>11,00</td><td>94,00</td><td>44,32</td><td>25,27</td><td>3,58</td><td>C3</td></tr>
-                        <tr><td>P42</td><td>12,00</td><td>98,00</td><td>48,44</td><td>29,39</td><td>7,70</td><td>C3</td></tr>
-                        <tr><td>P43</td><td>2,00</td><td>49,00</td><td>1,57</td><td>20,62</td><td>42,32</td><td>C1</td></tr>
-                        <tr><td>P44</td><td>3,00</td><td>54,00</td><td>3,53</td><td>15,52</td><td>37,22</td><td>C1</td></tr>
-                        <tr><td>P45</td><td>4,00</td><td>59,00</td><td>8,63</td><td>10,42</td><td>32,12</td><td>C1</td></tr>
-                        <tr><td>P46</td><td>5,00</td><td>64,00</td><td>13,73</td><td>5,32</td><td>27,02</td><td>C2</td></tr>
-                        <tr><td>P47</td><td>6,00</td><td>69,00</td><td>18,83</td><td>0,23</td><td>21,92</td><td>C2</td></tr>
-                        <tr><td>P48</td><td>7,00</td><td>74,00</td><td>23,93</td><td>4,88</td><td>16,82</td><td>C2</td></tr>
-                        <tr><td>P49</td><td>8,00</td><td>79,00</td><td>29,03</td><td>9,97</td><td>11,72</td><td>C2</td></tr>
-                        <tr><td>P50</td><td>9,00</td><td>84,00</td><td>34,12</td><td>15,07</td><td>6,62</td><td>C3</td></tr>
-                        <tr><td>P51</td><td>10,00</td><td>89,00</td><td>39,22</td><td>20,17</td><td>1,53</td><td>C3</td></tr>
-                        <tr><td>P52</td><td>11,00</td><td>94,00</td><td>44,32</td><td>25,27</td><td>3,58</td><td>C3</td></tr>
-                        <tr><td>P53</td><td>12,00</td><td>99,00</td><td>49,42</td><td>30,37</td><td>8,68</td><td>C3</td></tr>
-                        <tr><td>P54</td><td>1,00</td><td>44,00</td><td>6,67</td><td>25,72</td><td>47,41</td><td>C1</td></tr>
-                        <tr><td>P55</td><td>2,00</td><td>48,00</td><td>2,55</td><td>21,60</td><td>43,30</td><td>C1</td></tr>
-                        <tr><td>P56</td><td>3,00</td><td>53,00</td><td>2,55</td><td>16,50</td><td>38,20</td><td>C1</td></tr>
-                        <tr><td>P57</td><td>4,00</td><td>58,00</td><td>7,65</td><td>11,40</td><td>33,10</td><td>C1</td></tr>
-                        <tr><td>P58</td><td>5,00</td><td>63,00</td><td>12,75</td><td>6,30</td><td>28,00</td><td>C2</td></tr>
-                        <tr><td>P59</td><td>6,00</td><td>68,00</td><td>17,85</td><td>1,21</td><td>22,90</td><td>C2</td></tr>
-                        <tr><td>P60</td><td>7,00</td><td>73,00</td><td>22,95</td><td>3,90</td><td>17,80</td><td>C2</td></tr>
-                        <tr><td>P61</td><td>8,00</td><td>78,00</td><td>28,04</td><td>9,00</td><td>12,70</td><td>C2</td></tr>
-                        <tr><td>P62</td><td>9,00</td><td>83,00</td><td>33,14</td><td>14,09</td><td>7,60</td><td>C3</td></tr>
-                        <tr><td>P63</td><td>10,00</td><td>88,00</td><td>38,24</td><td>19,19</td><td>2,50</td><td>C3</td></tr>
-                        <tr><td>P64</td><td>11,00</td><td>93,00</td><td>43,34</td><td>24,29</td><td>2,60</td><td>C3</td></tr>
-                        <tr><td>P65</td><td>12,00</td><td>97,00</td><td>47,46</td><td>28,41</td><td>6,72</td><td>C3</td></tr>
-                        <tr><td>P66</td><td>2,00</td><td>50,00</td><td>0,65</td><td>19,64</td><td>41,34</td><td>C1</td></tr>
-                        <tr><td>P67</td><td>3,00</td><td>55,00</td><td>4,52</td><td>14,54</td><td>36,24</td><td>C1</td></tr>
-                        <tr><td>P68</td><td>4,00</td><td>60,00</td><td>9,61</td><td>9,44</td><td>31,14</td><td>C2</td></tr>
-                        <tr><td>P69</td><td>5,00</td><td>65,00</td><td>14,71</td><td>4,35</td><td>26,04</td><td>C2</td></tr>
-                        <tr><td>P70</td><td>6,00</td><td>70,00</td><td>19,81</td><td>0,80</td><td>20,94</td><td>C2</td></tr>
-                        <tr><td>P71</td><td>7,00</td><td>75,00</td><td>24,91</td><td>5,86</td><td>15,84</td><td>C2</td></tr>
-                        <tr><td>P72</td><td>8,00</td><td>80,00</td><td>30,01</td><td>10,96</td><td>10,74</td><td>C3</td></tr>
-                        <tr><td>P73</td><td>9,00</td><td>85,00</td><td>35,11</td><td>16,06</td><td>5,65</td><td>C3</td></tr>
-                        <tr><td>P74</td><td>10,00</td><td>90,00</td><td>40,20</td><td>21,15</td><td>0,63</td><td>C3</td></tr>
-                        <tr><td>P75</td><td>11,00</td><td>95,00</td><td>45,30</td><td>26,25</td><td>4,57</td><td>C3</td></tr>
-                        <tr><td>P76</td><td>12,00</td><td>98,00</td><td>48,44</td><td>29,39</td><td>7,70</td><td>C3</td></tr>
-                        <tr><td>P77</td><td>1,00</td><td>43,00</td><td>7,65</td><td>26,70</td><td>48,39</td><td>C1</td></tr>
-                        <tr><td>P78</td><td>2,00</td><td>47,00</td><td>3,54</td><td>22,58</td><td>44,28</td><td>C1</td></tr>
-                        <tr><td>P79</td><td>3,00</td><td>52,00</td><td>1,60</td><td>17,49</td><td>39,18</td><td>C1</td></tr>
-                        <tr><td>P80</td><td>4,00</td><td>57,00</td><td>6,68</td><td>12,39</td><td>34,08</td><td>C1</td></tr>
-                        <tr><td>P81</td><td>5,00</td><td>62,00</td><td>11,77</td><td>7,29</td><td>28,98</td><td>C2</td></tr>
-                        <tr><td>P82</td><td>6,00</td><td>67,00</td><td>16,87</td><td>2,21</td><td>23,88</td><td>C2</td></tr>
-                        <tr><td>P83</td><td>7,00</td><td>72,00</td><td>21,97</td><td>2,93</td><td>18,78</td><td>C2</td></tr>
-                        <tr><td>P84</td><td>8,00</td><td>77,00</td><td>27,07</td><td>8,02</td><td>13,68</td><td>C2</td></tr>
-                        <tr><td>P86</td><td>10,00</td><td>87,00</td><td>37,26</td><td>18,21</td><td>3,49</td><td>C3</td></tr>
-                        <tr><td>P87</td><td>11,00</td><td>92,00</td><td>42,36</td><td>23,31</td><td>1,64</td><td>C3</td></tr>
-                        <tr><td>P88</td><td>12,00</td><td>96,00</td><td>46,48</td><td>27,43</td><td>5,75</td><td>C3</td></tr>
-                        <tr><td>P89</td><td>2,00</td><td>49,00</td><td>1,57</td><td>20,62</td><td>42,32</td><td>C1</td></tr>
-                        <tr><td>P90</td><td>3,00</td><td>54,00</td><td>3,53</td><td>15,52</td><td>37,22</td><td>C1</td></tr>
-                        <tr><td>P91</td><td>4,00</td><td>59,00</td><td>8,63</td><td>10,42</td><td>32,12</td><td>C1</td></tr>
-                        <tr><td>P92</td><td>5,00</td><td>64,00</td><td>13,73</td><td>5,32</td><td>27,02</td><td>C2</td></tr>
-                        <tr><td>P93</td><td>6,00</td><td>69,00</td><td>18,83</td><td>0,23</td><td>21,92</td><td>C2</td></tr>
-                        <tr><td>P94</td><td>7,00</td><td>74,00</td><td>23,93</td><td>4,88</td><td>16,82</td><td>C2</td></tr>
-                        <tr><td>P95</td><td>8,00</td><td>79,00</td><td>29,03</td><td>9,97</td><td>11,72</td><td>C2</td></tr>
-                        <tr><td>P96</td><td>9,00</td><td>84,00</td><td>34,12</td><td>15,07</td><td>6,62</td><td>C3</td></tr>
-                        <tr><td>P97</td><td>10,00</td><td>89,00</td><td>39,22</td><td>20,17</td><td>1,53</td><td>C3</td></tr>
-                        <tr><td>P98</td><td>11,00</td><td>94,00</td><td>44,32</td><td>25,27</td><td>3,58</td><td>C3</td></tr>
-                        <tr><td>P99</td><td>12,00</td><td>98,00</td><td>48,44</td><td>29,39</td><td>7,70</td><td>C3</td></tr>
-                        <tr><td>P100</td><td>1,00</td><td>42,00</td><td>8,63</td><td>27,68</td><td>49,38</td><td>C1</td></tr>
-                    </table>
+            <section class="section-light" id="centroidU2">
+                <h3>Centroid Updates</h3>
+                <p>The same process was performed to update the centroids, resulting in:</p>
+
+                <div class="centroid-grid">
+                    <div class="centroid-item">
+                        <p><strong>Centroid 1:</strong> (2.63,51.70)</p>
+                    </div>
+                    <div class="centroid-item">
+                        <p><strong>Centroid 2:</strong>(6.17,69.50)</p>
+                    </div>
+                    <div class="centroid-item">
+                        <p><strong>Centroid 3:</strong> (10.22,89.62)</p>
+                    </div>
                 </div>
-            </div>
-        </section>
+            </section>
 
-        <section class="section-light" id="centroidU2">
-            <h2>Centroid Updates</h2>
-            <p>The same process was performed to update the centroids, resulting in:</p>
+            <!-- Iteration 3 -->
 
-            <div class="card-grid">
-                <div class="centroid-item">
-                    <p><strong>Centroid 1:</strong> (2.63,51.70)</p>
+            <section class="section-light" id="iteration3">
+                <h2>Iteration 3</h2>
+                <p>The same process is repeated</p>
+                <h3 id="initial3">Initial Centroids</h3>
+                <p>The initial centroids were:</p>
+                <div class="centroid-grid">
+                    <div class="centroid-item"><strong>Centroid 1:</strong>(2.63,51.70)</div>
+                    <div class="centroid-item"><strong>Centroid 2:</strong>(6.17,69.50)</div>
+                    <div class="centroid-item"><strong>Centroid 3:</strong>(10.22,89.62)</div>
                 </div>
-                <div class="centroid-item">
-                    <p><strong>Centroid 2:</strong>(6.17,69.50)</p>
+            </section>
+
+            <section class="section-light" id="distance3">
+                <h3>Distance Calculation</h3>
+                <div class="cards">
+                    <div class="card">
+                        <p>
+                            The distance is calculated the same as in iteration 1
+                        </p>
+                        <p>
+                            Example: For point P8 (9,85) and centroid C3 (10.22,89.62):
+                            d = √((9-10.22)² + (85-89.62)²) ≈ 4.78
+
+                        </p>
+                    </div>
                 </div>
-                <div class="centroid-item">
-                    <p><strong>Centroid 3:</strong> (10.22,89.62)</p>
+            </section>
+
+            <section class="section section-light" id="cluster3">
+                <h3>Cluster assignments</h3>
+                <div class="cards">
+                    <div class="card">
+                        <p>
+                            The clusters were assigned in the same way as in iteration 1. 
+                            For this case, for example, at point P8 we have the following distances:
+                        </p>
+                        <ul>
+                            <li>d(C1): 33.90</li>
+                            <li>d(C2): 15.76</li>
+                            <li>d(C3): 4.78</li>
+                        </ul>
+                        <p>
+                            Since C3 is the shortest distance to a centroid, it was added to cluster 3.
+                        </p>
+                    </div>
                 </div>
-            </div>
-        </section>
+            </section>
 
-        <!-- Iteration 3 -->
+            <section class="section-light" id="table3">
+                <h3>Distance Tables and Cluster Assignments</h3>
+                <div class="tables">
+                    <div class="table-card">
+                        <table>
+                            <tr>
+                                <th>Person</th>
+                                <th>StudyHours</th>
+                                <th>Grade</th>
+                                <th>d(C1)</th>
+                                <th>d(C2)</th>
+                                <th>d(C3)</th>
+                                <th>Cluster</th>
+                            </tr>
+                            <tr><td>P1</td><td>2,00</td><td>50,00</td><td>1,82</td><td>19,94</td><td>40,46</td><td>C1</td></tr>
+                            <tr><td>P2</td><td>3,00</td><td>55,00</td><td>3,32</td><td>14,84</td><td>35,37</td><td>C1</td></tr>
+                            <tr><td>P3</td><td>4,00</td><td>60,00</td><td>8,41</td><td>9,74</td><td>30,27</td><td>C1</td></tr>
+                            <tr><td>P4</td><td>5,00</td><td>65,00</td><td>13,51</td><td>4,65</td><td>25,17</td><td>C2</td></tr>
+                            <tr><td>P5</td><td>6,00</td><td>70,00</td><td>18,60</td><td>0,53</td><td>20,07</td><td>C2</td></tr>
+                            <tr><td>P6</td><td>7,00</td><td>75,00</td><td>23,70</td><td>5,56</td><td>14,97</td><td>C2</td></tr>
+                            <tr><td>P7</td><td>8,00</td><td>80,00</td><td>28,80</td><td>10,66</td><td>9,87</td><td>C3</td></tr>
+                            <tr><td>P8</td><td>9,00</td><td>85,00</td><td>33,90</td><td>15,76</td><td>4,78</td><td>C3</td></tr>
+                            <tr><td>P9</td><td>10,00</td><td>90,00</td><td>39,00</td><td>20,86</td><td>0,44</td><td>C3</td></tr>
+                            <tr><td>P10</td><td>11,00</td><td>95,00</td><td>44,10</td><td>25,95</td><td>5,44</td><td>C3</td></tr>
+                            <tr><td>P11</td><td>3,00</td><td>52,00</td><td>0,47</td><td>17,78</td><td>38,31</td><td>C1</td></tr>
+                            <tr><td>P12</td><td>4,00</td><td>57,00</td><td>5,47</td><td>12,69</td><td>33,21</td><td>C1</td></tr>
+                            <tr><td>P13</td><td>5,00</td><td>62,00</td><td>10,57</td><td>7,59</td><td>28,11</td><td>C2</td></tr>
+                            <tr><td>P14</td><td>6,00</td><td>67,00</td><td>15,66</td><td>2,51</td><td>23,01</td><td>C2</td></tr>
+                            <tr><td>P15</td><td>7,00</td><td>72,00</td><td>20,76</td><td>2,64</td><td>17,91</td><td>C2</td></tr>
+                            <tr><td>P16</td><td>8,00</td><td>77,00</td><td>25,86</td><td>7,72</td><td>12,81</td><td>C2</td></tr>
+                            <tr><td>P17</td><td>9,00</td><td>82,00</td><td>30,96</td><td>12,82</td><td>7,72</td><td>C3</td></tr>
+                            <tr><td>P18</td><td>10,00</td><td>87,00</td><td>36,06</td><td>17,91</td><td>2,63</td><td>C3</td></tr>
+                            <tr><td>P19</td><td>11,00</td><td>92,00</td><td>41,16</td><td>23,01</td><td>2,50</td><td>C3</td></tr>
+                            <tr><td>P20</td><td>12,00</td><td>97,00</td><td>46,26</td><td>28,11</td><td>7,59</td><td>C3</td></tr>
+                            <tr><td>P21</td><td>2,00</td><td>48,00</td><td>3,76</td><td>21,90</td><td>42,42</td><td>C1</td></tr>
+                            <tr><td>P22</td><td>3,00</td><td>53,00</td><td>1,35</td><td>16,80</td><td>37,33</td><td>C1</td></tr>
+                            <tr><td>P23</td><td>4,00</td><td>58,00</td><td>6,44</td><td>11,70</td><td>32,23</td><td>C1</td></tr>
+                            <tr><td>P24</td><td>5,00</td><td>63,00</td><td>11,54</td><td>6,60</td><td>27,13</td><td>C2</td></tr>
+                            <tr><td>P25</td><td>6,00</td><td>68,00</td><td>16,64</td><td>1,51</td><td>22,03</td><td>C2</td></tr>
+                            <tr><td>P26</td><td>7,00</td><td>73,00</td><td>21,74</td><td>3,60</td><td>16,93</td><td>C2</td></tr>
+                            <tr><td>P27</td><td>8,00</td><td>78,00</td><td>26,84</td><td>8,70</td><td>11,83</td><td>C2</td></tr>
+                            <tr><td>P28</td><td>9,00</td><td>83,00</td><td>31,94</td><td>13,79</td><td>6,73</td><td>C3</td></tr>
+                            <tr><td>P29</td><td>10,00</td><td>88,00</td><td>37,04</td><td>18,89</td><td>1,64</td><td>C3</td></tr>
+                            <tr><td>P30</td><td>11,00</td><td>93,00</td><td>42,14</td><td>23,99</td><td>3,47</td><td>C3</td></tr>
+                            <tr><td>P31</td><td>1,00</td><td>45,00</td><td>6,90</td><td>25,04</td><td>45,56</td><td>C1</td></tr>
+                            <tr><td>P32</td><td>2,00</td><td>50,00</td><td>1,82</td><td>19,94</td><td>40,46</td><td>C1</td></tr>
+                            <tr><td>P33</td><td>3,00</td><td>55,00</td><td>3,32</td><td>14,84</td><td>35,37</td><td>C1</td></tr>
+                            <tr><td>P34</td><td>4,00</td><td>60,00</td><td>8,41</td><td>9,74</td><td>30,27</td><td>C1</td></tr>
+                            <tr><td>P35</td><td>5,00</td><td>65,00</td><td>13,51</td><td>4,65</td><td>25,17</td><td>C2</td></tr>
+                            <tr><td>P36</td><td>6,00</td><td>70,00</td><td>18,60</td><td>0,53</td><td>20,07</td><td>C2</td></tr>
+                            <tr><td>P37</td><td>7,00</td><td>75,00</td><td>23,70</td><td>5,56</td><td>14,97</td><td>C2</td></tr>
+                            <tr><td>P38</td><td>8,00</td><td>80,00</td><td>28,80</td><td>10,66</td><td>9,87</td><td>C3</td></tr>
+                            <tr><td>P39</td><td>9,00</td><td>85,00</td><td>33,90</td><td>15,76</td><td>4,78</td><td>C3</td></tr>
+                            <tr><td>P40</td><td>10,00</td><td>90,00</td><td>39,00</td><td>20,86</td><td>0,44</td><td>C3</td></tr>
+                            <tr><td>P41</td><td>11,00</td><td>94,00</td><td>43,12</td><td>24,97</td><td>4,45</td><td>C3</td></tr>
+                            <tr><td>P42</td><td>12,00</td><td>98,00</td><td>47,24</td><td>29,09</td><td>8,57</td><td>C3</td></tr>
+                            <tr><td>P43</td><td>2,00</td><td>49,00</td><td>2,78</td><td>20,92</td><td>41,44</td><td>C1</td></tr>
+                            <tr><td>P44</td><td>3,00</td><td>54,00</td><td>2,33</td><td>15,82</td><td>36,35</td><td>C1</td></tr>
+                            <tr><td>P45</td><td>4,00</td><td>59,00</td><td>7,42</td><td>10,72</td><td>31,25</td><td>C1</td></tr>
+                            <tr><td>P46</td><td>5,00</td><td>64,00</td><td>12,52</td><td>5,62</td><td>26,15</td><td>C2</td></tr>
+                            <tr><td>P47</td><td>6,00</td><td>69,00</td><td>17,62</td><td>0,53</td><td>21,05</td><td>C2</td></tr>
+                            <tr><td>P48</td><td>7,00</td><td>74,00</td><td>22,72</td><td>4,58</td><td>15,95</td><td>C2</td></tr>
+                            <tr><td>P49</td><td>8,00</td><td>79,00</td><td>27,82</td><td>9,68</td><td>10,85</td><td>C2</td></tr>
+                            <tr><td>P50</td><td>9,00</td><td>84,00</td><td>32,92</td><td>14,77</td><td>5,75</td><td>C3</td></tr>
+                            <tr><td>P51</td><td>10,00</td><td>89,00</td><td>38,02</td><td>19,87</td><td>0,66</td><td>C3</td></tr>
+                            <tr><td>P52</td><td>11,00</td><td>94,00</td><td>43,12</td><td>24,97</td><td>4,45</td><td>C3</td></tr>
+                            <tr><td>P53</td><td>12,00</td><td>99,00</td><td>48,22</td><td>30,07</td><td>9,55</td><td>C3</td></tr>
+                            <tr><td>P54</td><td>1,00</td><td>44,00</td><td>7,87</td><td>26,02</td><td>46,54</td><td>C1</td></tr>
+                            <tr><td>P55</td><td>2,00</td><td>48,00</td><td>3,76</td><td>21,90</td><td>42,42</td><td>C1</td></tr>
+                            <tr><td>P56</td><td>3,00</td><td>53,00</td><td>1,35</td><td>16,80</td><td>37,33</td><td>C1</td></tr>
+                            <tr><td>P57</td><td>4,00</td><td>58,00</td><td>6,44</td><td>11,70</td><td>32,23</td><td>C1</td></tr>
+                            <tr><td>P58</td><td>5,00</td><td>63,00</td><td>11,54</td><td>6,60</td><td>27,13</td><td>C2</td></tr>
+                            <tr><td>P59</td><td>6,00</td><td>68,00</td><td>16,64</td><td>1,51</td><td>22,03</td><td>C2</td></tr>
+                            <tr><td>P60</td><td>7,00</td><td>73,00</td><td>21,74</td><td>3,60</td><td>16,93</td><td>C2</td></tr>
+                            <tr><td>P61</td><td>8,00</td><td>78,00</td><td>26,84</td><td>8,70</td><td>11,83</td><td>C2</td></tr>
+                            <tr><td>P62</td><td>9,00</td><td>83,00</td><td>31,94</td><td>13,79</td><td>6,73</td><td>C3</td></tr>
+                            <tr><td>P63</td><td>10,00</td><td>88,00</td><td>37,04</td><td>18,89</td><td>1,64</td><td>C3</td></tr>
+                            <tr><td>P64</td><td>11,00</td><td>93,00</td><td>42,14</td><td>23,99</td><td>3,47</td><td>C3</td></tr>
+                            <tr><td>P65</td><td>12,00</td><td>97,00</td><td>46,26</td><td>28,11</td><td>7,59</td><td>C3</td></tr>
+                            <tr><td>P66</td><td>2,00</td><td>50,00</td><td>1,82</td><td>19,94</td><td>40,46</td><td>C1</td></tr>
+                            <tr><td>P67</td><td>3,00</td><td>55,00</td><td>3,32</td><td>14,84</td><td>35,37</td><td>C1</td></tr>
+                            <tr><td>P68</td><td>4,00</td><td>60,00</td><td>8,41</td><td>9,74</td><td>30,27</td><td>C1</td></tr>
+                            <tr><td>P69</td><td>5,00</td><td>65,00</td><td>13,51</td><td>4,65</td><td>25,17</td><td>C2</td></tr>
+                            <tr><td>P70</td><td>6,00</td><td>70,00</td><td>18,60</td><td>0,53</td><td>20,07</td><td>C2</td></tr>
+                            <tr><td>P71</td><td>7,00</td><td>75,00</td><td>23,70</td><td>5,56</td><td>14,97</td><td>C2</td></tr>
+                            <tr><td>P72</td><td>8,00</td><td>80,00</td><td>28,80</td><td>10,66</td><td>9,87</td><td>C3</td></tr>
+                            <tr><td>P73</td><td>9,00</td><td>85,00</td><td>33,90</td><td>15,76</td><td>4,78</td><td>C3</td></tr>
+                            <tr><td>P74</td><td>10,00</td><td>90,00</td><td>39,00</td><td>20,86</td><td>0,44</td><td>C3</td></tr>
+                            <tr><td>P75</td><td>11,00</td><td>95,00</td><td>44,10</td><td>25,95</td><td>5,44</td><td>C3</td></tr>
+                            <tr><td>P76</td><td>12,00</td><td>98,00</td><td>47,24</td><td>29,09</td><td>8,57</td><td>C3</td></tr>
+                            <tr><td>P77</td><td>1,00</td><td>43,00</td><td>8,85</td><td>27,00</td><td>47,52</td><td>C1</td></tr>
+                            <tr><td>P78</td><td>2,00</td><td>47,00</td><td>4,75</td><td>22,88</td><td>43,41</td><td>C1</td></tr>
+                            <tr><td>P79</td><td>3,00</td><td>52,00</td><td>0,47</td><td>17,78</td><td>38,31</td><td>C1</td></tr>
+                            <tr><td>P80</td><td>4,00</td><td>57,00</td><td>5,47</td><td>12,69</td><td>33,21</td><td>C1</td></tr>
+                            <tr><td>P81</td><td>5,00</td><td>62,00</td><td>10,57</td><td>7,59</td><td>28,11</td><td>C2</td></tr>
+                            <tr><td>P82</td><td>6,00</td><td>67,00</td><td>15,66</td><td>2,51</td><td>23,01</td><td>C2</td></tr>
+                            <tr><td>P83</td><td>7,00</td><td>72,00</td><td>20,76</td><td>2,64</td><td>17,91</td><td>C2</td></tr>
+                            <tr><td>P84</td><td>8,00</td><td>77,00</td><td>25,86</td><td>7,72</td><td>12,81</td><td>C2</td></tr>
+                            <tr><td>P85</td><td>9,00</td><td>82,00</td><td>30,96</td><td>12,82</td><td>7,72</td><td>C3</td></tr>
+                            <tr><td>P86</td><td>10,00</td><td>87,00</td><td>36,06</td><td>17,91</td><td>2,63</td><td>C3</td></tr>
+                            <tr><td>P87</td><td>11,00</td><td>92,00</td><td>41,16</td><td>23,01</td><td>2,50</td><td>C3</td></tr>
+                            <tr><td>P88</td><td>12,00</td><td>96,00</td><td>45,28</td><td>27,13</td><td>6,62</td><td>C3</td></tr>
+                            <tr><td>P89</td><td>2,00</td><td>49,00</td><td>2,78</td><td>20,92</td><td>41,44</td><td>C1</td></tr>
+                            <tr><td>P90</td><td>3,00</td><td>54,00</td><td>2,33</td><td>15,82</td><td>36,35</td><td>C1</td></tr>
+                            <tr><td>P91</td><td>4,00</td><td>59,00</td><td>7,42</td><td>10,72</td><td>31,25</td><td>C1</td></tr>
+                            <tr><td>P92</td><td>5,00</td><td>64,00</td><td>12,52</td><td>5,62</td><td>26,15</td><td>C2</td></tr>
+                            <tr><td>P93</td><td>6,00</td><td>69,00</td><td>17,62</td><td>0,53</td><td>21,05</td><td>C2</td></tr>
+                            <tr><td>P94</td><td>7,00</td><td>74,00</td><td>22,72</td><td>4,58</td><td>15,95</td><td>C2</td></tr>
+                            <tr><td>P95</td><td>8,00</td><td>79,00</td><td>27,82</td><td>9,68</td><td>10,85</td><td>C2</td></tr>
+                            <tr><td>P96</td><td>9,00</td><td>84,00</td><td>32,92</td><td>14,77</td><td>5,75</td><td>C3</td></tr>
+                            <tr><td>P97</td><td>10,00</td><td>89,00</td><td>38,02</td><td>19,87</td><td>0,66</td><td>C3</td></tr>
+                            <tr><td>P98</td><td>11,00</td><td>94,00</td><td>43,12</td><td>24,97</td><td>4,45</td><td>C3</td></tr>
+                            <tr><td>P99</td><td>12,00</td><td>98,00</td><td>47,24</td><td>29,09</td><td>8,57</td><td>C3</td></tr>
+                            <tr><td>P100</td><td>1,00</td><td>42,00</td><td>9,84</td><td>27,98</td><td>48,51</td><td>C1</td></tr>
+                        </table>
+                    </div>
+                </div>  
+            </section>
 
-        <section class="section-light" id="iteration3">
-            <h2>Iteration 3</h2>
-            <p>The same process is repeated</p>
-            <h3 id="initial3">Initial Centroids</h3>
-            <p>The initial centroids were:</p>
-            <div class="card-grid">
-                <div class="centroid-item"><strong>Centroid 1:</strong>(2.63,51.70)</div>
-                <div class="centroid-item"><strong>Centroid 2:</strong>(6.17,69.50)</div>
-                <div class="centroid-item"><strong>Centroid 3:</strong>(10.22,89.62)</div>
-            </div>
-        </section>
+            <section class="section-light" id="variance">
+                <div class="variance-container">
+                    <div class="variance-text">
+                        <h3>6. Variance Comparison</h3>
+                        <p>
+                            Variance measures how far the data points are from their assigned centroids. It helps evaluate how compact the clusters are.
+                        </p>
+                        <p>
+                            In this exercise, the variance was calculated as the square of the distance between each data point and its assigned centroid.
+                            Using the formula:
+                        </p>
+                        <p>
+                            Variance = ∑d^2
+                        </p>
+                        <p>
+                        For each data point, the distance to the assigned centroid was squared,por example:
+                        </p>
+                            For P2 in iteration 1, whose cluster is C1, the distance to the centroid of that cluster was taken and squared.
+                            d(C1) = (5.10)^2
+                            Variance = 26.01
+                        <p>
+                            and then all values were summed to obtain the total variance for each iteration.
+                            The result is:
+                        </p>
+                        <table>
+                            <tr>
+                                <th>Iteration</th>
+                                <th>Variance</th>
+                            </tr>
+                            <tr><td>Iteration 1</td><td>5455,00</td></tr>
+                            <tr><td>Iteration 2</td><td>3281,47</td></tr>
+                            <tr><td>Iteration 1</td><td>3138,18</td></tr>
+                        </table>
+                    </div>
 
-        <section class="section-light" id="distance3">
-            <h2>Distance Calculation</h2>
-            <div class="cards">
-                <div class="card">
-                    <p>
-                        The distance is calculated the same as in iteration 1
-                    </p>
-                    <p>
-                        Example: For point P8 (9,85) and centroid C3 (10.22,89.62):
-                        d = √((9-10.22)² + (85-89.62)²) ≈ 4.78
-
-                    </p>
+                    <div class="variance-image">
+                        <img src="{{url_for('static',filename='k-means.png')}}" alt="Graphs">
+                        <p>
+                            By comparing the variances of each iteration, we can observe that the variance decreases with each iteration. 
+                            This demonstrates that the algorithm improves clustering by reducing the distance between the points and their centroids.
+                        </p>
+                        <p>
+                            The decrease in variance across iterations indicates that the K-Means algorithm is converging and producing more stable clusters.
+                        </p>
+                    </div>
                 </div>
-            </div>
-        </section>
+            </section>
 
-        <section class="section section-light" id="cluster3">
-            <h2>Cluster assignments</h2>
-            <div class="cards">
-                <div class="card">
-                    <p>
-                        The clusters were assigned in the same way as in iteration 1. 
-                        For this case, for example, at point P8 we have the following distances:
-                    </p>
-                    <ul>
-                        <li>d(C1): 33.90</li>
-                        <li>d(C2): 15.76</li>
-                        <li>d(C3): 4.78</li>
-                    </ul>
-                    <p>
-                        Since C3 is the shortest distance to a centroid, it was added to cluster 3.
-                    </p>
-                </div>
-            </div>
-        </section>
+            <section class="section-light" id="results">
+                <h3>7. Results Interpretation</h3>
+                <p>
+                    The K-Means algorithm allows the identification of three distinct groups based on the variables of study hours and grades.
+                </p>
+                <p>
+                    As a result of each cluster, this represents:
+                </p>
+                <ul>
+                    <li><strong>Cluster 1:</strong> Represents students with low study hours and low grades.</li>
+                    <li><strong>Cluster 2:</strong> Represents students with moderate study hours and average grades.</li>
+                    <li><strong>Cluster 3:</strong> Represents students with high study hours and high grades.</li>
+                </ul>
+                <p>
+                    The variance decreased across iterations, indicating that the data points became closer to their respective centroids.
+                </p>
+                <p>
+                    The centroids showed minimal changes between the last iterations, indicating that convergence between the data was achieved.
+                </p>
+                    Overall, the data were successfully grouped into meaningful clusters, demonstrating the effectiveness of K-Means
+                    in identifying patterns within the dataset.
+                </p>
+            </section>  
+            {%  endblock %}
+        </div>
 
-        <section class="section-light" id="table3">
-            <h2>Distance Tables and Cluster Assignments</h2>
-            <div class="tables">
-                <div class="table-card">
-                    <table>
-                        <tr>
-                            <th>Person</th>
-                            <th>StudyHours</th>
-                            <th>Grade</th>
-                            <th>d(C1)</th>
-                            <th>d(C2)</th>
-                            <th>d(C3)</th>
-                            <th>Cluster</th>
-                        </tr>
-                        <tr><td>P1</td><td>2,00</td><td>50,00</td><td>1,82</td><td>19,94</td><td>40,46</td><td>C1</td></tr>
-                        <tr><td>P2</td><td>3,00</td><td>55,00</td><td>3,32</td><td>14,84</td><td>35,37</td><td>C1</td></tr>
-                        <tr><td>P3</td><td>4,00</td><td>60,00</td><td>8,41</td><td>9,74</td><td>30,27</td><td>C1</td></tr>
-                        <tr><td>P4</td><td>5,00</td><td>65,00</td><td>13,51</td><td>4,65</td><td>25,17</td><td>C2</td></tr>
-                        <tr><td>P5</td><td>6,00</td><td>70,00</td><td>18,60</td><td>0,53</td><td>20,07</td><td>C2</td></tr>
-                        <tr><td>P6</td><td>7,00</td><td>75,00</td><td>23,70</td><td>5,56</td><td>14,97</td><td>C2</td></tr>
-                        <tr><td>P7</td><td>8,00</td><td>80,00</td><td>28,80</td><td>10,66</td><td>9,87</td><td>C3</td></tr>
-                        <tr><td>P8</td><td>9,00</td><td>85,00</td><td>33,90</td><td>15,76</td><td>4,78</td><td>C3</td></tr>
-                        <tr><td>P9</td><td>10,00</td><td>90,00</td><td>39,00</td><td>20,86</td><td>0,44</td><td>C3</td></tr>
-                        <tr><td>P10</td><td>11,00</td><td>95,00</td><td>44,10</td><td>25,95</td><td>5,44</td><td>C3</td></tr>
-                        <tr><td>P11</td><td>3,00</td><td>52,00</td><td>0,47</td><td>17,78</td><td>38,31</td><td>C1</td></tr>
-                        <tr><td>P12</td><td>4,00</td><td>57,00</td><td>5,47</td><td>12,69</td><td>33,21</td><td>C1</td></tr>
-                        <tr><td>P13</td><td>5,00</td><td>62,00</td><td>10,57</td><td>7,59</td><td>28,11</td><td>C2</td></tr>
-                        <tr><td>P14</td><td>6,00</td><td>67,00</td><td>15,66</td><td>2,51</td><td>23,01</td><td>C2</td></tr>
-                        <tr><td>P15</td><td>7,00</td><td>72,00</td><td>20,76</td><td>2,64</td><td>17,91</td><td>C2</td></tr>
-                        <tr><td>P16</td><td>8,00</td><td>77,00</td><td>25,86</td><td>7,72</td><td>12,81</td><td>C2</td></tr>
-                        <tr><td>P17</td><td>9,00</td><td>82,00</td><td>30,96</td><td>12,82</td><td>7,72</td><td>C3</td></tr>
-                        <tr><td>P18</td><td>10,00</td><td>87,00</td><td>36,06</td><td>17,91</td><td>2,63</td><td>C3</td></tr>
-                        <tr><td>P19</td><td>11,00</td><td>92,00</td><td>41,16</td><td>23,01</td><td>2,50</td><td>C3</td></tr>
-                        <tr><td>P20</td><td>12,00</td><td>97,00</td><td>46,26</td><td>28,11</td><td>7,59</td><td>C3</td></tr>
-                        <tr><td>P21</td><td>2,00</td><td>48,00</td><td>3,76</td><td>21,90</td><td>42,42</td><td>C1</td></tr>
-                        <tr><td>P22</td><td>3,00</td><td>53,00</td><td>1,35</td><td>16,80</td><td>37,33</td><td>C1</td></tr>
-                        <tr><td>P23</td><td>4,00</td><td>58,00</td><td>6,44</td><td>11,70</td><td>32,23</td><td>C1</td></tr>
-                        <tr><td>P24</td><td>5,00</td><td>63,00</td><td>11,54</td><td>6,60</td><td>27,13</td><td>C2</td></tr>
-                        <tr><td>P25</td><td>6,00</td><td>68,00</td><td>16,64</td><td>1,51</td><td>22,03</td><td>C2</td></tr>
-                        <tr><td>P26</td><td>7,00</td><td>73,00</td><td>21,74</td><td>3,60</td><td>16,93</td><td>C2</td></tr>
-                        <tr><td>P27</td><td>8,00</td><td>78,00</td><td>26,84</td><td>8,70</td><td>11,83</td><td>C2</td></tr>
-                        <tr><td>P28</td><td>9,00</td><td>83,00</td><td>31,94</td><td>13,79</td><td>6,73</td><td>C3</td></tr>
-                        <tr><td>P29</td><td>10,00</td><td>88,00</td><td>37,04</td><td>18,89</td><td>1,64</td><td>C3</td></tr>
-                        <tr><td>P30</td><td>11,00</td><td>93,00</td><td>42,14</td><td>23,99</td><td>3,47</td><td>C3</td></tr>
-                        <tr><td>P31</td><td>1,00</td><td>45,00</td><td>6,90</td><td>25,04</td><td>45,56</td><td>C1</td></tr>
-                        <tr><td>P32</td><td>2,00</td><td>50,00</td><td>1,82</td><td>19,94</td><td>40,46</td><td>C1</td></tr>
-                        <tr><td>P33</td><td>3,00</td><td>55,00</td><td>3,32</td><td>14,84</td><td>35,37</td><td>C1</td></tr>
-                        <tr><td>P34</td><td>4,00</td><td>60,00</td><td>8,41</td><td>9,74</td><td>30,27</td><td>C1</td></tr>
-                        <tr><td>P35</td><td>5,00</td><td>65,00</td><td>13,51</td><td>4,65</td><td>25,17</td><td>C2</td></tr>
-                        <tr><td>P36</td><td>6,00</td><td>70,00</td><td>18,60</td><td>0,53</td><td>20,07</td><td>C2</td></tr>
-                        <tr><td>P37</td><td>7,00</td><td>75,00</td><td>23,70</td><td>5,56</td><td>14,97</td><td>C2</td></tr>
-                        <tr><td>P38</td><td>8,00</td><td>80,00</td><td>28,80</td><td>10,66</td><td>9,87</td><td>C3</td></tr>
-                        <tr><td>P39</td><td>9,00</td><td>85,00</td><td>33,90</td><td>15,76</td><td>4,78</td><td>C3</td></tr>
-                        <tr><td>P40</td><td>10,00</td><td>90,00</td><td>39,00</td><td>20,86</td><td>0,44</td><td>C3</td></tr>
-                        <tr><td>P41</td><td>11,00</td><td>94,00</td><td>43,12</td><td>24,97</td><td>4,45</td><td>C3</td></tr>
-                        <tr><td>P42</td><td>12,00</td><td>98,00</td><td>47,24</td><td>29,09</td><td>8,57</td><td>C3</td></tr>
-                        <tr><td>P43</td><td>2,00</td><td>49,00</td><td>2,78</td><td>20,92</td><td>41,44</td><td>C1</td></tr>
-                        <tr><td>P44</td><td>3,00</td><td>54,00</td><td>2,33</td><td>15,82</td><td>36,35</td><td>C1</td></tr>
-                        <tr><td>P45</td><td>4,00</td><td>59,00</td><td>7,42</td><td>10,72</td><td>31,25</td><td>C1</td></tr>
-                        <tr><td>P46</td><td>5,00</td><td>64,00</td><td>12,52</td><td>5,62</td><td>26,15</td><td>C2</td></tr>
-                        <tr><td>P47</td><td>6,00</td><td>69,00</td><td>17,62</td><td>0,53</td><td>21,05</td><td>C2</td></tr>
-                        <tr><td>P48</td><td>7,00</td><td>74,00</td><td>22,72</td><td>4,58</td><td>15,95</td><td>C2</td></tr>
-                        <tr><td>P49</td><td>8,00</td><td>79,00</td><td>27,82</td><td>9,68</td><td>10,85</td><td>C2</td></tr>
-                        <tr><td>P50</td><td>9,00</td><td>84,00</td><td>32,92</td><td>14,77</td><td>5,75</td><td>C3</td></tr>
-                        <tr><td>P51</td><td>10,00</td><td>89,00</td><td>38,02</td><td>19,87</td><td>0,66</td><td>C3</td></tr>
-                        <tr><td>P52</td><td>11,00</td><td>94,00</td><td>43,12</td><td>24,97</td><td>4,45</td><td>C3</td></tr>
-                        <tr><td>P53</td><td>12,00</td><td>99,00</td><td>48,22</td><td>30,07</td><td>9,55</td><td>C3</td></tr>
-                        <tr><td>P54</td><td>1,00</td><td>44,00</td><td>7,87</td><td>26,02</td><td>46,54</td><td>C1</td></tr>
-                        <tr><td>P55</td><td>2,00</td><td>48,00</td><td>3,76</td><td>21,90</td><td>42,42</td><td>C1</td></tr>
-                        <tr><td>P56</td><td>3,00</td><td>53,00</td><td>1,35</td><td>16,80</td><td>37,33</td><td>C1</td></tr>
-                        <tr><td>P57</td><td>4,00</td><td>58,00</td><td>6,44</td><td>11,70</td><td>32,23</td><td>C1</td></tr>
-                        <tr><td>P58</td><td>5,00</td><td>63,00</td><td>11,54</td><td>6,60</td><td>27,13</td><td>C2</td></tr>
-                        <tr><td>P59</td><td>6,00</td><td>68,00</td><td>16,64</td><td>1,51</td><td>22,03</td><td>C2</td></tr>
-                        <tr><td>P60</td><td>7,00</td><td>73,00</td><td>21,74</td><td>3,60</td><td>16,93</td><td>C2</td></tr>
-                        <tr><td>P61</td><td>8,00</td><td>78,00</td><td>26,84</td><td>8,70</td><td>11,83</td><td>C2</td></tr>
-                        <tr><td>P62</td><td>9,00</td><td>83,00</td><td>31,94</td><td>13,79</td><td>6,73</td><td>C3</td></tr>
-                        <tr><td>P63</td><td>10,00</td><td>88,00</td><td>37,04</td><td>18,89</td><td>1,64</td><td>C3</td></tr>
-                        <tr><td>P64</td><td>11,00</td><td>93,00</td><td>42,14</td><td>23,99</td><td>3,47</td><td>C3</td></tr>
-                        <tr><td>P65</td><td>12,00</td><td>97,00</td><td>46,26</td><td>28,11</td><td>7,59</td><td>C3</td></tr>
-                        <tr><td>P66</td><td>2,00</td><td>50,00</td><td>1,82</td><td>19,94</td><td>40,46</td><td>C1</td></tr>
-                        <tr><td>P67</td><td>3,00</td><td>55,00</td><td>3,32</td><td>14,84</td><td>35,37</td><td>C1</td></tr>
-                        <tr><td>P68</td><td>4,00</td><td>60,00</td><td>8,41</td><td>9,74</td><td>30,27</td><td>C1</td></tr>
-                        <tr><td>P69</td><td>5,00</td><td>65,00</td><td>13,51</td><td>4,65</td><td>25,17</td><td>C2</td></tr>
-                        <tr><td>P70</td><td>6,00</td><td>70,00</td><td>18,60</td><td>0,53</td><td>20,07</td><td>C2</td></tr>
-                        <tr><td>P71</td><td>7,00</td><td>75,00</td><td>23,70</td><td>5,56</td><td>14,97</td><td>C2</td></tr>
-                        <tr><td>P72</td><td>8,00</td><td>80,00</td><td>28,80</td><td>10,66</td><td>9,87</td><td>C3</td></tr>
-                        <tr><td>P73</td><td>9,00</td><td>85,00</td><td>33,90</td><td>15,76</td><td>4,78</td><td>C3</td></tr>
-                        <tr><td>P74</td><td>10,00</td><td>90,00</td><td>39,00</td><td>20,86</td><td>0,44</td><td>C3</td></tr>
-                        <tr><td>P75</td><td>11,00</td><td>95,00</td><td>44,10</td><td>25,95</td><td>5,44</td><td>C3</td></tr>
-                        <tr><td>P76</td><td>12,00</td><td>98,00</td><td>47,24</td><td>29,09</td><td>8,57</td><td>C3</td></tr>
-                        <tr><td>P77</td><td>1,00</td><td>43,00</td><td>8,85</td><td>27,00</td><td>47,52</td><td>C1</td></tr>
-                        <tr><td>P78</td><td>2,00</td><td>47,00</td><td>4,75</td><td>22,88</td><td>43,41</td><td>C1</td></tr>
-                        <tr><td>P79</td><td>3,00</td><td>52,00</td><td>0,47</td><td>17,78</td><td>38,31</td><td>C1</td></tr>
-                        <tr><td>P80</td><td>4,00</td><td>57,00</td><td>5,47</td><td>12,69</td><td>33,21</td><td>C1</td></tr>
-                        <tr><td>P81</td><td>5,00</td><td>62,00</td><td>10,57</td><td>7,59</td><td>28,11</td><td>C2</td></tr>
-                        <tr><td>P82</td><td>6,00</td><td>67,00</td><td>15,66</td><td>2,51</td><td>23,01</td><td>C2</td></tr>
-                        <tr><td>P83</td><td>7,00</td><td>72,00</td><td>20,76</td><td>2,64</td><td>17,91</td><td>C2</td></tr>
-                        <tr><td>P84</td><td>8,00</td><td>77,00</td><td>25,86</td><td>7,72</td><td>12,81</td><td>C2</td></tr>
-                        <tr><td>P85</td><td>9,00</td><td>82,00</td><td>30,96</td><td>12,82</td><td>7,72</td><td>C3</td></tr>
-                        <tr><td>P86</td><td>10,00</td><td>87,00</td><td>36,06</td><td>17,91</td><td>2,63</td><td>C3</td></tr>
-                        <tr><td>P87</td><td>11,00</td><td>92,00</td><td>41,16</td><td>23,01</td><td>2,50</td><td>C3</td></tr>
-                        <tr><td>P88</td><td>12,00</td><td>96,00</td><td>45,28</td><td>27,13</td><td>6,62</td><td>C3</td></tr>
-                        <tr><td>P89</td><td>2,00</td><td>49,00</td><td>2,78</td><td>20,92</td><td>41,44</td><td>C1</td></tr>
-                        <tr><td>P90</td><td>3,00</td><td>54,00</td><td>2,33</td><td>15,82</td><td>36,35</td><td>C1</td></tr>
-                        <tr><td>P91</td><td>4,00</td><td>59,00</td><td>7,42</td><td>10,72</td><td>31,25</td><td>C1</td></tr>
-                        <tr><td>P92</td><td>5,00</td><td>64,00</td><td>12,52</td><td>5,62</td><td>26,15</td><td>C2</td></tr>
-                        <tr><td>P93</td><td>6,00</td><td>69,00</td><td>17,62</td><td>0,53</td><td>21,05</td><td>C2</td></tr>
-                        <tr><td>P94</td><td>7,00</td><td>74,00</td><td>22,72</td><td>4,58</td><td>15,95</td><td>C2</td></tr>
-                        <tr><td>P95</td><td>8,00</td><td>79,00</td><td>27,82</td><td>9,68</td><td>10,85</td><td>C2</td></tr>
-                        <tr><td>P96</td><td>9,00</td><td>84,00</td><td>32,92</td><td>14,77</td><td>5,75</td><td>C3</td></tr>
-                        <tr><td>P97</td><td>10,00</td><td>89,00</td><td>38,02</td><td>19,87</td><td>0,66</td><td>C3</td></tr>
-                        <tr><td>P98</td><td>11,00</td><td>94,00</td><td>43,12</td><td>24,97</td><td>4,45</td><td>C3</td></tr>
-                        <tr><td>P99</td><td>12,00</td><td>98,00</td><td>47,24</td><td>29,09</td><td>8,57</td><td>C3</td></tr>
-                        <tr><td>P100</td><td>1,00</td><td>42,00</td><td>9,84</td><td>27,98</td><td>48,51</td><td>C1</td></tr>
-                    </table>
-                </div>
-            </div>  
-        </section>
-
-        <section class="section-light" id="variance">
-            <div class="variance-container">
-                <div class="variance-text">
-                    <h2>6. Variance comparison</h2>
-                    <p>
-                        Variance measures how far the data points are from their assigned centroids. It helps evaluate how compact the clusters are.
-                    </p>
-                    <p>
-                        In this exercise, the variance was calculated as the square of the distance between each data point and its assigned centroid.
-                        Using the formula:
-                    </p>
-                    <p>
-                        Variance = ∑d^2
-                    </p>
-                    <p>
-                    For each data point, the distance to the assigned centroid was squared,por example:
-                    </p>
-                        For P2 in iteration 1, whose cluster is C1, the distance to the centroid of that cluster was taken and squared.
-                        d(C1) = (5.10)^2
-                        Variance = 26.01
-                    <p>
-                        and then all values were summed to obtain the total variance for each iteration.
-                        The result is:
-                    </p>
-                    <table>
-                        <tr>
-                            <th>Iteration</th>
-                            <th>Variance</th>
-                        </tr>
-                        <tr><td>Iteration 1</td><td>5455,00</td></tr>
-                        <tr><td>Iteration 2</td><td>3281,47</td></tr>
-                        <tr><td>Iteration 1</td><td>3138,18</td></tr>
-                    </table>
-                </div>
-
-                <div class="variance-image">
-                    <img src="{{url_for('static',filename='k-means.png')}}" alt="Graphs">
-                    <p>
-                        By comparing the variances of each iteration, we can observe that the variance decreases with each iteration. 
-                        This demonstrates that the algorithm improves clustering by reducing the distance between the points and their centroids.
-                    </p>
-                    <p>
-                        The decrease in variance across iterations indicates that the K-Means algorithm is converging and producing more stable clusters.
-                    </p>
-                </div>
-            </div>
-        </section>
-
-        <section class="section-light" id="results">
-            <h2>7. Results Interpretation</h2>
-            <p>
-                The K-Means algorithm allows the identification of three distinct groups based on the variables of study hours and grades.
-            </p>
-            <p>
-                As a result of each cluster, this represents:
-            </p>
-            <ul>
-                <li><strong>Cluster 1:</strong> Represents students with low study hours and low grades.</li>
-                <li><strong>Cluster 2:</strong> Represents students with moderate study hours and average grades.</li>
-                <li><strong>Cluster 3:</strong> Represents students with high study hours and high grades.</li>
-            </ul>
-            <p>
-                The variance decreased across iterations, indicating that the data points became closer to their respective centroids.
-            </p>
-            <p>
-                The centroids showed minimal changes between the last iterations, indicating that convergence between the data was achieved.
-            </p>
-                Overall, the data were successfully grouped into meaningful clusters, demonstrating the effectiveness of K-Means
-                in identifying patterns within the dataset.
-            </p>
-        </section>  
-        {%  endblock %}
     </main>
 </div>
 
