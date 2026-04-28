@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Machine Learning: K-Means Clustering Concepts</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='navbar.css') }}">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            display: flex;
+            background-color: #f0f2f5;
+        }
+
+        .sidebar {
+            width: 280px;
+            height: 100vh;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            padding: 80px 20px 20px 20px;
+            position: fixed;
+            color: white;
+            overflow-y: auto;
+        }
+
+        .sidebar h3 {
+            color: #00d4ff;
+            margin-bottom: 20px;
+            font-size: 1.3rem;
+        }
+
+        .sidebar ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .sidebar li {
+            margin: 12px 0;
+        }
+
+        .sidebar a {
+            text-decoration: none;
+            color: #ccc;
+            transition: all 0.3s;
+            display: block;
+            padding: 8px 12px;
+            border-radius: 8px;
+        }
+
+        .sidebar a:hover {
+            color: white;
+            background-color: rgba(0, 212, 255, 0.2);
+            padding-left: 20px;
+        }
+
+        .main {
+            margin-left: 280px;
+            padding: 100px 40px 40px 40px;
+            width: 100%;
+        }
+
+        .banner {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 40px;
+            border-radius: 20px;
+            color: white;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .banner h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        .card {
+            background: white;
+            padding: 25px;
+            border-radius: 16px;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            border: none;
+        }
+
+        .card h2 {
+            color: #2c3e50;
+            border-left: 5px solid #667eea;
+            padding-left: 15px;
+            margin-bottom: 20px;
+            font-size: 1.6rem;
+        }
+
+        .card h3 {
+            color: #764ba2;
+            margin-top: 20px;
+            margin-bottom: 15px;
+        }
+
+        .formula {
+            background: #1e1e2e;
+            color: #00ff9c;
+            padding: 15px;
+            border-radius: 10px;
+            font-family: monospace;
+            font-size: 1.1rem;
+            text-align: center;
+            margin: 15px 0;
+        }
+
+        .algorithm-step {
+            background: #f8f9fa;
+            border-left: 4px solid #667eea;
+            padding: 12px 20px;
+            margin: 12px 0;
+            border-radius: 8px;
+        }
+
+        .pros-cons {
+            display: flex;
+            gap: 20px;
+            margin-top: 15px;
+        }
+
+        .pros, .cons {
+            flex: 1;
+            padding: 15px;
+            border-radius: 12px;
+        }
+
+        .pros {
+            background: #d4edda;
+            border-left: 4px solid #28a745;
+        }
+
+        .cons {
+            background: #f8d7da;
+            border-left: 4px solid #dc3545;
+        }
+
+        code {
+            background: #1e1e2e;
+            color: #00d4ff;
+            padding: 2px 6px;
+            border-radius: 5px;
+            font-family: monospace;
+        }
+
+        pre {
+            background: #1e1e2e;
+            color: #00ff9c;
+            padding: 20px;
+            border-radius: 12px;
+            overflow-x: auto;
+            font-size: 0.9rem;
+        }
+
+        .comparison-table th {
+            background: #667eea;
+            color: white;
+        }
+
+        .note {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 12px 20px;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+    </style>
+</head>
+<body>
+
+    {% include "navbar.html" %}
+
+    <div class="sidebar">
+        <h3><i class="bi bi-diagram-3"></i> K-Means Concepts</h3>
+        <ul>
+            <li><a href="#definition">What is K-Means?</a></li>
+            <li><a href="#algorithm">Algorithm Steps</a></li>
+            <li><a href="#mathematics">Mathematical Foundation</a></li>
+            <li><a href="#choosing-k">Choosing K</a></li>
+            <li><a href="#distance">Distance Metrics</a></li>
+            <li><a href="#initialization">Centroid Initialization</a></li>
+            <li><a href="#evaluation">Evaluation Metrics</a></li>
+            <li><a href="#applications">Real-World Applications</a></li>
+            <li><a href="#pros-cons">Pros & Cons</a></li>
+            <li><a href="#code">Example Code</a></li>
+            <li><a href="#code-exp">Code Explanation</a></li>
+            <li><a href="#comparison">Comparison</a></li>
+        </ul>
+    </div>
+
+    <div class="main">
+        <div class="banner">
+            <h1><i class="bi bi-diagram-3"></i> K-Means Clustering</h1>
+            <p>Unsupervised Machine Learning Algorithm for Data Segmentation</p>
+        </div>
+
+        <!-- Definition -->
+        <div class="card" id="definition">
+            <h2>What is K-Means Clustering?</h2>
+            <p>
+                <strong>K-Means</strong> is an <strong>unsupervised learning algorithm</strong> used to partition <strong>n</strong> observations
+                into <strong>k</strong> clusters, where each observation belongs to the cluster with the nearest mean (centroid).
+            </p>
+            <p>
+                It is one of the most popular clustering algorithms due to its <strong>simplicity</strong> and <strong>efficiency</strong>
+                for large datasets.
+            </p>
+            <div class="note">
+                <strong><i class="bi bi-lightbulb"></i> Key Idea:</strong> Similar data points are grouped together, and dissimilar points are separated.
+            </div>
+        </div>
+
+        <!-- Algorithm Steps -->
+        <div class="card" id="algorithm">
+            <h2>Algorithm Steps</h2>
+            <div class="algorithm-step">
+                <strong>Step 1:</strong> Randomly select <strong>k</strong> points as initial centroids.
+            </div>
+            <div class="algorithm-step">
+                <strong>Step 2:</strong> Assign each data point to the nearest centroid.
+            </div>
+            <div class="algorithm-step">
+                <strong>Step 3:</strong> Recalculate centroids as the mean of all points in each cluster.
+            </div>
+            <div class="algorithm-step">
+                <strong>Step 4:</strong> Repeat steps 2-3 until convergence.
+            </div>
+        </div>
+
+        <!-- Mathematical Foundation -->
+        <div class="card" id="mathematics">
+            <h2>Mathematical Foundation</h2>
+            <p><strong>Objective Function (WCSS):</strong></p>
+            <div class="formula">
+                J = Σ<sub>j=1</sub><sup>k</sup> Σ<sub>i=1</sub><sup>n</sup> ||x<sub>i</sub><sup>(j)</sup> - μ<sub>j</sub>||²
+            </div>
+        </div>
+
+        <!-- Choosing K -->
+        <div class="card" id="choosing-k">
+            <h2>Choosing the Number of Clusters (K)</h2>
+            <h3>Elbow Method</h3>
+            <p>Plot WCSS against K values. The "elbow point" indicates optimal K.</p>
+            <h3>Silhouette Method</h3>
+            <p>Measures cluster quality. Values range from -1 to 1.</p>
+        </div>
+
+        <!-- Distance Metrics -->
+        <div class="card" id="distance">
+            <h2>Distance Metrics</h2>
+            <p>K-Means typically uses <strong>Euclidean distance</strong>:</p>
+            <div class="formula">
+                d(x, y) = √( Σ<sub>i=1</sub><sup>n</sup> (x<sub>i</sub> - y<sub>i</sub>)² )
+            </div>
+            <div class="note">
+                <strong>Important:</strong> Feature scaling is essential before applying K-Means.
+            </div>
+        </div>
+
+        <!-- Centroid Initialization -->
+        <div class="card" id="initialization">
+            <h2>Centroid Initialization</h2>
+            <ul>
+                <li><strong>Random:</strong> Simple but can be suboptimal</li>
+                <li><strong>K-Means++:</strong> Default in scikit-learn, better convergence</li>
+            </ul>
+        </div>
+
+        <!-- Evaluation Metrics -->
+        <div class="card" id="evaluation">
+            <h2>Evaluation Metrics</h2>
+            <ul>
+                <li><strong>Inertia (WCSS):</strong> Lower is better</li>
+                <li><strong>Silhouette Score:</strong> [-1,1], higher is better</li>
+                <li><strong>Davies-Bouldin:</strong> Lower is better</li>
+                <li><strong>Calinski-Harabasz:</strong> Higher is better</li>
+            </ul>
+        </div>
+
+        <!-- Applications -->
+        <div class="card" id="applications">
+            <h2>Real-World Applications</h2>
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="algorithm-step text-center">
+                        <i class="bi bi-people-fill" style="font-size: 2rem;"></i>
+                        <h4>Customer Segmentation</h4>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="algorithm-step text-center">
+                        <i class="bi bi-file-image-fill" style="font-size: 2rem;"></i>
+                        <h4>Image Compression</h4>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="algorithm-step text-center">
+                        <i class="bi bi-graph-up" style="font-size: 2rem;"></i>
+                        <h4>Anomaly Detection</h4>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Pros and Cons -->
+        <div class="card" id="pros-cons">
+            <h2>Pros & Cons</h2>
+            <div class="pros-cons">
+                <div class="pros">
+                    <h4><i class="bi bi-check-circle-fill"></i> Advantages</h4>
+                    <ul>
+                        <li>Simple and fast</li>
+                        <li>Scales well</li>
+                        <li>Guaranteed convergence</li>
+                    </ul>
+                </div>
+                <div class="cons">
+                    <h4><i class="bi bi-exclamation-triangle-fill"></i> Disadvantages</h4>
+                    <ul>
+                        <li>Need to specify K</li>
+                        <li>Sensitive to initialization</li>
+                        <li>Assumes spherical clusters</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Example Code -->
+        <div class="card" id="code">
+            <h2>Example Code</h2>
+            <pre>
+from sklearn.cluster import KMeans
+from sklearn.preprocessing import StandardScaler
+
+# Scale features
+scaler = StandardScaler()
+X_scaled = scaler.fit_transform(X)
+
+# Apply K-Means
+kmeans = KMeans(n_clusters=4, random_state=42)
+clusters = kmeans.fit_predict(X_scaled)
+            </pre>
+        </div>
+
+        <!-- Code Explanation -->
+        <div class="card" id="code-exp">
+            <h2>Code Explanation</h2>
+            <ol>
+                <li>Load and prepare data</li>
+                <li>Scale features with StandardScaler</li>
+                <li>Create K-Means model with k=4</li>
+                <li>Train and predict clusters</li>
+                <li>Analyze results</li>
+            </ol>
+        </div>
+
+        <!-- Comparison -->
+        <div class="card" id="comparison">
+            <h2>Comparison with Other Algorithms</h2>
+            <table class="table table-bordered comparison-table">
+                <thead>
+                    <tr><th>Algorithm</th><th>Strengths</th><th>Weaknesses</th><th>Best For</th></tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>K-Means</strong></td>
+                        <td>Fast, scalable</td>
+                        <td>Needs K, spherical</td>
+                        <td>Large datasets</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Hierarchical</strong></td>
+                        <td>No K needed</td>
+                        <td>Slow</td>
+                        <td>Small datasets</td>
+                    </tr>
+                    <tr>
+                        <td><strong>DBSCAN</strong></td>
+                        <td>Handles noise</td>
+                        <td>Needs epsilon</td>
+                        <td>Arbitrary shapes</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

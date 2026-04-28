@@ -11,13 +11,13 @@ df = pd.read_csv('medals.csv')
 df_logistic = pd.read_csv('fifa24.csv')
 df_perceptron = pd.read_csv('breastCancerWisconsin.csv')
 
-# ================== ROUTE ==================
+# ================== ROUTES ==================
 
 @app.route('/')
 def home():
     return render_template('mainMenu.html')
 
-#---------- USE CASE ----------
+# ---------- USE CASE ----------
 
 @app.route('/BankFraud')
 def bank_page():
@@ -38,7 +38,7 @@ def facial_page():
 def customerChurn_page():
     return render_template('caseUse/customerChurn.html')
 
-#---------- LINEAR REGRESSION ----------
+# ---------- LINEAR REGRESSION ----------
 
 @app.route('/linearRegression/concepts')
 def linealConcept():
@@ -62,20 +62,18 @@ def predict():
     return render_template('linearRegression/linealRApplication.html',
                            columns=columns,
                            prediction=prediction,
-                           x_col=x_col, 
+                           x_col=x_col,
                            input_value=input_value)
 
-#---------- LOGISTIC REGRESSION ----------
+# ---------- LOGISTIC REGRESSION ----------
 
 @app.route('/logisticRegression/concepts')
 def logisticConcept():
     return render_template('logisticRegression/logisticConcepts.html')
 
-
 @app.route('/logisticRegression/application')
 def logisticApplication():
     return render_template('logisticRegression/logisticApplication.html')
-
 
 @app.route('/predict_logistic', methods=['POST'])
 def predict_logistic():
@@ -91,10 +89,10 @@ def predict_logistic():
         passing_input,
         dribbling_input
     )
-    return render_template('logisticRegression/logisticApplication.html',
-                           **result_data)
+    return render_template('logisticRegression/logisticApplication.html', **result_data)
 
-#---------- CLASSIFICATION PERPCEPTRON ----------
+# ---------- PERCEPTRON ----------
+
 @app.route('/perceptron/concepts')
 def perceptronConcepts():
     return render_template('classificationPerceptron/perceptronConcepts.html')
@@ -102,7 +100,6 @@ def perceptronConcepts():
 @app.route('/perceptron/application', methods=['GET', 'POST'])
 def perceptronApp():
     data = train_perceptron(df_perceptron)
-
     prediction = None
 
     if request.method == 'POST':
@@ -120,11 +117,11 @@ def perceptronApp():
                            plot_url_errors=data["plot_url_errors"],
                            prediction=prediction)
 
-#---------- K-MEANS ----------
-@app.route('/kmeans/manualexercise')
-def kMeansManual():
-    return render_template('kMeans/manualExercise.html')
+# ---------- K-MEANS ----------
 
+@app.route('/kmeans/concepts')
+def kmeans_concepts():
+    return render_template('kMeans/kmeansConcepts.html')
 
 # ================== RUN ==================
 if __name__ == '__main__':

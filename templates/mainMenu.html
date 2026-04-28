@@ -6,42 +6,52 @@
     <title>Home</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename='navbar.css') }}">
-    <link rel = "stylesheet" href="{{url_for('static',filename='style.css')}}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
-    {% include "navbar.html"%}
+    {% include "navbar.html" %}
     <div class="main">
         <div class="content">
             <div class="centeredContent">
+
                 <h1 class="titleMainMenu">Machine Learning</h1>
-                <a href="{{url_for('home')}}">Home</a>
+                <a href="{{ url_for('home') }}">Home</a>
 
                 <h2>ML Use Cases</h2>
                 <ul>
-                    <li><a href="{{url_for('bbva_page')}}">Case 1: BBVA Pipeline</a></li>
-                    <li><a href="{{url_for('bank_page')}}">Case 2: Bank Fraud</a></li>
-                    <li><a href="{{url_for('facial_page')}}">Case 3: Facial Recognition</a></li>
-                    <li><a href="{{url_for('customerChurn_page')}}">Case 4: Customer Churn</a></li>
+                    <li><a href="{{ url_for('bbva_page') }}">Case 1: BBVA Pipeline</a></li>
+                    <li><a href="{{ url_for('bank_page') }}">Case 2: Bank Fraud</a></li>
+                    <li><a href="{{ url_for('facial_page') }}">Case 3: Facial Recognition</a></li>
+                    <li><a href="{{ url_for('customerChurn_page') }}">Case 4: Customer Churn</a></li>
                 </ul>
 
                 <h2>Supervised Machine Learning</h2>
                 <ul>
                     <li>Linear Regression
                         <ul>
-                            <li><a href="{{url_for('linealConcept')}}">Basic Concepts</a></li>
-                            <li><a href="{{url_for('linealApplication')}}">Application</a></li>
+                            <li><a href="{{ url_for('linealConcept') }}">Basic Concepts</a></li>
+                            <li><a href="{{ url_for('linealApplication') }}">Application</a></li>
                         </ul>
                     </li>
                     <li>Logistic Regression
                         <ul>
-                            <li><a href="{{url_for('logisticConcept')}}">Basic Concepts</a></li>
-                            <li><a href="{{url_for('logisticApplication')}}">Application</a></li>
+                            <li><a href="{{ url_for('logisticConcept') }}">Basic Concepts</a></li>
+                            <li><a href="{{ url_for('logisticApplication') }}">Application</a></li>
                         </ul>
                     </li>
-                    <li> Perceptron classification model
+                    <li>Perceptron classification model
                         <ul>
-                            <li><a href="{{url_for('perceptronConcepts')}}">Basic Concepts</a></li>
-                            <li><a href="{{url_for('perceptronApp')}}">Application</a></li>
+                            <li><a href="{{ url_for('perceptronConcepts') }}">Basic Concepts</a></li>
+                            <li><a href="{{ url_for('perceptronApp') }}">Application</a></li>
+                        </ul>
+                    </li>
+                </ul>
+
+                <h2>Unsupervised Machine Learning</h2>
+                <ul>
+                    <li>K-Means Clustering
+                        <ul>
+                            <li><a href="{{ url_for('kmeans_concepts') }}">Basic Concepts</a></li>
                         </ul>
                     </li>
                 </ul>
