@@ -117,7 +117,10 @@ def perceptronApp():
                            plot_url_errors=data["plot_url_errors"],
                            prediction=prediction)
 
-# ---------- K-MEANS ----------
+#---------- K-MEANS ----------
+@app.route('/kmeans/manualexercise')
+def kMeansManual():
+    return render_template('kMeans/manualExercise.html')
 
 @app.route('/kmeans/concepts')
 def kmeans_concepts():
