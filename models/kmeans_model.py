@@ -2,57 +2,73 @@ import pandas as pd
 import numpy as np
 from sklearn.cluster import KMeans
 from sklearn.preprocessing import StandardScaler
+from sklearn.metrics import silhouette_score, davies_bouldin_score, calinski_harabasz_score
+import matplotlib
+matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 
 
-def ejecutar_kmeans():
-    # Cargar dataset (clientes.csv del Kaggle)
+def get_kmeans_data():
     df = pd.read_csv("clientes.csv")
 
-    # === CREAR FEATURES PARA SEGMENTACIÓN ===
-    # Agrupar por cliente para crear características de comportamiento
     customer_data = df.groupby('customer_id').agg({
-        'quantity': 'sum',  # Total de items comprados
-        'price': 'sum',  # Total gastado
-        'age': 'first',  # Edad del cliente
-        'review_score': 'mean'  # Promedio de reseñas
+        'quantity': 'sum',
+        'price': 'sum',
+        'age': 'first',
+        'review_score': 'mean'
     }).reset_index()
 
-    # Limpiar valores nulos en review_score
     customer_data['review_score'] = customer_data['review_score'].fillna(customer_data['review_score'].median())
 
-    # Crear columnas con nombres similares a lo que espera el template
-    customer_data['Annual Income (k$)'] = customer_data['age'] * 0.8 + 20  # Simular ingreso basado en edad
+    customer_data['Annual Income (k$)'] = customer_data['age'] * 0.8 + 20
     customer_data['Spending Score (1-100)'] = (customer_data['price'] / customer_data['price'].max()) * 100
 
-    # Seleccionar features para clustering
     X = customer_data[['Annual Income (k$)', 'Spending Score (1-100)']]
 
-    # Escalado de datos
     scaler = StandardScaler()
     X_scaled = scaler.fit_transform(X)
 
-    # Modelo K-Means (5 clusters)
     kmeans = KMeans(n_clusters=5, random_state=42, n_init=10)
     customer_data['Cluster'] = kmeans.fit_predict(X_scaled)
 
-    # Centroides en escala original
     centroids_scaled = kmeans.cluster_centers_
     centroids_original = scaler.inverse_transform(centroids_scaled)
 
-    # Resumen por cluster
     resumen = customer_data.groupby('Cluster').agg({
         'Annual Income (k$)': ['mean', 'min', 'max', 'count'],
         'Spending Score (1-100)': ['mean', 'min', 'max']
     }).round(2)
 
-    return customer_data, resumen, centroids_original, X_scaled
+    # Métricas completas
+    metrics = {
+        "inertia": round(kmeans.inertia_, 2),
+        "silhouette": round(silhouette_score(X_scaled, customer_data['Cluster']), 4),
+        "davies_bouldin": round(davies_bouldin_score(X_scaled, customer_data['Cluster']), 4),
+        "calinski": round(calinski_harabasz_score(X_scaled, customer_data['Cluster']), 2)
+    }
+
+    # Generar gráfico
+    graficar(X_scaled, customer_data['Cluster'].values, centroids_scaled)
+
+    # Conteo por cluster
+    cluster_counts = customer_data['Cluster'].value_counts().sort_index().to_dict()
+
+    return {
+        "customer_data": customer_data,
+        "resumen": resumen.to_html(classes='table table-sm table-striped'),
+        "tabla": customer_data[['customer_id', 'Annual Income (k$)', 'Spending Score (1-100)', 'Cluster']].head(20).to_html(classes='table table-sm table-striped', index=False),
+        "centroids": centroids_original.tolist(),
+        "X_scaled": X_scaled.tolist(),
+        "metrics": metrics,
+        "n_clusters": 5,
+        "total_records": len(customer_data),
+        "cluster_counts": cluster_counts
+    }
 
 
 def graficar(X, clusters, centroides):
     plt.figure(figsize=(10, 6))
 
-    # Colores para clusters
     colors = ['#FF6B6B', '#4ECDC4', '#45B7D1', '#96CEB4', '#FFEAA7']
 
     for i in range(len(centroides)):
@@ -60,7 +76,6 @@ def graficar(X, clusters, centroides):
         plt.scatter(cluster_points[:, 0], cluster_points[:, 1],
                     c=colors[i], label=f'Cluster {i}', alpha=0.6, edgecolors='k')
 
-    # Centroides
     plt.scatter(centroides[:, 0], centroides[:, 1],
                 c='black', marker='X', s=200, label='Centroids', edgecolors='white', linewidth=2)
 
@@ -74,14 +89,7 @@ def graficar(X, clusters, centroides):
     plt.close()
 
 
-def predecir_cliente(df, income, spending_score):
-    """
-    Predice a qué cluster pertenece un nuevo cliente
-    """
-    from sklearn.cluster import KMeans
-    from sklearn.preprocessing import StandardScaler
-
-    # Crear datos similares a los de entrenamiento
+def predict_customer(df, income, spending_score):
     X = df[['Annual Income (k$)', 'Spending Score (1-100)']].copy()
 
     scaler = StandardScaler()
@@ -90,18 +98,15 @@ def predecir_cliente(df, income, spending_score):
     kmeans = KMeans(n_clusters=5, random_state=42, n_init=10)
     kmeans.fit(X_scaled)
 
-    # Predecir nuevo cliente
     new_customer = np.array([[income, spending_score]])
     new_customer_scaled = scaler.transform(new_customer)
     cluster = kmeans.predict(new_customer_scaled)[0]
 
-    # Centroides
     centroids_scaled = kmeans.cluster_centers_
     centroids_original = scaler.inverse_transform(centroids_scaled)
     centroid_income = round(centroids_original[cluster][0], 2)
     centroid_score = round(centroids_original[cluster][1], 2)
 
-    # Interpretaciones según el cluster
     interpretations = {
         0: "Standard Customer - Moderate income and spending",
         1: "Premium Customer - High income, high spending",
