@@ -3,6 +3,7 @@ import pandas as pd
 from models.linearRegression import train_predict
 from models.logisticRegression import train_predict_logistic
 from models.perceptron_model import train_perceptron, prediction_perceptron
+from models.kmeans_model import get_kmeans_data, predict_customer
 
 app = Flask(__name__)
 
@@ -11,13 +12,13 @@ df = pd.read_csv('medals.csv')
 df_logistic = pd.read_csv('fifa24.csv')
 df_perceptron = pd.read_csv('breastCancerWisconsin.csv')
 
-# ================== ROUTES ==================
+# ================== ROUTE ==================
 
 @app.route('/')
 def home():
     return render_template('mainMenu.html')
 
-# ---------- USE CASE ----------
+#---------- USE CASE ----------
 
 @app.route('/BankFraud')
 def bank_page():
@@ -38,7 +39,7 @@ def facial_page():
 def customerChurn_page():
     return render_template('caseUse/customerChurn.html')
 
-# ---------- LINEAR REGRESSION ----------
+#---------- LINEAR REGRESSION ----------
 
 @app.route('/linearRegression/concepts')
 def linealConcept():
@@ -62,18 +63,20 @@ def predict():
     return render_template('linearRegression/linealRApplication.html',
                            columns=columns,
                            prediction=prediction,
-                           x_col=x_col,
+                           x_col=x_col, 
                            input_value=input_value)
 
-# ---------- LOGISTIC REGRESSION ----------
+#---------- LOGISTIC REGRESSION ----------
 
 @app.route('/logisticRegression/concepts')
 def logisticConcept():
     return render_template('logisticRegression/logisticConcepts.html')
 
+
 @app.route('/logisticRegression/application')
 def logisticApplication():
     return render_template('logisticRegression/logisticApplication.html')
+
 
 @app.route('/predict_logistic', methods=['POST'])
 def predict_logistic():
@@ -89,10 +92,10 @@ def predict_logistic():
         passing_input,
         dribbling_input
     )
-    return render_template('logisticRegression/logisticApplication.html', **result_data)
+    return render_template('logisticRegression/logisticApplication.html',
+                           **result_data)
 
-# ---------- PERCEPTRON ----------
-
+#---------- CLASSIFICATION PERPCEPTRON ----------
 @app.route('/perceptron/concepts')
 def perceptronConcepts():
     return render_template('classificationPerceptron/perceptronConcepts.html')
@@ -100,6 +103,7 @@ def perceptronConcepts():
 @app.route('/perceptron/application', methods=['GET', 'POST'])
 def perceptronApp():
     data = train_perceptron(df_perceptron)
+
     prediction = None
 
     if request.method == 'POST':
@@ -116,15 +120,30 @@ def perceptronApp():
                            plot_url_roc=data["plot_url_roc"],
                            plot_url_errors=data["plot_url_errors"],
                            prediction=prediction)
-
-#---------- K-MEANS ----------
-@app.route('/kmeans/manualexercise')
-def kMeansManual():
-    return render_template('kMeans/manualExercise.html')
+#---------- UNSUPERVISED LEARNING ----------
 
 @app.route('/kmeans/concepts')
 def kmeans_concepts():
     return render_template('kMeans/kmeansConcepts.html')
+
+@app.route('/kmeans/manualexercise')
+def kMeansManual():
+    return render_template('kMeans/manualExercise.html')
+
+@app.route('/kmeans/application', methods=['GET', 'POST'])
+def kmeansApp():
+    data = get_kmeans_data()
+    prediction = None
+
+    if request.method == 'POST':
+        income = float(request.form['annual_income'])
+        spending_score = float(request.form['spending_score'])
+        # ✅ pasar customer_data como primer argumento
+        prediction = predict_customer(data['customer_data'], income, spending_score)
+
+    data['prediction'] = prediction
+
+    return render_template('kMeans/kmeansApplication.html', **data)
 
 # ================== RUN ==================
 if __name__ == '__main__':
