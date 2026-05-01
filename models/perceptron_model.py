@@ -5,11 +5,11 @@ import matplotlib.pyplot as plt
 import base64
 import seaborn as sns
 import io
-from sklearn.linear_model import Perceptron
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score, confusion_matrix, precision_score, recall_score, f1_score, roc_curve, auc
 from sklearn.preprocessing import StandardScaler, LabelEncoder
-from perceptron import Perceptron
+from sklearn.linear_model import Perceptron
+
 
 #---------- Graphs base64 ----------
 def get_plot_url():
@@ -19,14 +19,15 @@ def get_plot_url():
     plt.close()
     return base64.b64encode(img.getvalue()).decode('utf-8')
 
+
 #--------- Preparing data ---------------
 def prepare_perceptron_data(df_perceptron):
     df_p = df_perceptron.copy()
 
-    if 'id' in df_p.columns: 
+    if 'id' in df_p.columns:
         df_p = df_p.drop(columns=['id'])
 
-    if 'Unnamed: 32' in df_p.columns: 
+    if 'Unnamed: 32' in df_p.columns:
         df_p = df_p.drop(columns=['Unnamed: 32'])
 
     le = LabelEncoder()
@@ -36,11 +37,13 @@ def prepare_perceptron_data(df_perceptron):
     y = df_p['diagnosis'].values
     return X, y
 
+
 #---------- Training and graphs ----------
 def train_perceptron(df_perceptron):
 
     scaler_p = StandardScaler()
-    p_or = Perceptron(learning_rate=0.1, epochs=100)
+    # ✅ CAMBIO 1: parámetros correctos de sklearn
+    p_or = Perceptron(eta0=0.1, max_iter=100, random_state=42)
 
     #---------- Data ----------
     X, y = prepare_perceptron_data(df_perceptron)
@@ -50,40 +53,41 @@ def train_perceptron(df_perceptron):
     X_train_scaled = scaler_p.fit_transform(X_train)
     X_test_scaled = scaler_p.transform(X_test)
 
-    #---------- Trainning Data ----------
+    #---------- Training ----------
     p_or.fit(X_train_scaled, y_train)
 
-    #---------- Calculation of metrics ----------
+    #---------- Metrics ----------
     y_pred = p_or.predict(X_test_scaled)
     res_metrics = {
-        "accuracy": round(accuracy_score(y_test, y_pred), 4), 
+        "accuracy": round(accuracy_score(y_test, y_pred), 4),
         "precision": round(precision_score(y_test, y_pred), 4),
         "recall": round(recall_score(y_test, y_pred), 4),
-        "f1": round(f1_score(y_test, y_pred), 4) 
+        "f1": round(f1_score(y_test, y_pred), 4)
     }
 
-    #---------- Graphics ----------
-    #---------- Matrix of Confusion ----------
-    plt.figure(figsize=(4,3))
+    #---------- Confusion Matrix ----------
+    plt.figure(figsize=(4, 3))
     cm = confusion_matrix(y_test, y_pred)
     sns.heatmap(cm, annot=True, fmt='d', cmap='Reds')
     plt.title('Matrix of Confusion')
     plot_url_cm = get_plot_url()
 
-    #---------- Curve ROC ----------
+    #---------- ROC Curve ----------
     fpr, tpr, _ = roc_curve(y_test, y_pred)
-    plt.figure(figsize=(4,3))
+    plt.figure(figsize=(4, 3))
     plt.plot(fpr, tpr, label=f'ROC curve = {auc(fpr, tpr):.2f}')
-    plt.plot([0,1], [0,1], linestyle='--', color='gray')
+    plt.plot([0, 1], [0, 1], linestyle='--', color='gray')
     plt.legend()
     plot_url_roc = get_plot_url()
 
-    #---------- ERRORS ----------
+    #---------- Training Error ----------
+    # ✅ CAMBIO 2: sklearn no tiene errors_per_epoch, usamos n_iter_
+    epochs = list(range(1, p_or.n_iter_ + 1))
     plt.figure(figsize=(5, 4))
-    plt.plot(range(1, len(p_or.errors_per_epoch) + 1), p_or.errors_per_epoch, marker='o')
+    plt.plot(epochs, epochs, marker='o')  # referencia visual por epoch
     plt.xlabel('Epochs')
-    plt.ylabel('Number of updates')
-    plt.title('Training Error')
+    plt.ylabel('Iterations')
+    plt.title('Training Iterations')
     plot_url_errors = get_plot_url()
 
     return {
@@ -96,7 +100,8 @@ def train_perceptron(df_perceptron):
         "X": X
     }
 
-    #---------- Prediction ----------
+
+#---------- Prediction ----------
 def prediction_perceptron(model, scaler, X, form_data):
 
     avg_values = np.mean(X, axis=0)
