@@ -1,23 +1,21 @@
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm">
-    <div class="container-fluid">
+<nav class="navbar navbar-expand-lg shadow-sm">
+    <div class="container-fluid px-4">
 
-        <a class="navbar-brand fw-bold" href="{{ url_for('home') }}">ML</a>
+        <a class="navbar-brand" href="{{ url_for('home') }}">ML</a>
 
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown">
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
             <span class="navbar-toggler-icon"></span>
         </button>
 
-        <div class="collapse navbar-collapse" id="navbarNavDropdown">
+        <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav">
 
                 <li class="nav-item">
-                    <a class="nav-link active" href="{{ url_for('home') }}">Home</a>
+                    <a class="nav-link" href="{{ url_for('home') }}">Home</a>
                 </li>
 
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
-                        Use Case
-                    </a>
+                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">Use Case</a>
                     <ul class="dropdown-menu">
                         <li><a class="dropdown-item" href="{{ url_for('bbva_page') }}">BBVA Pipeline</a></li>
                         <li><a class="dropdown-item" href="{{ url_for('bank_page') }}">Bank Fraud</a></li>
@@ -27,48 +25,39 @@
                 </li>
 
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
-                        Supervised Learning
-                    </a>
+                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">Supervised Learning</a>
                     <ul class="dropdown-menu">
-
                         <li class="dropdown-submenu">
-                            <a class="dropdown-item dropdown-toggle" href="#">Linear Regression</a>
+                            <a class="dropdown-item dropdown-toggle">Linear Regression</a>
                             <ul class="dropdown-menu">
                                 <li><a class="dropdown-item" href="{{ url_for('linealConcept') }}">Concepts</a></li>
                                 <li><a class="dropdown-item" href="{{ url_for('linealApplication') }}">Application</a></li>
                             </ul>
                         </li>
-
                         <li class="dropdown-submenu">
-                            <a class="dropdown-item dropdown-toggle" href="#">Logistic Regression</a>
+                            <a class="dropdown-item dropdown-toggle">Logistic Regression</a>
                             <ul class="dropdown-menu">
                                 <li><a class="dropdown-item" href="{{ url_for('logisticConcept') }}">Concepts</a></li>
                                 <li><a class="dropdown-item" href="{{ url_for('logisticApplication') }}">Application</a></li>
                             </ul>
                         </li>
-
                         <li class="dropdown-submenu">
-                            <a class="dropdown-item dropdown-toggle" href="#">Perceptron</a>
+                            <a class="dropdown-item dropdown-toggle">Perceptron</a>
                             <ul class="dropdown-menu">
                                 <li><a class="dropdown-item" href="{{ url_for('perceptronConcepts') }}">Concepts</a></li>
                                 <li><a class="dropdown-item" href="{{ url_for('perceptronApp') }}">Application</a></li>
                             </ul>
                         </li>
-
                     </ul>
                 </li>
 
-                <!--Unsupervised Learning-->
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
-                        Unsupervised Learning
-                    </a>
+                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">Unsupervised Learning</a>
                     <ul class="dropdown-menu">
                         <li class="dropdown-submenu">
-                            <a class="dropdown-item dropdown-toggle" href="#">K-Means</a>
+                            <a class="dropdown-item dropdown-toggle">K-Means</a>
                             <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" href="{{ url_for('kmeans_concepts') }}">Concepts</a></li>
+                                <li><a class="dropdown-item" href="{{ url_for('kmeans_concepts') }}">Basic Concepts</a></li>
                                 <li><a class="dropdown-item" href="{{ url_for('kMeansManual') }}">Manual Exercise</a></li>
                                 <li><a class="dropdown-item" href="{{ url_for('kmeansApp') }}">Application</a></li>
                             </ul>

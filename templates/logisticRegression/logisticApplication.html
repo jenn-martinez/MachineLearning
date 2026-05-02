@@ -3,118 +3,249 @@
 <head>
     <meta charset="UTF-8">
     <title>Logistic Regression Application</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename='navbar.css') }}">
+
+    <style>
+        body {
+            background: #f0f2f5;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        .page-container {
+            display: flex;
+        }
+
+        /* SIDEBAR */
+        .sidebar {
+            width: 260px;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #1a1a2e, #16213e);
+            padding: 20px;
+            color: white;
+            position: sticky;
+            top: 56px;
+        }
+
+        .sidebar-title {
+            color: #00d4ff;
+            margin-bottom: 15px;
+        }
+
+        .nav-link {
+            color: #ccc;
+            padding: 8px;
+            border-radius: 8px;
+        }
+
+        .nav-link:hover {
+            background: rgba(0,212,255,0.2);
+            color: white;
+            padding-left: 15px;
+        }
+
+        /* MAIN */
+        .main {
+            padding: 40px;
+            width: 100%;
+        }
+
+        /* HERO */
+        .hero {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            padding: 40px;
+            border-radius: 20px;
+            color: white;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        /* SECTIONS */
+        .section-light {
+            background: white;
+            padding: 25px;
+            border-radius: 16px;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .section-light h2 {
+            border-left: 5px solid #667eea;
+            padding-left: 12px;
+            margin-bottom: 15px;
+        }
+
+        .tables {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .tables > div {
+            flex: 1;
+        }
+
+        .form-control {
+            border-radius: 10px;
+        }
+
+        .btn-success {
+            background: #667eea;
+            border: none;
+            border-radius: 10px;
+        }
+
+        .result-box {
+            margin-top: 20px;
+            padding: 20px;
+            border-radius: 12px;
+            color: white;
+            text-align: center;
+        }
+
+        .metric-card {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+    </style>
 </head>
+
 <body>
 
 {% include "navbar.html" %}
 
-<div class="container mt-4">
+<div class="page-container">
 
-    <h1>Logistic Regression - Application</h1>
-    <hr>
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+        <p class="sidebar-title">Sections</p>
+        <nav class="nav flex-column">
+            <a class="nav-link" href="#problem">Problem</a>
+            <a class="nav-link" href="#dataset">Dataset</a>
+            <a class="nav-link" href="#pipeline">Pipeline</a>
+            <a class="nav-link" href="#prediction">Prediction</a>
+            <a class="nav-link" href="#metrics">Metrics</a>
+            <a class="nav-link" href="#final">Conclusion</a>
+        </nav>
+    </aside>
 
-    <h3>Problem Description</h3>
-    <p>
-        The objective of this project is to classify whether a FIFA 24 player is 
-        <strong>Elite</strong> or <strong>Average</strong> based on their in-game statistics.
-        A player is considered Elite if their Overall rating is 80 or above.
-    </p>
+    <!-- MAIN -->
+    <main class="main">
 
-    <h3>Dataset Explanation</h3>
-    <p>
-        The dataset used comes from Kaggle and contains information about FIFA 24 players,
-        including their pace, shooting, passing, dribbling, defending, and physicality ratings,
-        among other attributes. It contains over 17,000 unique player entries.
-    </p>
-
-    <h3>Data Preparation</h3>
-    <p>
-        The dataset was processed by selecting the relevant numeric columns (Pace, Shooting, Passing, Dribbling).
-        A binary target variable was created: <strong>Elite = 1</strong> if Overall ≥ 80, otherwise <strong>0</strong>.
-        The data was split into 80% training and 20% testing sets, and scaled using StandardScaler before training.
-    </p>
-
-    <hr>
-
-    <h3>Prediction Form</h3>
-    <p>Enter a player's stats to predict whether they are an Elite or Average player.</p>
-
-    <form action="{{ url_for('predict_logistic') }}" method="POST">
-
-        <div class="mb-3">
-            <label class="form-label"><strong>Pace (0 - 99)</strong></label>
-            <input type="number" name="pace" class="form-control"
-                   min="0" max="99" placeholder="e.g. 85"
-                   value="{{ pace or '' }}" required>
+        <!-- HERO -->
+        <div class="hero">
+            <h1>Logistic <span>Regression</span></h1>
+            <p>FIFA 24 Player Classification</p>
         </div>
 
-        <div class="mb-3">
-            <label class="form-label"><strong>Shooting (0 - 99)</strong></label>
-            <input type="number" name="shooting" class="form-control"
-                   min="0" max="99" placeholder="e.g. 78"
-                   value="{{ shooting or '' }}" required>
+        <!-- PROBLEM -->
+        <div class="section-light" id="problem">
+            <h2>Problem Description</h2>
+            <p>
+                Classify players as <strong>Elite</strong> or <strong>Average</strong>.
+                Elite = Overall ≥ 80.
+            </p>
         </div>
 
-        <div class="mb-3">
-            <label class="form-label"><strong>Passing (0 - 99)</strong></label>
-            <input type="number" name="passing" class="form-control"
-                   min="0" max="99" placeholder="e.g. 75"
-                   value="{{ passing or '' }}" required>
-        </div>
+        <!-- DATASET + PIPELINE -->
+        <div class="tables">
+            <div class="section-light" id="dataset">
+                <h2>Dataset</h2>
+                <p>FIFA 24 dataset with 17,000+ players.</p>
+            </div>
 
-        <div class="mb-3">
-            <label class="form-label"><strong>Dribbling (0 - 99)</strong></label>
-            <input type="number" name="dribbling" class="form-control"
-                   min="0" max="99" placeholder="e.g. 82"
-                   value="{{ dribbling or '' }}" required>
-        </div>
-
-        <div class="mb-3">
-            <label class="form-label"><strong>Target Variable (Y)</strong></label>
-            <input type="text" class="form-control" value="Elite (Overall ≥ 80)" disabled>
-            <small class="text-muted">This is the variable the model predicts — it cannot be changed.</small>
-        </div>
-
-        <button type="submit" class="btn btn-success">Predict</button>
-    </form>
-
-    {% if result is not none %}
-        <div class="alert {% if result == 'ELITE PLAYER' %}alert-success{% else %}alert-warning{% endif %} mt-4">
-            <strong>Prediction Result:</strong> With Pace={{ pace }}, Shooting={{ shooting }},
-            Passing={{ passing }}, Dribbling={{ dribbling }},
-            the player is classified as <strong>{{ result }}</strong>
-            with a probability of <strong>{{ probability }}</strong>.
-        </div>
-
-        <div class="row mt-3">
-            <div class="col-md-6">
-                <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title">Model Accuracy</h5>
-                        <p>Train Accuracy: <strong>{{ train_acc }}</strong></p>
-                        <p>Test Accuracy: <strong>{{ test_acc }}</strong></p>
-                    </div>
-                </div>
+            <div class="section-light" id="pipeline">
+                <h2>Data Pipeline</h2>
+                <ul>
+                    <li>Feature selection</li>
+                    <li>Binary target creation</li>
+                    <li>Train/Test split</li>
+                    <li>StandardScaler</li>
+                </ul>
             </div>
         </div>
 
-        <h3 class="mt-4">Classification Graph</h3>
-        <img src="{{ url_for('static', filename='logistic_graph.png') }}" class="img-fluid" alt="Logistic Regression Graph">
+        <!-- PREDICTION -->
+        <div class="section-light" id="prediction">
+            <h2>Prediction</h2>
 
-        <h3 class="mt-4">Interpretation of Results</h3>
-        <p>
-            The model was trained on FIFA 24 player data using <strong>Pace, Shooting, Passing and Dribbling</strong>
-            as input features to classify players as Elite (Overall ≥ 80) or Average.
-            The left graph shows the decision boundary between the two classes,
-            and the black star represents your input prediction.
-            The right panel shows the model's accuracy on both training and testing data.
-        </p>
-    {% endif %}
+            <form action="{{ url_for('predict_logistic') }}" method="POST">
 
+                <div class="tables">
+                    <div>
+                        <label>Pace</label>
+                        <input type="number" name="pace" class="form-control" value="{{ pace or '' }}" required>
+                    </div>
+
+                    <div>
+                        <label>Shooting</label>
+                        <input type="number" name="shooting" class="form-control" value="{{ shooting or '' }}" required>
+                    </div>
+                </div>
+
+                <div class="tables mt-3">
+                    <div>
+                        <label>Passing</label>
+                        <input type="number" name="passing" class="form-control" value="{{ passing or '' }}" required>
+                    </div>
+
+                    <div>
+                        <label>Dribbling</label>
+                        <input type="number" name="dribbling" class="form-control" value="{{ dribbling or '' }}" required>
+                    </div>
+                </div>
+
+                <button class="btn btn-success w-100 mt-3">Predict</button>
+            </form>
+
+            {% if result is not none %}
+            <div class="result-box {% if result == 'ELITE PLAYER' %}bg-success{% else %}bg-warning{% endif %}">
+                <h3>{{ result }}</h3>
+                <p>Probability: {{ probability }}</p>
+            </div>
+            {% endif %}
+        </div>
+
+        <!-- METRICS -->
+        {% if result is not none %}
+        <div class="section-light" id="metrics">
+            <h2>Metrics</h2>
+
+            <div class="tables">
+                <div class="metric-card">
+                    Train Accuracy<br><strong>{{ train_acc }}</strong>
+                </div>
+
+                <div class="metric-card">
+                    Test Accuracy<br><strong>{{ test_acc }}</strong>
+                </div>
+            </div>
+
+            <div class="mt-4">
+                <h3>Decision Boundary</h3>
+                <img src="{{ url_for('static', filename='logistic_graph.png') }}" class="img-fluid">
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- FINAL -->
+        <div class="section-light" id="final">
+            <h2>Conclusion</h2>
+            <p>
+                Logistic Regression separates Elite vs Average players using a linear boundary.
+            </p>
+        </div>
+
+    </main>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
 </body>
 </html>

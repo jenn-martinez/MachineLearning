@@ -1,179 +1,102 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Logistic Regression Concepts</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="{{ url_for('static', filename='navbar.css') }}">
-    <link rel = "stylesheet" href="{{url_for('static',filename='style.css')}}">
-</head>
-<body>
-    {% include "navbar.html"%}
-<div class="layout">
+{% extends "base.html" %}
+{% block title %}Logistic Regression Concepts{% endblock %}
+{% block content %}
+
+<div class="page-container">
     <div class="sidebar">
-        <h3>Sections</h3>
-        <ul>
-            <li><a href="#what">What is logistic regression?</a></li>
-            <li>
-                <a href="#types">Types of classification</a>
-                <ol>
-                    <ul>
-                        <li><a href="#binary">Binary classification</a></li>
-                        <li><a href="#multiclass">Multiclass classification</a></li>
-                    </ul>
-                </ol>
-            </li>
-            <li><a href="#sigmoid">Sigmoid function</a></li>
-            <li><a href="#decision">Decision boundary</a></li>
-            <li><a href="#equation">Model equation</a></li>
-            <li><a href="#assumptions">Assumptions about logistic regression</a></li>
-            <li><a href="#vs">Linear vs Logistic regression</a></li>
-            <li><a href="#example">Example of application</a></li>
-        </ul>
-    </div>
-    <div class="main">
-        <div class="content">
-            <div class="titleOne">
-                <h1>Logistic Regression Concepts</h1>
+        <p class="sidebar-title">Sections</p>
+        <nav class="nav flex-column">
+            <a class="nav-link" href="#what">What is logistic regression?</a>
+            <a class="nav-link" href="#types">Types of classification</a>
+            <div class="sub-nav">
+                <a class="nav-link" href="#binary">Binary</a>
+                <a class="nav-link" href="#multiclass">Multiclass</a>
             </div>
-            <div class="section">
+            <a class="nav-link" href="#sigmoid">Sigmoid function</a>
+            <a class="nav-link" href="#decision">Decision boundary</a>
+            <a class="nav-link" href="#equation">Model equation</a>
+            <a class="nav-link" href="#assumptions">Assumptions</a>
+            <a class="nav-link" href="#vs">Linear vs Logistic</a>
+            <a class="nav-link" href="#example">Example</a>
+        </nav>
+    </div>
 
-                <h1 id="what">What is logistic regression?</h1>
-                <p>
-                    Logistic regression is a supervised learning algorithm used to solve 
-                    <strong>classification</strong> problems. Unlike linear regression, it does not 
-                    predict a continuous number but instead predicts the 
-                    <strong>probability</strong> that a sample belongs to a specific class (0 or 1).
-                    It is characterized by:
-                </p>
-                <ul>
-                    <li>It predicts probabilities between 0 and 1 using the sigmoid function.</li>
-                    <li>It classifies data into discrete categories (Yes/No, Elite/Average).</li>
-                    <li>It is used for spam detection, medical diagnosis, and player classification.</li>
-                </ul>
+    <div class="main">
+        <div class="hero-banner">Logistic Regression Concepts</div>
 
-                <h1></h1>
+        <div class="section-light" id="what">
+            <h2>What is logistic regression?</h2>
+            <p>Logistic regression is a supervised learning algorithm used to solve <strong>classification</strong> problems. It predicts the <strong>probability</strong> that a sample belongs to a specific class (0 or 1).</p>
+            <ul>
+                <li>Predicts probabilities between 0 and 1 using the sigmoid function.</li>
+                <li>Classifies data into discrete categories (Yes/No, Elite/Average).</li>
+                <li>Used for spam detection, medical diagnosis, and player classification.</li>
+            </ul>
+        </div>
 
-                <h1 id="types">Types of classification</h1>
-                <h2 id="binary">Binary classification</h2>
-                <p>
-                    Binary classification predicts one of two possible outcomes.
-                    The model outputs a probability and then assigns a class based on a threshold (usually 0.5).
-                </p>
-                <p>
-                    Example: Is a FIFA 24 player <strong>Elite</strong> (Overall ≥ 80)? → Yes (1) or No (0).
-                </p>
-                <h2 id="multiclass">Multiclass classification</h2>
-                <p>
-                    Multiclass classification predicts one of three or more possible outcomes.
-                    It extends binary logistic regression by using techniques like One-vs-Rest (OvR).
-                </p>
-                <p>
-                    Example: Classifying a player as <strong>Bronze, Silver, or Gold</strong> tier.
-                </p>
+        <div class="section-light" id="types">
+            <h2>Types of Classification</h2>
+            <h3 id="binary">Binary classification</h3>
+            <p>Predicts one of two possible outcomes. Example: Is a FIFA 24 player <strong>Elite</strong> (Overall ≥ 80)? → Yes (1) or No (0).</p>
+            <h3 id="multiclass" style="margin-top:16px">Multiclass classification</h3>
+            <p>Predicts one of three or more possible outcomes using One-vs-Rest (OvR). Example: Classifying a player as <strong>Bronze, Silver, or Gold</strong>.</p>
+        </div>
 
-                <h1 id="sigmoid">Sigmoid function</h1>
-                <p>
-                    The sigmoid function is the core of logistic regression. It transforms any real number 
-                    into a value between 0 and 1, interpreted as a probability.
-                </p>
-                <h2>
-                    <strong>p = 1 / (1 + e<sup>-z</sup>)</strong>
-                </h2>
-                <p>
-                    Where <strong>z</strong> is the linear combination of inputs and weights.
-                    If p ≥ 0.5 → class 1 (Elite). If p &lt; 0.5 → class 0 (Average).
-                </p>
+        <div class="section-light" id="sigmoid">
+            <h2>Sigmoid Function</h2>
+            <p>Transforms any real number into a value between 0 and 1:</p>
+            <h2 style="font-size:24px; border:none; padding:12px 0; color:var(--apple-blue)">p = 1 / (1 + e<sup>-z</sup>)</h2>
+            <p>If p ≥ 0.5 → class 1. If p &lt; 0.5 → class 0.</p>
+        </div>
 
-                <h1 id="decision">Decision boundary</h1>
-                <p>
-                    The decision boundary is the threshold that separates the two classes.
-                    It is the point where the model switches from predicting class 0 to class 1.
-                </p>
-                <p>
-                    By default the threshold is <strong>0.5</strong>, meaning if the predicted 
-                    probability is greater than 50%, the model classifies the sample as class 1.
-                </p>
+        <div class="section-light" id="decision">
+            <h2>Decision Boundary</h2>
+            <p>The default threshold is <strong>0.5</strong>. If the predicted probability is greater than 50%, the model classifies the sample as class 1.</p>
+        </div>
 
-                <h1 id="equation">Model equation</h1>
-                <p>
-                    For logistic regression, the model first computes a linear combination:
-                </p>
-                <h2>
-                    <strong>z = β₀ + β₁x₁ + β₂x₂ + ... + βₙxₙ</strong>
-                </h2>
-                <p>
-                    Then applies the sigmoid function to obtain the final probability:
-                </p>
-                <h2>
-                    <strong>p = 1 / (1 + e<sup>-z</sup>)</strong>
-                </h2>
-                <p>
-                    Where β₀ is the intercept and β₁...βₙ are the feature coefficients learned during training.
-                </p>
+        <div class="section-light" id="equation">
+            <h2>Model Equation</h2>
+            <p>Linear combination:</p>
+            <p style="font-size:16px; font-weight:600; padding:12px; background:var(--apple-light); border-radius:8px; margin:8px 0">z = β₀ + β₁x₁ + β₂x₂ + ... + βₙxₙ</p>
+            <p>Then applies sigmoid:</p>
+            <p style="font-size:16px; font-weight:600; padding:12px; background:var(--apple-light); border-radius:8px; margin:8px 0">p = 1 / (1 + e<sup>-z</sup>)</p>
+        </div>
 
-                <h1 id="assumptions">Assumptions about logistic regression</h1>
-                <ol>
-                    <li>The dependent variable must be binary or categorical</li>
-                    <li>The observations must be independent of each other</li>
-                    <li>There should be little or no multicollinearity among the input features</li>
-                    <li>A large sample size improves the reliability of the model</li>
-                </ol>
+        <div class="section-light" id="assumptions">
+            <h2>Assumptions</h2>
+            <ol>
+                <li>The dependent variable must be binary or categorical</li>
+                <li>The observations must be independent of each other</li>
+                <li>There should be little or no multicollinearity among input features</li>
+                <li>A large sample size improves reliability</li>
+            </ol>
+        </div>
 
-                <h1 id="vs">Linear vs Logistic regression</h1>
-                <table class="table table-bordered table-striped mt-3">
-                    <thead class="table-dark">
-                        <tr>
-                            <th>Aspect</th>
-                            <th>Linear Regression</th>
-                            <th>Logistic Regression</th>
-                        </tr>
-                    </thead>
+        <div class="section-light" id="vs">
+            <h2>Linear vs Logistic Regression</h2>
+            <div class="table-card">
+                <table>
+                    <thead><tr><th>Aspect</th><th>Linear Regression</th><th>Logistic Regression</th></tr></thead>
                     <tbody>
-                        <tr>
-                            <td>Output</td>
-                            <td>Continuous number</td>
-                            <td>Probability (0 to 1)</td>
-                        </tr>
-                        <tr>
-                            <td>Task</td>
-                            <td>Prediction</td>
-                            <td>Classification</td>
-                        </tr>
-                        <tr>
-                            <td>Function</td>
-                            <td>Straight line (y = mx + b)</td>
-                            <td>S-shaped sigmoid curve</td>
-                        </tr>
-                        <tr>
-                            <td>Example</td>
-                            <td>Predict total Olympic medals</td>
-                            <td>Is FIFA player Elite? Yes/No</td>
-                        </tr>
+                        <tr><td>Output</td><td>Continuous number</td><td>Probability (0 to 1)</td></tr>
+                        <tr><td>Task</td><td>Prediction</td><td>Classification</td></tr>
+                        <tr><td>Function</td><td>Straight line (y = mx + b)</td><td>S-shaped sigmoid curve</td></tr>
+                        <tr><td>Example</td><td>Predict total Olympic medals</td><td>Is FIFA player Elite? Yes/No</td></tr>
                     </tbody>
                 </table>
-
-                <h1 id="example">Example of application</h1>
-                <p>
-                    A real-life example is classifying FIFA 24 players as Elite or Average.
-                    Where:
-                </p>
-                <ul>
-                    <li>The independent variables are Pace, Shooting, Passing and Dribbling.</li>
-                    <li>The dependent variable is whether the player is Elite (Overall ≥ 80)</li>
-                </ul>
-                <p>The logistic regression model would be as follows:</p>
-                <p><strong>z = β₀ + β₁(Pace) + β₂(Shooting) + β₃(Passing) + β₄(Dribbling)</strong></p>
-                <p><strong>p = 1 / (1 + e<sup>-z</sup>)</strong></p>
-                <p>
-                    Where p is the probability of the player being Elite.
-                    If p ≥ 0.5 the model classifies the player as Elite, otherwise as Average.
-                </p>
-
             </div>
+        </div>
+
+        <div class="section-light" id="example">
+            <h2>Example of Application</h2>
+            <p>Classifying FIFA 24 players as Elite or Average:</p>
+            <ul>
+                <li>Independent variables: Pace, Shooting, Passing and Dribbling</li>
+                <li>Dependent variable: whether the player is Elite (Overall ≥ 80)</li>
+            </ul>
+            <p style="margin-top:12px; padding:12px; background:var(--apple-light); border-radius:8px; font-weight:500">z = β₀ + β₁(Pace) + β₂(Shooting) + β₃(Passing) + β₄(Dribbling)</p>
         </div>
     </div>
 </div>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-</body>
-</html>
+
+{% endblock %}

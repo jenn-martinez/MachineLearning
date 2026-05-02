@@ -1,278 +1,182 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>K-Means Clustering Application | Customer Segmentation</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
-    <link rel="stylesheet" href="{{ url_for('static', filename='navbar.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-</head>
-<body>
-    {% include "navbar.html" %}
+{% extends "base.html" %}
+{% block title %}BBVA Fraud Detection{% endblock %}
 
-    <div class="layout">
-        <nav class="sidebar shadow-sm">
-            <h3>Sections</h3>
-            <ul>
-                <li><a href="#problem">Problem Description</a></li>
-                <li><a href="#dataset">Dataset Explanation & Variables</a></li>
-                <li><a href="#pipeline">Data Pipeline</a></li>
-                <li><a href="#training">Model Training</a></li>
-                <li><a href="#clusters">Cluster Assignment</a></li>
-                <li><a href="#summary">Cluster Summary & Centroids</a></li>
-                <li><a href="#metrics">Clustering Metrics</a></li>
-                <li><a href="#visualization">Visualization</a></li>
-                <li><a href="#prediction">Customer Segmentation Prediction</a></li>
-                <li><a href="#final">Final Interpretation & Conclusion</a></li>
-            </ul>
-        </nav>
+{% block content %}
 
-        <main class="main">
-            <div class="content">
-                <div class="titlePerceptron">
-                    <div class="overlay"></div>
-                    <h1>K-Means Clustering Model</h1>
-                    <p class="text-light">Customer Segmentation | Unsupervised Learning</p>
-                </div>
+<style>
+    body { background-color: #f0f2f5; }
 
-                <!-- Problem Description -->
-                <section id="problem" class="card p-4 shadow-sm mb-4">
-                    <h3 class="text-primary">Problem Description</h3>
-                    <p>
-                        The objective is to segment customers into <strong>distinct groups (clusters)</strong> based on their
-                        <strong>Annual Income</strong> and <strong>Spending Score</strong>. This unsupervised learning approach
-                        helps businesses understand customer behavior patterns and design targeted marketing strategies.
-                    </p>
-                </section>
+    .page-wrapper { display: flex; }
 
-                <!-- Dataset and Pipeline row -->
-                <div class="row d-flex align-items-stretch">
-                    <div class="col-md-7">
-                        <section id="dataset" class="card p-4 h-100 shadow-sm">
-                            <h4>Dataset Explanation</h4>
-                            <p class="small">
-                                The Customer Segmentation dataset contains <strong>{{ total_records }}</strong> records of retail customers.
-                                Each customer is described by two key behavioral features:
-                            </p>
-                            <div class="row g-2">
-                                <div class="col-md-12">
-                                    <h5><i class="bi bi-database"></i> Variables used:</h5>
-                                    <ul class="small text-muted">
-                                        <li><strong>Annual Income (k$)</strong> - Customer's yearly earnings in thousands of dollars</li>
-                                        <li><strong>Spending Score (1-100)</strong> - Composite score based on purchase frequency and amount</li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <div class="alert alert-info small mt-2">
-                                <i class="bi bi-info-circle"></i> The dataset contains realistic customer behavior patterns commonly found in e-commerce businesses.
-                            </div>
-                        </section>
-                    </div>
+    .sidebar {
+        width: 280px;
+        min-height: 100vh;
+        background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+        padding: 20px;
+        position: sticky;
+        top: 56px;
+        color: white;
+        overflow-y: auto;
+        max-height: calc(100vh - 56px);
+    }
 
-                    <div class="col-md-5">
-                        <section id="pipeline" class="card p-4 h-100 shadow-sm bg-light border-primary">
-                            <h4>Data Preparation (Pipeline)</h4>
-                            <ul class="small">
-                                <li><strong>Cleaning:</strong> No missing values or duplicates detected</li>
-                                <li><strong>Scaling:</strong> StandardScaler (Z-score) applied - crucial for K-Means as it uses Euclidean distance</li>
-                                <li><strong>Transformation:</strong> Features transformed to mean=0, variance=1</li>
-                                <li><strong>Why scaling?</strong> Prevents features with larger scales from dominating distance calculations</li>
-                            </ul>
-                        </section>
-                    </div>
-                </div>
+    .sidebar h3 {
+        color: #00d4ff;
+        margin-bottom: 20px;
+    }
 
-                <!-- Model Training -->
-                <section id="training" class="card p-4 mt-4 shadow-sm">
-                    <h3>Model Training (K-Means)</h3>
-                    <p>
-                        K-Means is an iterative algorithm that partitions data into K clusters by minimizing intra-cluster variance.
-                        The algorithm assigns each point to the nearest centroid, then recalculates centroids as cluster means.
-                    </p>
-                    <div class="row align-items-center">
-                        <div class="col-md-6 text-center">
-                            <h5><strong>Customer Segments Visualization</strong></h5>
-                            <img src="{{ url_for('static', filename='graph_kmeans.png') }}" class="img-fluid rounded" alt="K-Means Clusters">
-                            <p class="small mt-2">
-                                Scatter plot showing customer segments with cluster centroids (black X markers).
-                            </p>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="p-3 bg-white border rounded">
-                                <h6>Hyperparameters:</h6>
-                                <ul class="mb-0">
-                                    <li><strong>Number of clusters (k):</strong> {{ n_clusters }}</li>
-                                    <li><strong>Initialization:</strong> k-means++</li>
-                                    <li><strong>Max iterations:</strong> 300</li>
-                                    <li><strong>Random state:</strong> 42</li>
-                                    <li><strong>n_init:</strong> 10</li>
-                                    <li><strong>Distance metric:</strong> Euclidean distance</li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                </section>
+    .sidebar a {
+        color: #ccc;
+        display: block;
+        padding: 8px 12px;
+        border-radius: 8px;
+        text-decoration: none;
+    }
 
-                <!-- Cluster Assignment Table -->
-                <section id="clusters" class="card p-4 mt-4 shadow-sm">
-                    <h3>Cluster Assignment</h3>
-                    <p>Sample of customer records with their assigned clusters:</p>
-                    <div class="table-responsive" style="max-height: 300px; overflow-y: auto;">
-                        {{ tabla | safe }}
-                    </div>
-                    <p class="small text-muted mt-2">
-                        <i class="bi bi-table"></i> Each customer has been assigned to one of {{ n_clusters }} segments.
-                    </p>
-                </section>
+    .sidebar a:hover {
+        background: rgba(0,212,255,0.2);
+        color: white;
+        padding-left: 20px;
+    }
 
-                <!-- Cluster Summary and Centroids -->
-                <section id="summary" class="card p-4 mt-4 shadow-sm">
-                    <h3>Cluster Summary & Centroids</h3>
-                    <div class="row">
-                        <div class="col-md-6">
-                            <h5>Cluster Summary Statistics</h5>
-                            <div class="table-responsive">
-                                {{ resumen | safe }}
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <h5>Centroids (Original Scale)</h5>
-                            <div class="table-responsive">
-                                <table class="table table-striped table-sm">
-                                    <thead>
-                                        <tr><th>Cluster</th><th>Annual Income (k$)</th><th>Spending Score</th></tr>
-                                    </thead>
-                                    <tbody>
-                                        {% for i in range(centroids|length) %}
-                                        <tr>
-                                            <td>{{ i }}</td>
-                                            <td>{{ "%.2f"|format(centroids[i][0]) }}</td>
-                                            <td>{{ "%.2f"|format(centroids[i][1]) }}</td>
-                                        </tr>
-                                        {% endfor %}
-                                    </tbody>
-                                </table>
-                            </div>
-                            <p class="small text-muted mt-2">
-                                <i class="bi bi-pin-map"></i> Centroids represent the "average" customer in each cluster.
-                            </p>
-                        </div>
-                    </div>
-                </section>
+    .main {
+        padding: 40px;
+        width: 100%;
+    }
 
-                <!-- Metrics -->
-                <section id="metrics" class="mt-4">
-                    <h2 class="section-title mb-4">Clustering Evaluation Metrics</h2>
-                    <div class="row g-4 text-center">
-                        <div class="col-md-3">
-                            <div class="card p-3 border-left-blue">
-                                <small class="text-muted">Inertia (WCSS)</small>
-                                <h4 class="mb-0">{{ "%.2f"|format(metrics.inertia) }}</h4>
-                                <small>Within-Cluster Sum of Squares</small>
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="card p-3 border-left-blue">
-                                <small class="text-muted">Silhouette Score</small>
-                                <h4 class="mb-0">{{ "%.4f"|format(metrics.silhouette) }}</h4>
-                                <small>[-1 to 1, higher is better]</small>
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="card p-3 border-left-blue">
-                                <small class="text-muted">Davies-Bouldin</small>
-                                <h4 class="mb-0">{{ "%.4f"|format(metrics.davies_bouldin) }}</h4>
-                                <small>Lower is better</small>
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="card p-3 border-left-blue">
-                                <small class="text-muted">Calinski-Harabasz</small>
-                                <h4 class="mb-0">{{ "%.2f"|format(metrics.calinski) }}</h4>
-                                <small>Higher is better</small>
-                            </div>
-                        </div>
-                    </div>
-                </section>
+    .banner {
+        background: linear-gradient(135deg, #004481 0%, #0070c9 100%);
+        padding: 40px;
+        border-radius: 20px;
+        color: white;
+        text-align: center;
+        margin-bottom: 30px;
+    }
 
-                <!-- Prediction Form -->
-                <section id="prediction" class="card p-5 mt-4 border-primary shadow">
-                    <h3 class="text-center mb-4"><strong>Customer Segmentation Predictor</strong></h3>
-                    <p>Enter customer information to predict which segment they belong to:</p>
-                    <form method="POST" action="{{ url_for('kmeansApp') }}" class="row g-3">
-                        <div class="col-md-6">
-                            <label class="form-label fw-bold small">Annual Income (thousand dollars)</label>
-                            <input type="number" step="any" name="income" class="form-control shadow-sm" placeholder="e.g., 60" required>
-                        </div>
-                        <div class="col-md-6">
-                            <label class="form-label fw-bold small">Spending Score (1-100)</label>
-                            <input type="number" step="any" name="spending_score" class="form-control shadow-sm" placeholder="e.g., 75" required>
-                        </div>
-                        <div class="col-12 text-center mt-4">
-                            <button type="submit" class="btn btn-primary btn-lg w-100">Predict Customer Segment</button>
-                        </div>
-                    </form>
+    .banner h1 { font-size: 2.5rem; }
 
-                    {% if prediction is not none %}
-                    <div class="mt-4">
-                        <div class="p-4 rounded-3 shadow text-center bg-primary text-white">
-                            <h2 class="mb-0">
-                                <i class="bi bi-person-badge"></i>
-                                Cluster {{ prediction.cluster }}: {{ prediction.label }}
-                            </h2>
-                            <p class="mt-2 mb-0">
-                                This customer belongs to the <strong>{{ prediction.label }}</strong> segment.
-                            </p>
-                        </div>
-                        <div class="row mt-3">
-                            <div class="col-md-6">
-                                <div class="alert alert-info">
-                                    <strong>Centroid values for this cluster:</strong><br>
-                                    Annual Income: ${{ "%.2f"|format(prediction.centroid_income) }}k<br>
-                                    Spending Score: {{ "%.2f"|format(prediction.centroid_score) }}
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="alert alert-success">
-                                    <strong>Recommended strategy:</strong><br>
-                                    {{ prediction.strategy }}
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    {% endif %}
-                </section>
+    .card {
+        background: white;
+        padding: 25px;
+        border-radius: 16px;
+        margin-bottom: 25px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        border: none;
+    }
 
-                <!-- Final Interpretation -->
-                <section id="final" class="mt-4">
-                    <div class="interpretation-box mt-5 shadow-sm p-4 rounded">
-                        <h4><i class="bi bi-lightbulb-fill"></i> <strong>Final Interpretation of the Results</strong></h4>
-                        <p>
-                            The K-Means algorithm successfully identified <strong>{{ n_clusters }} distinct customer segments</strong>.
-                            The Silhouette Score of {{ "%.4f"|format(metrics.silhouette) }} indicates that clusters are reasonably well-separated.
-                        </p>
-                        <div class="row mt-3">
-                            {% for i in range(n_clusters) %}
-                            <div class="col-md-6 mb-2">
-                                <div class="p-2 border-start border-3 border-primary bg-light">
-                                    <strong>Cluster {{ i }}:</strong> Cluster {{ i }} with {{ cluster_counts[i] }} customers ({{ "%.1f"|format((cluster_counts[i]/total_records)*100) }}%)
-                                </div>
-                            </div>
-                            {% endfor %}
-                        </div>
-                        <p class="mt-3">
-                            <strong>Conclusion:</strong> K-Means clustering provides actionable insights for customer segmentation,
-                            enabling personalized marketing strategies and improved customer retention. The model can be used to
-                            automatically classify new customers and recommend appropriate marketing approaches.
-                        </p>
-                    </div>
-                </section>
-            </div>
-        </main>
+    .card h2 {
+        border-left: 5px solid #004481;
+        padding-left: 15px;
+        color: #2c3e50;
+    }
+
+    .step {
+        background: #f8f9fa;
+        border-left: 4px solid #0070c9;
+        padding: 12px 20px;
+        margin: 10px 0;
+        border-radius: 8px;
+    }
+
+    .note {
+        background: #fff3cd;
+        border-left: 4px solid #ffc107;
+        padding: 12px;
+        border-radius: 8px;
+        margin-top: 15px;
+    }
+</style>
+
+<div class="page-wrapper">
+
+    <!-- SIDEBAR -->
+    <div class="sidebar">
+        <h3>💳 BBVA Pipeline</h3>
+        <a href="#intro">Introduction</a>
+        <a href="#pipeline">Pipeline</a>
+        <a href="#models">Models</a>
+        <a href="#data">Data</a>
+        <a href="#metrics">Metrics</a>
+        <a href="#impact">Impact</a>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-</body>
-</html>
+    <!-- MAIN -->
+    <div class="main">
+
+        <div class="banner">
+            <h1>BBVA Fraud Detection System</h1>
+            <p>Machine Learning Pipeline for Financial Security</p>
+        </div>
+
+        <!-- INTRO -->
+        <div class="card" id="intro">
+            <h2>Introduction</h2>
+            <p>
+                BBVA uses Machine Learning models to detect fraudulent transactions in real time,
+                protecting customers and reducing financial losses.
+            </p>
+            <div class="note">
+                ⚡ Real-time scoring is critical for blocking fraud instantly.
+            </div>
+        </div>
+
+        <!-- PIPELINE -->
+        <div class="card" id="pipeline">
+            <h2>Pipeline</h2>
+
+            <div class="step">1. Data ingestion (transactions, devices, behavior)</div>
+            <div class="step">2. Feature engineering</div>
+            <div class="step">3. Model scoring</div>
+            <div class="step">4. Decision threshold</div>
+            <div class="step">5. Alert or block transaction</div>
+            <div class="step">6. Feedback & retraining</div>
+        </div>
+
+        <!-- MODELS -->
+        <div class="card" id="models">
+            <h2>Models Used</h2>
+            <ul>
+                <li>XGBoost</li>
+                <li>Random Forest</li>
+                <li>Neural Networks</li>
+                <li>Graph Neural Networks (GNN)</li>
+            </ul>
+        </div>
+
+        <!-- DATA -->
+        <div class="card" id="data">
+            <h2>Data</h2>
+            <ul>
+                <li>Transaction history</li>
+                <li>User behavior</li>
+                <li>Device & location</li>
+                <li>Fraud labels</li>
+            </ul>
+        </div>
+
+        <!-- METRICS -->
+        <div class="card" id="metrics">
+            <h2>Evaluation Metrics</h2>
+            <ul>
+                <li>Precision</li>
+                <li>Recall</li>
+                <li>F1 Score</li>
+                <li>ROC-AUC</li>
+            </ul>
+        </div>
+
+        <!-- IMPACT -->
+        <div class="card" id="impact">
+            <h2>Business Impact</h2>
+            <ul>
+                <li>Reduced fraud losses</li>
+                <li>Improved customer trust</li>
+                <li>Real-time protection</li>
+                <li>Scalable ML system</li>
+            </ul>
+        </div>
+
+    </div>
+</div>
+
+{% endblock %}

@@ -1,253 +1,174 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends "base.html" %}
+{% block title %}BBVA Pipeline{% endblock %}
+{% block content %}
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BBVA pipeline use case</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="{{ url_for('static', filename='navbar.css') }}">
-    <link rel = "stylesheet" href="{{url_for('static',filename='style.css')}}">
+<div class="page-container">
 
-</head>
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+        <p class="sidebar-title">Sections</p>
+        <nav class="nav flex-column">
+            <a class="nav-link" href="#problem">Problem</a>
+            <a class="nav-link" href="#model">Type of ML</a>
+            <a class="nav-link" href="#classification">Models</a>
+            <a class="nav-link" href="#data">Data</a>
+            <a class="nav-link" href="#structure">Pipeline</a>
+            <a class="nav-link" href="#evaluation">Evaluation</a>
+            <a class="nav-link" href="#deployment">Deployment</a>
+            <a class="nav-link" href="#win">Impact</a>
+        </nav>
+    </aside>
 
-<body>
-    {% include "navbar.html"%}
+    <!-- MAIN -->
+    <main class="main">
 
-    <div class="layout">
-        <div class="sidebar">
-            <h3>Sections</h3>
-            <ul>
-                <li><a href="#problem">Problem Description</a></li>
-                <li><a href="#model">Type of Machine Learning</a></li>
-                <li><a href="#clasification">Classification and Types of models according to the client's situation</a></li>
-                <li>
-                    <a href="#Data"> Data</a>
-                    <ol>
-                        <ul>
-                        <li><a href="#InputData"> Input Data</a></li>
-                        <li><a href="#OutputData"> Expected Output</a></li>
-                        </ul>
-                    </ol>
-                </li>
-                <li>
-                    <a href="#structure">Structure management</a>
-                    <ol>
-                        <li><a href="#ETL">ETL Dataset Construction</a></li>
-                        <li><a href="#dateSplit">Data Split</a></li>
-                        <li><a href="#selection">Variable Selection and Control</a></li>
-                        <li><a href="#modeling">Modeling</a></li>
-                        <li><a href="#evaluation">Model Evaluation</a></li>
-                        <li><a href="#deployment">Deployment and Monitoring</a></li>
-                    </ol>
-                </li>
-                <li><a href="#win">Real world relevance</a></li>
-            </ul>
+        <!-- HERO -->
+        <div class="hero">
+            <h1>BBVA <span>Pipeline</span></h1>
+            <p>Predictive Model | Early Debt Resolution</p>
         </div>
 
-        <div class="main">
-            <div class="content">
-                <h1 class="titleOne"> Machine Learning: Pipeline BBVA </h1>
-                <div class="title">
-                    <div class="overlay"></div>
-                    <h1>Use Case: Predictive model for early debt resolution, BBVA Bank</h1>
-                </div>
-                <div class="section">
-                    <p>
-                        This is a predictive model created by the BBVA AI Factory division of BBVA Bank
-                        with the aim of improving early debt management and personalizing it according to each case.
-                    </p>
-                </div>
-                <hr>
+        <!-- INTRO -->
+        <div class="section-light">
+            <p>
+                Predictive model developed by BBVA AI Factory to improve early debt management
+                and personalize strategies based on customer risk profiles.
+            </p>
+        </div>
 
-                <div class="section">
-                    <h2 id="problem"> Problem Description </h2>
-                    <p>
-                        When a customer enters a delinquency state due to financial difficulties, both the customer
-                        and the bank are affected.
-                        The customer suffers penalties and the bank faces the risk of financial loss. The objective is
-                        to identify
-                        these situations early and categorize them in order to provide appropriate solutions for each case.
-                    </p>
-                </div>
+        <!-- PROBLEM -->
+        <div class="section-light" id="problem">
+            <h2>Problem Description</h2>
+            <p>
+                Customers entering delinquency affect both themselves and the bank.
+                The goal is early detection and classification to apply the best recovery strategy.
+            </p>
+        </div>
 
-                <div class="section">
-                    <h2 id="model"> Type of Machine Learning</h2>
-                    <p>
-                        This model is a based on a machine learning pipeline that uses <strong> supervised learning </strong>because it uses historical data, 
-                        where the outcome whether the customer pays or not is already known.
-                    </p>
-                    <p>
-                        Therefore, it learns patterns from this labeled data to make predictions about new customers.
-                    </p>
-                    <p>
-                        It is a <strong>classification model </strong> because it assigns each customer a risk category, allowing the bank 
-                        to decide on the appropriate recovery strategy.
-                        This customer classification is performed as follows:
-                    </p>
-                </div>
+        <!-- MODEL TYPE -->
+        <div class="section-light" id="model">
+            <h2>Type of Machine Learning</h2>
+            <p>
+                This is a <strong>Supervised Learning</strong> model using historical labeled data.
+            </p>
+            <p>
+                It performs <strong>classification</strong> by assigning customers to risk categories.
+            </p>
+        </div>
 
-                <div class="section">
-                    <h2 id="clasification">Classification and Types of models according to the client's situation</h2>
-                    <p>
-                        They are divided into <strong>4 models</strong> according to the delinquency status.
-                    </p>
-                    <img src="{{url_for('static',filename='BBVA.jpg')}}" width="900px" height="300px">
-                    <p>
-                        This segmentation makes it possible to adapt recovery strategies according to the customer profile.
-                    </p>
-                </div>
-                <div class="section">
-                    <h2 id="Data">Data</h2>
-                    <h3 id="InputData"> Input Data</h3>
-                    <p>
-                        The input data used by the model consists of data labeled according to the different factors 
-                        that can influence payment compliance. These are divided into the following variables:
-                    </p>
+        <!-- MODELS -->
+        <div class="section-light" id="classification">
+            <h2>Classification & Models</h2>
+            <p>Four models are used depending on delinquency status.</p>
+
+            <div style="text-align:center; margin-top:15px">
+                <img src="{{ url_for('static', filename='BBVA.jpg') }}"
+                     style="max-width:60%; border-radius:12px;"
+                     alt="BBVA Model">
+            </div>
+        </div>
+
+        <!-- DATA -->
+        <div class="section-light" id="data">
+            <h2>Data</h2>
+
+            <div class="tables">
+                <div style="flex:1">
+                    <h3>Input Data</h3>
                     <ul>
-                        <li>Sociodemographic data (age, income, employment status)</li>
+                        <li>Sociodemographic data</li>
                         <li>Debt status</li>
                         <li>Payment behavior</li>
                         <li>Financial history</li>
                     </ul>
-                
-                    <h3 id="OutputData"> Expected Output</h3>
-                    <p>
-                        The model is designed to produce data that allows the bank to determine which model is 
-                        appropriate for each client. 
-                    </p>
-                    <p>
-                        Thse outputs allow the bank to make data-driven decisions and apply 
-                        personalized recovery strategies. They are divided into:
-                    </p>
+                </div>
+
+                <div style="flex:1">
+                    <h3>Output</h3>
                     <ul>
-                        <li>Probability of repayment</li>
+                        <li>Repayment probability</li>
                         <li>Risk classification</li>
                         <li>Recommended actions</li>
-                    </ul>                
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- PIPELINE -->
+        <div class="section-light" id="structure">
+            <h2>Pipeline Structure</h2>
+
+            <div class="cards">
+
+                <div class="card">
+                    <h3>ETL</h3>
+                    <p>Data extraction, transformation, and loading.</p>
                 </div>
 
-                <div class="section">
-                    <h2 id="structure">Structure management</h2>
-                    <h3 id="ETL"> 1. ETL Dataset Construction </h3>
-                    <p>
-                        The table is created through an extract, transform, and load (ETL) process using the 
-                        input data as variables.
-
-                    <h3 id="dateSplit">2. Data Split </h3>
-                    <p>
-                        The data is separated into:
-                    <ul>
-                        <li>Training</li>
-                        <li>Validation</li>
-                        <li>Test</li>
-                    </ul>
-                    The latter acts as a temporal holdout set to review the model's behavior.
-                    </p>
-                    <div class="horizontal-block">
-                        <div class="imagen">
-                            <img src="{{url_for('static',filename='iconos.jpg')}}" alt="Iconos" width="400px">
-                        </div>
-
-                            <div class="text">
-                                <h3 id="selection">3. Variable Selection and Control </h3>
-                            <p>
-                                Using the <strong>GRMlab</strong> tool, variables are preselected.
-                                Afterwards, unstable variables (data drift) are identified and removed.
-                                Finally, using the <strong>Mercury</strong> tool, model overfitting is controlled,
-                                preventing performance deterioration.
-                            </p>
-                            </div>
-                    </div>
-
-
-                    <h3 id="modeling">4. Modeling </h3>
-                    <p>
-                        Three types of models are built:
-                    <ul>
-                        <li>
-                            <p>
-                                <strong>Baseline Model:</strong> integrates traditional methodologies that allow
-                                referencing the minimum expected performance.
-                            </p>
-                        </li>
-                        <li>
-                            <p>
-                                <strong>Complex non-productionizable model:</strong> <strong>AutoGluon</strong>
-                                is used to generate code pipelines automatically from the data,
-                                producing an efficient and high-performing model, but not suitable for production
-                                integration due to its lack of transparency and interpretability.
-                            </p>
-                        </li>
-                        <li>
-                            <p>
-                                <strong>Production candidate model:</strong> represents a balance between the type of
-                                algorithm, variable selection, and hyperparameter optimization.
-                                It also allows the integration of algorithm lists and processing through
-                                time-series cross-validation, ensuring stable performance.
-                            </p>
-                        </li>
-                    </ul>
-
-                    At this stage two key concepts appear:
-                    <ul>
-                        <li>
-                            <p>
-                                <strong>Feature Selection</strong>: techniques such as Permutation Feature Importance
-                                and Recursive Feature Elimination are used to discard redundant variables.
-                            </p>
-                        </li>
-                        <li>
-                            <p>
-                                <strong>Hyperparameter Optimization</strong> using the
-                                <strong>Optuna</strong> framework to maximize AUC, minimize overfitting, and apply
-                                time-series cross-validation.
-                            </p>
-                        </li>
-                    </ul>
-                    </p>
-
-                    <h3 id="evaluation">5. Model Evaluation</h3>
-                    <p>
-                        To determine the effectiveness of the model, the following tests are carried out:
-                    <ol>
-                        <li>Performance measurement using metrics such as the Gini index, recall, and the confusion matrix.</li>
-                        <li>Evaluation by segments such as product type or financial history.</li>
-                        <li>Stability analysis and deviation index.</li>
-                        <li>Using <strong>Optimal Binning</strong> to discretize the model score, which allows
-                            specific actions depending on the risk level.</li>
-                        <li>Variable impact analysis using the SHAP library.</li>
-                        <li>Bias absence verification.</li>
-                    </ol>
-                    </p>
-
-                    <h3 id="deployment">6. Deployment and Monitoring</h3>
-                    <p>
-                        Once the tests are passed, the model is implemented in production and monitored for:
-                    <ul>
-                        <li>Performance</li>
-                        <li>Stability</li>
-                        <li>Retraining if necessary</li>
-                    </ul>
-
-                    </p>
+                <div class="card">
+                    <h3>Data Split</h3>
+                    <p>Train, validation, and test sets.</p>
                 </div>
-                <div class="section">
-                    <h2 id="win">Real world relevance</h2>
-                    <p>
-                        This case is relevant in real-world situations because, in addition to being successful, it allows banks to reduce 
-                        losses and improve customer management based on data.
-                    </p>
-                    <p>
-                        Furthermore, by being scalable and combining performance with interpretability, it adapts dynamically to changes in 
-                        the financial market.
-                    </p>
+
+                <div class="card">
+                    <h3>Feature Selection</h3>
+                    <p>Remove unstable variables and control overfitting.</p>
+                </div>
+
+                <div class="card">
+                    <h3>Modeling</h3>
+                    <p>Baseline, AutoML, and production model.</p>
                 </div>
 
             </div>
 
+            <div class="tables" style="margin-top:20px">
+                <div style="flex:1">
+                    <img src="{{ url_for('static', filename='iconos.jpg') }}"
+                         style="max-width:100%; border-radius:12px;">
+                </div>
+                <div style="flex:1">
+                    <p>
+                        Tools like <strong>GRMlab</strong> and <strong>Mercury</strong> are used
+                        to ensure stability, avoid overfitting, and maintain model quality.
+                    </p>
+                </div>
+            </div>
         </div>
-    </div>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-</body>
-</html>
+
+        <!-- EVALUATION -->
+        <div class="section-light" id="evaluation">
+            <h2>Model Evaluation</h2>
+
+            <div class="cards">
+                <div class="card">Gini Index</div>
+                <div class="card">Recall</div>
+                <div class="card">Confusion Matrix</div>
+                <div class="card">SHAP Analysis</div>
+                <div class="card">Stability</div>
+                <div class="card">Bias Control</div>
+            </div>
+        </div>
+
+        <!-- DEPLOYMENT -->
+        <div class="section-light" id="deployment">
+            <h2>Deployment & Monitoring</h2>
+            <p>
+                The model is deployed into production and continuously monitored
+                to ensure performance and adapt to market changes.
+            </p>
+        </div>
+
+        <!-- IMPACT -->
+        <div class="section-light" id="win">
+            <h2>Real World Impact</h2>
+            <p>
+                This solution helps banks reduce losses, improve customer management,
+                and make data-driven decisions at scale.
+            </p>
+        </div>
+
+    </main>
+</div>
+
+{% endblock %}
